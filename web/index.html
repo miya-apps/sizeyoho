@@ -1,0 +1,115 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="子どもの成長記録・成長曲線と、服・靴サイズの先読みアプリ">
+  <meta name="theme-color" content="#C8EDDB">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="サイズ予報">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>サイズ予報</title>
+  <link rel="manifest" href="manifest.json">
+
+  <!-- 起動画面（アプリの読み込みが終わるまで表示するスプラッシュ） -->
+  <style>
+    #splash {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #C8EDDB;
+      transition: opacity 0.45s ease-out;
+    }
+    #splash img {
+      width: 132px;
+      height: 132px;
+      animation: splash-pop 0.9s ease-out;
+    }
+    #splash .splash-name {
+      margin-top: 14px;
+      font-family: 'Hiragino Maru Gothic ProN', 'Yu Gothic UI', 'Meiryo',
+        sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #3D444D;
+      letter-spacing: 0.08em;
+    }
+    #splash .splash-dots {
+      margin-top: 26px;
+      display: flex;
+      gap: 8px;
+    }
+    #splash .splash-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #3D444D;
+      opacity: 0.25;
+      animation: splash-blink 1.2s infinite;
+    }
+    #splash .splash-dots span:nth-child(2) { animation-delay: 0.2s; }
+    #splash .splash-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes splash-pop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes splash-blink {
+      0%, 100% { opacity: 0.25; }
+      50% { opacity: 0.9; }
+    }
+  </style>
+</head>
+<body>
+  <div id="splash">
+    <img src="icons/Icon-512.png" alt="サイズ予報">
+    <div class="splash-name">サイズ予報</div>
+    <div class="splash-dots"><span></span><span></span><span></span></div>
+  </div>
+  <script>
+    // Flutter の初回フレーム描画が終わったらスプラッシュをフェードアウト。
+    window.addEventListener('flutter-first-frame', function () {
+      var splash = document.getElementById('splash');
+      if (!splash) return;
+      splash.style.opacity = '0';
+      setTimeout(function () { splash.remove(); }, 500);
+    });
+  </script>
+
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
+

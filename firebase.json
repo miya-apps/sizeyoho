@@ -1,0 +1,17 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "flutter": {
+    "platforms": {
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "sizeyoho",
+          "configurations": {
+            "web": "1:643895439317:web:71742486288f8ecb2dd75c"
+          }
+        }
+      }
+    }
+  }
+}
