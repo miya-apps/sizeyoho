@@ -50,7 +50,7 @@ class _AccountSignInSheet extends StatelessWidget {
             const SizedBox(height: 20),
             _SignInButton(
               label: 'Googleで続ける',
-              icon: Icons.g_mobiledata_rounded,
+              leading: const _GoogleMark(),
               onPressed: () => _signIn(context, CloudBackup.instance.signInWithGoogle),
             ),
             if (_showApple) ...[
@@ -90,23 +90,57 @@ class _AccountSignInSheet extends StatelessWidget {
 class _SignInButton extends StatelessWidget {
   const _SignInButton({
     required this.label,
-    required this.icon,
+    this.icon,
+    this.leading,
     required this.onPressed,
   });
 
   final String label;
-  final IconData icon;
+  final IconData? icon;
+  final Widget? leading;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
-    return OutlinedButton.icon(
+    return OutlinedButton(
       onPressed: onPressed,
-      icon: Icon(icon, size: 22),
-      label: Text(label),
       style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 14),
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (leading != null) ...[leading!, const SizedBox(width: 10)],
+          if (icon != null) ...[Icon(icon, size: 22), const SizedBox(width: 10)],
+          Text(label),
+        ],
+      ),
+    );
+  }
+}
+
+class _GoogleMark extends StatelessWidget {
+  const _GoogleMark();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 22,
+      height: 22,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey.shade300),
+      ),
+      child: const Text(
+        'G',
+        style: TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w700,
+          color: Color(0xFF4285F4),
+        ),
       ),
     );
   }
