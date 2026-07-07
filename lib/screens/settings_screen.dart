@@ -13,6 +13,7 @@ import '../cloud/cloud_backup.dart';
 import '../models/child_profile.dart';
 import '../monetization/pro_status.dart';
 import '../settings/export_privacy.dart';
+import '../widgets/account_sign_in_sheet.dart';
 import 'about_app_screen.dart';
 import 'birthday_memories_screen.dart';
 import 'children_screen.dart';
@@ -595,7 +596,7 @@ class _ProSection extends StatelessWidget {
                     return ListTile(
                       leading: Icon(Icons.login_rounded, color: scheme.primary),
                       title: const Text(
-                        'Googleでサインイン',
+                        'サインイン',
                         style: TextStyle(
                           fontSize: 14.5,
                           fontWeight: FontWeight.w600,
@@ -609,19 +610,7 @@ class _ProSection extends StatelessWidget {
                         ),
                       ),
                       trailing: const Icon(Icons.chevron_right, size: 20),
-                      onTap: () async {
-                        final messenger = ScaffoldMessenger.of(context);
-                        final err =
-                            await CloudBackup.instance.signInWithGoogle();
-                        if (err != null) {
-                          messenger.showSnackBar(
-                            SnackBar(
-                              content: Text(err),
-                              behavior: SnackBarBehavior.floating,
-                            ),
-                          );
-                        }
-                      },
+                      onTap: () => showAccountSignInSheet(context),
                     );
                   }
                   return Column(

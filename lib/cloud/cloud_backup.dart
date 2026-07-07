@@ -76,10 +76,18 @@ class CloudBackup {
 
   /// Googleアカウントでサインインする。成功なら null、失敗なら
   /// 利用者向けメッセージを返す。
-  Future<String?> signInWithGoogle() async {
+  Future<String?> signInWithGoogle() => _signInWithProvider(GoogleAuthProvider());
+
+  /// Apple IDでサインインする（iOS/macOSアプリ版向け。Webは未設定時は失敗）。
+  Future<String?> signInWithApple() {
+    final provider = AppleAuthProvider();
+    provider.addScope('email');
+    return _signInWithProvider(provider);
+  }
+
+  Future<String?> _signInWithProvider(AuthProvider provider) async {
     if (!available) return 'クラウド機能を初期化できませんでした';
     try {
-      final provider = GoogleAuthProvider();
       if (kIsWeb) {
         await FirebaseAuth.instance.signInWithPopup(provider);
       } else {
@@ -90,7 +98,7 @@ class CloudBackup {
       if (e.code == 'popup-closed-by-user' ||
           e.code == 'web-context-canceled' ||
           e.code == 'canceled') {
-        return null; // 利用者キャンセルはエラー扱いしない
+        return null;
       }
       return 'サインインに失敗しました（${e.code}）';
     }
