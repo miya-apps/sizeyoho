@@ -11,7 +11,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
 
   static const Color _background = Color(0xFFF6F6F8);
-  static const String _revisedAt = '2026年7月7日';
+  static const String _revisedAt = '2026年7月8日';
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +92,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       Text(
                         '法令に基づく場合を除き、取得した情報を第三者に'
                         '提供することはありません。上記の目的の範囲で、'
-                        'Google LLC のサービス（Firebase・AdMob）を利用します。',
+                        'Google LLC のサービス（Firebase・AdMob）を利用します。\n\n'
+                        'お問い合わせには Google LLC の Googleフォームを'
+                        '利用します。フォームに入力いただいた内容は、'
+                        'お問い合わせへの対応目的でのみ利用します。',
                         style: _bodyStyle,
                       ),
                       _section('3. データの保管と削除'),
@@ -119,7 +122,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       ),
                       _section('6. お問い合わせ'),
                       Text(
-                        'sizeyoho.app@gmail.com',
+                        'お問い合わせページ（$kContactPageUrl）の'
+                        'フォームからご連絡ください。フォームがご利用'
+                        'いただけない場合は $kSupportEmail までお寄せください。',
                         style: _bodyStyle,
                       ),
                       const SizedBox(height: 20),

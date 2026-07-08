@@ -57,19 +57,21 @@ $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAlias
 $g.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
 $g.FillRectangle($bgBrush, 0, 0, 1024, 1024)
 
-# イラスト：幅 790px に拡大して上部中央へ（B案）
-$artW = 790
+# イラスト：幅 820px・上寄せ（文字との間隔を詰める）
+$artW = 820
+$artTop = 72
 $artH = [int]($artW * $bh / $bw)
-$dstArt = New-Object System.Drawing.Rectangle ([int]((1024 - $artW) / 2)), 100, $artW, $artH
+$dstArt = New-Object System.Drawing.Rectangle ([int]((1024 - $artW) / 2)), $artTop, $artW, $artH
 $srcArt = New-Object System.Drawing.Rectangle $minX, $minY, $bw, $bh
 $g.DrawImage($clean, $dstArt, $srcArt, [System.Drawing.GraphicsUnit]::Pixel)
 
-# 文字：イラストの下に大きめに
-$font = New-Object System.Drawing.Font($family, 118, $style, [System.Drawing.GraphicsUnit]::Pixel)
+# 文字：イラストのすぐ下（間隔 28px）
+$font = New-Object System.Drawing.Font($family, 108, $style, [System.Drawing.GraphicsUnit]::Pixel)
 $textBrush = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(255, 61, 68, 77))
 $fmt = New-Object System.Drawing.StringFormat
 $fmt.Alignment = [System.Drawing.StringAlignment]::Center
-$g.DrawString($text, $font, $textBrush, 512, 745, $fmt)
+$textY = $dstArt.Y + $dstArt.Height + 28
+$g.DrawString($text, $font, $textBrush, 512, $textY, $fmt)
 $g.Dispose()
 
 $wordmarkPath = Join-Path $root 'assets\branding\app_icon_wordmark.png'
@@ -77,8 +79,8 @@ $bmp.Save($wordmarkPath, [System.Drawing.Imaging.ImageFormat]::Png)
 Write-Host "saved: $wordmarkPath"
 
 # ── 2) イラストのみ版（ホーム画面アイコン向け。文字なし・中央寄せ） ──
-# 倍率が小さいほどイラストが大きく写る（1.12 = 余白ひかえめで大きく表示）
-$side = [int]([Math]::Max($bw, $bh) * 1.12)
+# 倍率が小さいほど切り出しがタイトになり、絵が大きく見える（0.90 推奨）
+$side = [int]([Math]::Max($bw, $bh) * 0.90)
 $cx = [int](($minX + $maxX) / 2); $cy = [int](($minY + $maxY) / 2)
 
 $art = New-Object System.Drawing.Bitmap 1024, 1024

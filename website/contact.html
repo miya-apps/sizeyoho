@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>お問い合わせ｜サイズ予報</title>
+  <meta name="description" content="サイズ予報へのお問い合わせはこちらから。不具合報告・バックアップ・Pro版・データ削除など。">
+  <link rel="icon" type="image/png" href="icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --mint: #C8EDDB;
+      --mint-light: #EAF8F0;
+      --ink: #3D444D;
+      --accent: #4CAF87;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Zen Maru Gothic', sans-serif;
+      color: var(--ink);
+      background: var(--mint-light);
+      line-height: 1.8;
+    }
+    header {
+      background: var(--mint);
+      text-align: center;
+      padding: 28px 20px;
+    }
+    header h1 { font-size: 1.4rem; }
+    header p { font-size: 0.9rem; margin-top: 4px; }
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 20px 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 24px 22px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+      margin-bottom: 20px;
+    }
+    h2 {
+      font-size: 1.05rem;
+      border-left: 6px solid var(--accent);
+      padding-left: 12px;
+      margin-bottom: 12px;
+    }
+    p { margin-bottom: 10px; font-size: 0.95rem; }
+    ul {
+      margin: 0 0 12px 1.2em;
+      font-size: 0.92rem;
+    }
+    li { margin-bottom: 4px; }
+    .note {
+      font-size: 0.85rem;
+      color: #666;
+      background: var(--mint-light);
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-top: 14px;
+    }
+    .btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 14px 28px;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(76, 175, 135, 0.35);
+    }
+    .btn:hover { opacity: 0.92; }
+    a { color: var(--accent); }
+    footer {
+      text-align: center;
+      font-size: 0.85rem;
+      color: #777;
+      padding: 24px 16px 40px;
+    }
+    footer nav a { margin: 0 10px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>お問い合わせ</h1>
+    <p>サイズ予報</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>お問い合わせフォーム</h2>
+      <p>
+        ご意見・ご要望・不具合のご報告・バックアップに関するご質問などは、
+        下のボタンからフォームを開いてお送りください。
+      </p>
+      <p style="text-align: center;">
+        <a
+          class="btn"
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform"
+          target="_blank"
+          rel="noopener noreferrer"
+        >お問い合わせフォームを開く</a>
+      </p>
+      <p class="note">
+        ・お子様の健康状態に関するご相談にはお答えできません。気になる場合は
+        かかりつけ医・保健師にご相談ください。<br>
+        ・通常、2〜5営業日以内に返信します（個人運営のため遅れる場合があります）。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>お問い合わせの種類</h2>
+      <ul>
+        <li>不具合・エラー</li>
+        <li>バックアップ・機種変更</li>
+        <li>Pro版・課金</li>
+        <li>個人情報・データ削除</li>
+        <li>機能の要望</li>
+        <li>その他</li>
+      </ul>
+      <p class="note">
+        クラウド上のバックアップ削除をご希望の場合は、フォームで
+        「個人情報・データ削除」を選び、サインインに使用したメールアドレスを
+        必ずご記入ください。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>メールでのお問い合わせ</h2>
+      <p>
+        フォームがご利用いただけない場合のみ、
+        <a href="mailto:sizeyoho.app@gmail.com">sizeyoho.app@gmail.com</a>
+        までご連絡ください。
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <nav>
+      <a href="index.html">トップ</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+    </nav>
+    &copy; 2026 MIYA APPS
+  </footer>
+</body>
+</html>

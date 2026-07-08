@@ -1,12 +1,26 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/app_info.dart';
-import 'screens/splash_screen.dart';
+import 'app/app_shell.dart';
+import 'cloud/cloud_backup.dart';
+import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // 起動画面の見た目は web/index.html のスプラッシュに任せる。
+  // ここでは Firebase 初期化だけ行い、二重表示を避ける。
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    CloudBackup.available = true;
+    await CloudBackup.instance.init();
+  } catch (_) {
+    CloudBackup.available = false;
+  }
   runApp(const GrowApp());
 }
 
@@ -30,7 +44,7 @@ class GrowApp extends StatelessWidget {
         supportedLocales: const [
           Locale('ja', 'JP'),
         ],
-        home: const SplashScreen(),
+        home: const AppShell(),
       ),
     );
   }

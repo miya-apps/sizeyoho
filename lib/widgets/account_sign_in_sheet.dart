@@ -32,14 +32,16 @@ class _AccountSignInSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'バックアップ用にサインイン',
+              'クラウドにバックアップ',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             Text(
-              '記録をクラウドに保存・復元するためのアカウントです。'
-              '課金（Pro版の購入）とは別の手続きです。',
+              '機種変更や端末の故障に備えて、記録をクラウドに'
+              '保存するためのアカウントです。\n'
+              'Pro版のお支払いは App Store / Google Play で'
+              '行い、ここでのサインインは不要です。',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12.5,
