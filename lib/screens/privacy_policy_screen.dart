@@ -103,8 +103,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                         '端末内の記録データは、本アプリを削除すると消去されます。'
                         'クラウド上のバックアップは常に最新の内容で上書き保存'
                         'されます。クラウド上のバックアップの削除をご希望の'
-                        '場合は、サインインに使用したアカウントを記載のうえ、'
-                        '下記の連絡先までご連絡ください。本人確認のうえ削除します。',
+                        '場合は、お問い合わせフォームで「個人情報・データ削除」'
+                        'を選び、サインインに使用したアカウントを記載のうえ'
+                        'ご連絡ください。本人確認のうえ削除します。',
                         style: _bodyStyle,
                       ),
                       _section('4. お子様の情報について'),
@@ -123,8 +124,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       _section('6. お問い合わせ'),
                       Text(
                         'お問い合わせページ（$kContactPageUrl）の'
-                        'フォームからご連絡ください。フォームがご利用'
-                        'いただけない場合は $kSupportEmail までお寄せください。',
+                        'Googleフォームからご連絡ください。',
                         style: _bodyStyle,
                       ),
                       const SizedBox(height: 20),
