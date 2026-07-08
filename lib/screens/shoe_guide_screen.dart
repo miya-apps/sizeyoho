@@ -228,28 +228,31 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
         const SizedBox(height: 12),
         // 次の購入目安（このカードの主役）。
         // サイズアウト警告は「いまのサイズ」由来の情報なので無料でも表示し、
-        // 将来の時期・サイズのシミュレーションだけPro限定（ぼかし＋鍵）にする。
-        if (plan.currentShoeOutgrown)
-          _nextPurchaseBanner(plan, next, bannerColor)
-        else
+        // 将来の時期・サイズのシミュレーションはPro限定（ぼかし＋鍵）。
+        // 「次の購入」と「その先」は1つのゲートにまとめて鍵を1個にする。
+        if (plan.currentShoeOutgrown) ...[
+          _nextPurchaseBanner(plan, next, bannerColor),
+          if (_laterEntry(plan) != null) ...[
+            const SizedBox(height: 6),
+            ProGate(
+              lockLabel: 'その先の予報はPro版で',
+              child: _laterText(plan),
+            ),
+          ],
+        ] else
           ProGate(
-            lockLabel: '次の購入時期はPro版で',
-            child: _nextPurchaseBanner(plan, next, bannerColor),
-          ),
-        if (_laterEntry(plan) != null) ...[
-          const SizedBox(height: 6),
-          ProGate(
-            lockLabel: 'その先の予報はPro版で',
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Text(
-                'その先：${_laterEntry(plan)!.shoeSizeCm.toStringAsFixed(1)}cm '
-                '（${formatShoeMonthLabel(_laterEntry(plan)!.approxDate)}）',
-                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-              ),
+            lockLabel: '購入時期の先読みはPro版で',
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _nextPurchaseBanner(plan, next, bannerColor),
+                if (_laterEntry(plan) != null) ...[
+                  const SizedBox(height: 6),
+                  _laterText(plan),
+                ],
+              ],
             ),
           ),
-        ],
         const SizedBox(height: 10),
         Row(
           children: [
@@ -315,6 +318,19 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// 「その先：○cm（○月頃）」の1行テキスト。
+  Widget _laterText(ShoeSizePurchasePlan plan) {
+    final later = _laterEntry(plan)!;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Text(
+        'その先：${later.shoeSizeCm.toStringAsFixed(1)}cm '
+        '（${formatShoeMonthLabel(later.approxDate)}）',
+        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
       ),
     );
   }

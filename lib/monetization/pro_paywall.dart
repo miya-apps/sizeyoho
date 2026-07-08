@@ -25,7 +25,7 @@ class _ProPaywallSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     return SafeArea(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(24, 4, 24, 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -180,8 +180,11 @@ class _ProPaywallSheet extends StatelessWidget {
     const padding = EdgeInsets.symmetric(vertical: 12, horizontal: 8);
 
     // ストア課金導入までは案内のみ（購入フローは未接続）。
+    // シートを閉じてから出さないとスナックバーがシートの裏に隠れる。
     void onPressed() {
-      ScaffoldMessenger.of(context).showSnackBar(
+      final messenger = ScaffoldMessenger.of(context);
+      Navigator.of(context).pop();
+      messenger.showSnackBar(
         const SnackBar(
           content: Text('決済機能は現在準備中です。もうしばらくお待ちください。'),
           behavior: SnackBarBehavior.floating,
