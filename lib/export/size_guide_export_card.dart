@@ -8,6 +8,7 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../app/app_info.dart';
 import '../growth/clothing_size_guide.dart';
 import '../models/child_profile.dart';
+import '../monetization/pro_status.dart';
 import '../screens/clothing_guide_screen.dart'
     show seasonAccentColor, seasonBaseColor, seasonIconData;
 import '../screens/shoe_guide_screen.dart' show formatShoeMonthLabel;
@@ -395,10 +396,16 @@ class _ShoeExportSection extends StatelessWidget {
   Widget _body(ColorScheme scheme, ShoeSizePurchasePlan plan) {
     final lastPurchase = plan.lastPurchase;
     final next = plan.nextPurchase;
+    // 画面（靴ガイド）と同じルール：サイズアウト警告は無料でも出すが、
+    // 将来の時期・サイズのシミュレーションはPro限定。
+    // 書き出し画像はぼかしではなく案内文に置き換えて情報が漏れないようにする。
+    final locked = !ProStatus.isPro.value && !plan.currentShoeOutgrown;
     final bannerColor = plan.currentShoeOutgrown ? _staleColor : scheme.primary;
 
     final String nextText;
-    if (next == null) {
+    if (locked) {
+      nextText = '次の購入サイズ・時期の予報はPro版で確認できます';
+    } else if (next == null) {
       nextText = '当面はサイズアップの予定はありません';
     } else if (plan.currentShoeOutgrown) {
       nextText = 'いまの靴が小さいかも。'

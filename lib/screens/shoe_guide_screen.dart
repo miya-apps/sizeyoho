@@ -6,6 +6,8 @@ import '../app/adaptive_layout.dart';
 import '../growth/clothing_size_guide.dart';
 import '../models/child_profile.dart';
 import '../models/shoe_records.dart';
+import '../monetization/pro_status.dart';
+import '../widgets/pro_gate.dart';
 
 /// 履歴一覧の絞り込み。
 enum _HistoryFilter { all, measurement, purchase }
@@ -224,44 +226,28 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
           ],
         ),
         const SizedBox(height: 12),
-        // 次の購入目安（このカードの主役）
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-          decoration: BoxDecoration(
-            color: bannerColor.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: bannerColor.withValues(alpha: 0.35)),
+        // 次の購入目安（このカードの主役）。
+        // サイズアウト警告は「いまのサイズ」由来の情報なので無料でも表示し、
+        // 将来の時期・サイズのシミュレーションだけPro限定（ぼかし＋鍵）にする。
+        if (plan.currentShoeOutgrown)
+          _nextPurchaseBanner(plan, next, bannerColor)
+        else
+          ProGate(
+            lockLabel: '次の購入時期はPro版で',
+            child: _nextPurchaseBanner(plan, next, bannerColor),
           ),
-          child: Row(
-            children: [
-              Icon(
-                plan.currentShoeOutgrown
-                    ? Icons.priority_high_rounded
-                    : Icons.shopping_bag_outlined,
-                size: 20,
-                color: bannerColor,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  _nextPurchaseText(plan, next),
-                  style: TextStyle(
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w700,
-                    height: 1.4,
-                    color: plan.currentShoeOutgrown ? _staleColor : _titleColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
         if (_laterEntry(plan) != null) ...[
           const SizedBox(height: 6),
-          Text(
-            'その先：${_laterEntry(plan)!.shoeSizeCm.toStringAsFixed(1)}cm '
-            '（${formatShoeMonthLabel(_laterEntry(plan)!.approxDate)}）',
-            style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+          ProGate(
+            lockLabel: 'その先の予報はPro版で',
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Text(
+                'その先：${_laterEntry(plan)!.shoeSizeCm.toStringAsFixed(1)}cm '
+                '（${formatShoeMonthLabel(_laterEntry(plan)!.approxDate)}）',
+                style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+              ),
+            ),
           ),
         ],
         const SizedBox(height: 10),
@@ -291,6 +277,45 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
           ],
         ),
       ],
+    );
+  }
+
+  /// 「次の購入」帯（サイズアウト時は買い替え警告）。
+  Widget _nextPurchaseBanner(
+    ShoeSizePurchasePlan plan,
+    ShoePurchaseEntry? next,
+    Color bannerColor,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: bannerColor.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: bannerColor.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            plan.currentShoeOutgrown
+                ? Icons.priority_high_rounded
+                : Icons.shopping_bag_outlined,
+            size: 20,
+            color: bannerColor,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              _nextPurchaseText(plan, next),
+              style: TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w700,
+                height: 1.4,
+                color: plan.currentShoeOutgrown ? _staleColor : _titleColor,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -565,9 +590,11 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
       );
 
   Future<void> _showPurchaseDialog() {
-    // 「次の購入」でおすすめしているサイズを初期値にする
+    // Pro版では「次の購入」でおすすめしているサイズを初期値にする
     // （買い替えのタイミングで記録するのが典型的な使い方のため）。
+    // 無料版では先読みサイズが漏れないよう「いまの目安」までにとどめる。
     final plan = computeShoeSizePurchasePlan(_child);
+    final nextSize = ProStatus.isPro.value ? plan?.nextPurchase?.shoeSizeCm : null;
     return _showValueDateDialog(
       title: '購入を記録',
       description: '購入した靴のサイズを記録します。',
@@ -575,7 +602,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
       stepCm: _purchaseStepCm,
       minCm: _purchaseMinCm,
       maxCm: _shoeMaxCm,
-      initialValue: plan?.nextPurchase?.shoeSizeCm ??
+      initialValue: nextSize ??
           plan?.currentShoeSizeCm ??
           latestShoePurchase(_child)?.sizeCm ??
           14.0,
