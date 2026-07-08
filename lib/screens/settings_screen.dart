@@ -14,6 +14,7 @@ import '../models/child_profile.dart';
 import '../monetization/pro_status.dart';
 import '../settings/export_privacy.dart';
 import '../widgets/account_sign_in_sheet.dart';
+import '../support/contact_launcher.dart';
 import 'about_app_screen.dart';
 import 'birthday_memories_screen.dart';
 import 'children_screen.dart';
@@ -220,6 +221,14 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     );
                   },
+                ),
+                _menuTile(
+                  context,
+                  icon: Icons.mail_outline_rounded,
+                  iconColor: scheme.primary,
+                  title: 'お問い合わせ',
+                  subtitle: '不具合・ご要望・バックアップ・データ削除など',
+                  onTap: () => openContactForm(context),
                 ),
               ]),
             ],

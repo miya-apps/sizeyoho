@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app/adaptive_layout.dart';
 import '../app/app_info.dart';
+import '../support/contact_launcher.dart';
 
 /// プライバシーポリシー画面（設定 → このアプリについて から開く）。
 ///
@@ -123,9 +124,25 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       ),
                       _section('6. お問い合わせ'),
                       Text(
-                        'お問い合わせページ（$kContactPageUrl）の'
-                        'Googleフォームからご連絡ください。',
+                        'ご意見・不具合のご報告・データ削除のご依頼などは、'
+                        '下のボタンからお問い合わせフォームを開いて'
+                        'ご連絡ください。',
                         style: _bodyStyle,
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FilledButton.icon(
+                          onPressed: () => openContactForm(context),
+                          icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                          label: const Text('お問い合わせフォームを開く'),
+                          style: FilledButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 20),
                       Text(

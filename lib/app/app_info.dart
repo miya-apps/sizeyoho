@@ -9,3 +9,5 @@ const String kAppVersion = '1.0.0';
 const String kWebBaseUrl = 'https://miya-apps.github.io/sizeyoho';
 const String kContactPageUrl = '$kWebBaseUrl/contact.html';
 const String kPrivacyPolicyUrl = '$kWebBaseUrl/privacy.html';
+const String kContactFormUrl =
+    'https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform';
