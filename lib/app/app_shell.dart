@@ -4,6 +4,7 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'adaptive_layout.dart';
+import '../ads/ad_banner.dart';
 import '../cloud/cloud_backup.dart';
 import '../export/growth_pdf.dart';
 import '../export/screen_capture.dart';
@@ -32,10 +33,6 @@ import '../widgets/growth_summary_sheet.dart';
 import '../theme/app_theme.dart';
 
 import '../widgets/growth_record_add_sheet.dart';
-
-/// 広告バナー枠のプレースホルダーを画面に出すかどうか。
-/// 広告SDK導入までは位置確認用。スクリーンショット撮影の際はOFFにする。
-const bool _kShowAdPlaceholder = false;
 
 class AppShell extends StatefulWidget {
   const AppShell({super.key});
@@ -1036,44 +1033,9 @@ class _AppShellState extends State<AppShell> {
               ],
             ),
           ),
-          // ── 広告バナー枠（無料版のみ） ──
-          // 広告SDK（AdMob等）導入時にここへ実バナー（標準 320×50）を差し込む。
-          // プレースホルダー表示はスクリーンショット撮影等の邪魔になるため
-          // いったんOFF（_kShowAdPlaceholder を true にすると枠を確認できる）。
-          // Pro版では非表示になる（ProStatus.isPro で分岐済み）。
-          if (_kShowAdPlaceholder)
-          ValueListenableBuilder<bool>(
-            valueListenable: ProStatus.isPro,
-            builder: (context, isPro, _) => isPro
-                ? const SizedBox.shrink()
-                : Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF1F1F3),
-                      border: Border(
-                        top: BorderSide(color: Colors.grey[300]!),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.campaign_outlined,
-                          size: 16,
-                          color: Colors.grey[500],
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          '広告スペース（リリース時に表示・Pro版では非表示）',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey[500],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-          ),
+          // ── 広告バナー（無料版のみ・Android/iOSのみ） ──
+          // Pro版・Web・読み込み前は AdBanner 側で高さ0になる。
+          const AdBanner(),
         ],
             ),
           ),

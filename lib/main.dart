@@ -1,11 +1,15 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'ads/ad_banner.dart';
 import 'app/app_info.dart';
 import 'app/app_shell.dart';
 import 'cloud/cloud_backup.dart';
 import 'firebase_options.dart';
+import 'monetization/purchase_manager.dart';
 import 'theme/app_theme.dart';
 
 Future<void> main() async {
@@ -21,6 +25,9 @@ Future<void> main() async {
   } catch (_) {
     CloudBackup.available = false;
   }
+  // 広告と課金（Android/iOSのみ）。起動を待たせないよう並行初期化。
+  unawaited(initializeAds());
+  unawaited(PurchaseManager.instance.init());
   runApp(const GrowApp());
 }
 

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'pro_pricing.dart';
+import 'purchase_manager.dart';
 
 /// Pro版の案内（ペイウォール）シートを開く。
 ///
 /// 鍵付きのPro限定表示をタップしたときに呼ぶ。
-/// ストア課金（in_app_purchase）導入後は、プラン選択ボタンの
-/// onPressed から購入フローを開始する。
+/// プラン選択で PurchaseManager 経由のストア購入を開始する。
 Future<void> showProPaywallSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
@@ -72,31 +72,48 @@ class _ProPaywallSheet extends StatelessWidget {
               body: '画面下の広告が表示されなくなります',
             ),
             const SizedBox(height: 18),
-            Row(
-              children: [
-                Expanded(
-                  child: _planButton(
-                    context,
-                    label: '月額プラン',
-                    price: proMonthlyPriceLabel,
-                    sub: '毎月のお支払い',
-                    emphasized: false,
+            ValueListenableBuilder<bool>(
+              valueListenable: PurchaseManager.instance.busy,
+              builder: (context, busy, _) => Row(
+                children: [
+                  Expanded(
+                    child: _planButton(
+                      context,
+                      label: '月額プラン',
+                      price: proMonthlyPriceLabel,
+                      sub: '毎月のお支払い',
+                      emphasized: false,
+                      onPressed: busy
+                          ? null
+                          : () => _buy(context, kProMonthlyProductId),
+                    ),
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: _planButton(
-                    context,
-                    label: '年額プラン',
-                    price: proYearlyPriceLabel,
-                    sub: '$proYearlyPerMonthLabel・'
-                        '約$proYearlyDiscountPercent%おトク',
-                    emphasized: true,
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _planButton(
+                      context,
+                      label: '年額プラン',
+                      price: proYearlyPriceLabel,
+                      sub: '$proYearlyPerMonthLabel・'
+                          '約$proYearlyDiscountPercent%おトク',
+                      emphasized: true,
+                      onPressed: busy
+                          ? null
+                          : () => _buy(context, kProYearlyProductId),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 10),
+            TextButton(
+              onPressed: () => _restore(context),
+              child: const Text(
+                '購入を復元する（機種変更後など）',
+                style: TextStyle(fontSize: 11.5),
+              ),
+            ),
+            const SizedBox(height: 2),
             Text(
               '価格はすべて消費税込みです。\n'
               'お支払いは App Store / Google Play のアカウントに請求されます。',
@@ -153,12 +170,40 @@ class _ProPaywallSheet extends StatelessWidget {
     );
   }
 
+  /// 購入を開始する。エラーはシートを閉じてスナックバーで知らせる
+  /// （成功時は purchaseStream 側で ProStatus が有効になり、ぼかしが解ける）。
+  static Future<void> _buy(BuildContext context, String productId) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final err = await PurchaseManager.instance.buy(productId);
+    if (err != null) {
+      if (navigator.canPop()) navigator.pop();
+      messenger.showSnackBar(
+        SnackBar(content: Text(err), behavior: SnackBarBehavior.floating),
+      );
+    }
+  }
+
+  static Future<void> _restore(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    final err = await PurchaseManager.instance.restore();
+    if (navigator.canPop()) navigator.pop();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(err ?? '復元処理を実行しました。購入履歴があればPro版が有効になります'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
   Widget _planButton(
     BuildContext context, {
     required String label,
     required String price,
     required String sub,
     required bool emphasized,
+    required VoidCallback? onPressed,
   }) {
     final scheme = Theme.of(context).colorScheme;
     final content = Column(
@@ -178,19 +223,6 @@ class _ProPaywallSheet extends StatelessWidget {
       borderRadius: BorderRadius.circular(14),
     );
     const padding = EdgeInsets.symmetric(vertical: 12, horizontal: 8);
-
-    // ストア課金導入までは案内のみ（購入フローは未接続）。
-    // シートを閉じてから出さないとスナックバーがシートの裏に隠れる。
-    void onPressed() {
-      final messenger = ScaffoldMessenger.of(context);
-      Navigator.of(context).pop();
-      messenger.showSnackBar(
-        const SnackBar(
-          content: Text('決済機能は現在準備中です。もうしばらくお待ちください。'),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
 
     return emphasized
         ? FilledButton(

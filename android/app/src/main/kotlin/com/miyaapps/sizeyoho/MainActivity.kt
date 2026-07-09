@@ -1,4 +1,4 @@
-package com.yourname.growth.grow_app
+package com.miyaapps.sizeyoho
 
 import io.flutter.embedding.android.FlutterActivity
 

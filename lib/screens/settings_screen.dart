@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:firebase_auth/firebase_auth.dart' show User;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +12,9 @@ import '../app/adaptive_layout.dart';
 import '../backup/growth_backup.dart';
 import '../cloud/cloud_backup.dart';
 import '../models/child_profile.dart';
+import '../monetization/pro_paywall.dart';
 import '../monetization/pro_status.dart';
+import '../monetization/purchase_manager.dart';
 import '../settings/export_privacy.dart';
 import '../widgets/account_sign_in_sheet.dart';
 import '../support/contact_launcher.dart';
@@ -552,10 +555,11 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-/// Pro版（オンライン自動バックアップ・広告非表示）のセクション。
+/// Pro版（先読み予報・オンライン自動バックアップ・広告非表示）のセクション。
 ///
-/// 課金（ストア内購入）導入までは、Proの有効化スイッチを
-/// 動作確認用として直接置いている。導入後は購入・復元ボタンに差し替える。
+/// ストア審査に出す本番ビルドでは動作確認用スイッチを含めず、
+/// 購入（ペイウォール）と復元の導線だけを出す。
+/// 開発ビルドとWebプレビューではスイッチで動作確認できる。
 class _ProSection extends StatelessWidget {
   const _ProSection({
     required this.childrenData,
@@ -564,6 +568,10 @@ class _ProSection extends StatelessWidget {
 
   final List<ChildProfile> childrenData;
   final ValueChanged<List<ChildProfile>> onRestoreChildren;
+
+  /// 動作確認用スイッチを見せるか。ストア配布ビルド（Android/iOSの
+  /// リリース）では false になり、課金以外でProを有効化できない。
+  static bool get _showDevSwitch => kDebugMode || kIsWeb;
 
   @override
   Widget build(BuildContext context) {
@@ -578,24 +586,70 @@ class _ProSection extends StatelessWidget {
         valueListenable: ProStatus.isPro,
         builder: (context, isPro, _) => Column(
           children: [
-            // 課金導入までの動作確認用スイッチ。
-            SwitchListTile(
-              secondary: const Icon(
-                Icons.workspace_premium_outlined,
-                color: Color(0xFFB8860B),
+            if (_showDevSwitch)
+              // 開発用：課金なしでProの動作を確認するスイッチ。
+              SwitchListTile(
+                secondary: const Icon(
+                  Icons.workspace_premium_outlined,
+                  color: Color(0xFFB8860B),
+                ),
+                title: const Text(
+                  'Pro版',
+                  style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  '先読み予報＋オンライン自動バックアップ＋広告非表示\n'
+                  '（開発ビルド専用の動作確認スイッチです）',
+                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                ),
+                value: isPro,
+                onChanged: (v) => ProStatus.setActive(v),
+              )
+            else if (!isPro) ...[
+              ListTile(
+                leading: const Icon(
+                  Icons.workspace_premium_outlined,
+                  color: Color(0xFFB8860B),
+                ),
+                title: const Text(
+                  'Pro版にアップグレード',
+                  style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  'サイズの先読み予報＋オンライン自動バックアップ＋広告非表示',
+                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                ),
+                trailing: const Icon(Icons.chevron_right, size: 20),
+                onTap: () => showProPaywallSheet(context),
               ),
-              title: const Text(
-                'Pro版',
-                style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              ListTile(
+                leading: Icon(Icons.restore_rounded, color: scheme.primary),
+                title: const Text(
+                  '購入を復元',
+                  style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  '機種変更後などに、購入済みのPro版を有効にします',
+                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                ),
+                onTap: () => _restorePurchase(context),
               ),
-              subtitle: Text(
-                'オンライン自動バックアップ＋広告非表示\n'
-                '（課金導入前の動作確認用スイッチです）',
-                style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+            ] else
+              ListTile(
+                leading: const Icon(
+                  Icons.workspace_premium_rounded,
+                  color: Color(0xFFB8860B),
+                ),
+                title: const Text(
+                  'Pro版をご利用中',
+                  style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  '先読み予報・オンライン自動バックアップ・広告非表示が有効です',
+                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                ),
               ),
-              value: isPro,
-              onChanged: (v) => ProStatus.setActive(v),
-            ),
             if (isPro) ...[
               const Divider(height: 1, indent: 16, endIndent: 16),
               ValueListenableBuilder<User?>(
@@ -752,6 +806,17 @@ class _ProSection extends StatelessWidget {
     messenger.showSnackBar(
       SnackBar(
         content: Text(err ?? 'クラウドへバックアップしました'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Future<void> _restorePurchase(BuildContext context) async {
+    final messenger = ScaffoldMessenger.of(context);
+    final err = await PurchaseManager.instance.restore();
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(err ?? '復元処理を実行しました。購入履歴があればPro版が有効になります'),
         behavior: SnackBarBehavior.floating,
       ),
     );
