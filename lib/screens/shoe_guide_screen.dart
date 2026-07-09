@@ -35,7 +35,6 @@ class ShoeGuideView extends StatefulWidget {
 class _ShoeGuideViewState extends State<ShoeGuideView> {
   static const _staleColor = Color(0xFFB25E09);
   static const _titleColor = Color(0xFF1A1A1A);
-  static const _measureColor = Color(0xFF5B7C4F); // 実測（定規）
   static const _purchaseColor = Color(0xFF3679A8); // 購入（買い物）
 
   _HistoryFilter _filter = _HistoryFilter.all;
@@ -497,10 +496,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
               size: 20,
               color: _purchaseColor,
             )
-          : const FootprintIcon(
-              size: 20,
-              color: _measureColor,
-            ),
+          : const FootprintIcon(size: 20),
       title: Text(
         valueText,
         style: const TextStyle(fontSize: 13.5, fontWeight: FontWeight.w600),

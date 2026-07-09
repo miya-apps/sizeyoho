@@ -1,40 +1,53 @@
 import 'package:flutter/material.dart';
 
-/// 指5本が見える「足あと」アイコン。
+/// 指5本が見える「足あと」アイコン（肌色）。
 ///
 /// 既製アイコン（Phosphor の footprints）は指がなく靴の中敷きに
 /// 見えてしまうため、赤ちゃんの足形らしい形を独自に描画する。
-/// 色は [color] 未指定なら IconTheme に従う（ボタン内でも正しく効く）。
+/// 淡い背景でも境界が分かるよう、薄い縁取りとグラデーションを付ける。
 class FootprintIcon extends StatelessWidget {
-  const FootprintIcon({super.key, this.size = 20, this.color});
+  const FootprintIcon({super.key, this.size = 20});
 
   final double size;
-  final Color? color;
 
   @override
   Widget build(BuildContext context) {
-    final c = color ?? IconTheme.of(context).color ?? Colors.black87;
     return CustomPaint(
       size: Size.square(size),
-      painter: _FootprintPainter(c),
+      painter: const _FootprintPainter(),
     );
   }
 }
 
 class _FootprintPainter extends CustomPainter {
-  const _FootprintPainter(this.color);
+  const _FootprintPainter();
 
-  final Color color;
+  static const _outline = Color(0xFF9A6B52);
+  static const _highlight = Color(0xFFF8DCC8);
+  static const _base = Color(0xFFE8B498);
+  static const _shadow = Color(0xFFD49578);
 
   @override
   void paint(Canvas canvas, Size size) {
     final s = size.width / 24;
-    final paint = Paint()
-      ..color = color
+    final bounds = Offset.zero & size;
+    final fillPaint = Paint()
+      ..shader = const LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [_highlight, _base, _shadow],
+        stops: [0.0, 0.55, 1.0],
+      ).createShader(bounds)
       ..isAntiAlias = true;
-    // 左右の足を少し互い違いに（歩いた足あとらしく）。
-    _foot(canvas, paint, s, cx: 7.6, top: 8.4, mirror: false);
-    _foot(canvas, paint, s, cx: 16.4, top: 1.6, mirror: true);
+    final outlinePaint = Paint()
+      ..color = _outline
+      ..isAntiAlias = true;
+
+    // 縁取り → 肌色の順で重ねて、背景色に溶け込まないようにする。
+    _foot(canvas, outlinePaint, s, cx: 7.6, top: 8.4, mirror: false, inflate: 0.14);
+    _foot(canvas, outlinePaint, s, cx: 16.4, top: 1.6, mirror: true, inflate: 0.14);
+    _foot(canvas, fillPaint, s, cx: 7.6, top: 8.4, mirror: false, inflate: 0);
+    _foot(canvas, fillPaint, s, cx: 16.4, top: 1.6, mirror: true, inflate: 0);
   }
 
   /// 片足を描く。[mirror] が true なら右足（親指が左側）。
@@ -45,6 +58,7 @@ class _FootprintPainter extends CustomPainter {
     required double cx,
     required double top,
     required bool mirror,
+    required double inflate,
   }) {
     final m = mirror ? -1.0 : 1.0;
     // 指5本：内側（親指）がいちばん大きく、外へ向かって小さく。
@@ -58,30 +72,28 @@ class _FootprintPainter extends CustomPainter {
     for (final t in toes) {
       canvas.drawCircle(
         Offset((cx + m * t[0]) * s, (top + t[1]) * s),
-        t[2] * s,
+        (t[2] + inflate) * s,
         paint,
       );
     }
-    // 足裏：つま先側が広く、かかとが細い（楕円2つを重ねて表現）。
     canvas.drawOval(
       Rect.fromCenter(
         center: Offset(cx * s, (top + 5.5) * s),
-        width: 6.6 * s,
-        height: 5.6 * s,
+        width: (6.6 + inflate * 2) * s,
+        height: (5.6 + inflate * 2) * s,
       ),
       paint,
     );
     canvas.drawOval(
       Rect.fromCenter(
         center: Offset((cx + m * 0.3) * s, (top + 9.6) * s),
-        width: 4.4 * s,
-        height: 5.2 * s,
+        width: (4.4 + inflate * 2) * s,
+        height: (5.2 + inflate * 2) * s,
       ),
       paint,
     );
   }
 
   @override
-  bool shouldRepaint(_FootprintPainter oldDelegate) =>
-      oldDelegate.color != color;
+  bool shouldRepaint(covariant _FootprintPainter oldDelegate) => false;
 }
