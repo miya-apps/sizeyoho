@@ -14,15 +14,15 @@ import '../monetization/pro_status.dart';
 class AdBanner extends StatefulWidget {
   const AdBanner({super.key});
 
-  /// 本番の広告ユニットID。AdMobコンソールで「バナー」ユニットを
-  /// 作成したらここを差し替える（アプリID とは別物）。
-  /// 開発中は誤タップによるポリシー違反を避けるため必ずテストIDを使う。
+  /// バナーの広告ユニットID（アプリIDとは別物）。
+  /// 開発中は誤タップによるポリシー違反を避けるため必ずGoogle公式テストIDを使い、
+  /// リリースビルドのみ本番IDで配信する。
   static const String _androidUnitId = kDebugMode
       ? 'ca-app-pub-3940256099942544/6300978111' // Google公式テストID
-      : 'ca-app-pub-3940256099942544/6300978111'; // TODO: 本番ユニットIDに差し替え
+      : 'ca-app-pub-7890458320134528/1069454919'; // 本番（サイズ予報 下部バナー）
   static const String _iosUnitId = kDebugMode
       ? 'ca-app-pub-3940256099942544/2934735716' // Google公式テストID
-      : 'ca-app-pub-3940256099942544/2934735716'; // TODO: 本番ユニットIDに差し替え
+      : 'ca-app-pub-7890458320134528/6216592970'; // 本番（サイズ予報 下部バナー）
 
   static bool get _supported =>
       !kIsWeb && (Platform.isAndroid || Platform.isIOS);
