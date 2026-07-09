@@ -5,7 +5,7 @@
     "display": "standalone",
     "background_color": "#C8EDDB",
     "theme_color": "#C8EDDB",
-    "description": "子どもの成長記録・成長曲線と、服・靴サイズの先読みアプリ",
+    "description": "成長曲線で、服と靴のサイズを予報する子どもの成長記録アプリ",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
