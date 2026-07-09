@@ -7,6 +7,7 @@ import '../growth/clothing_size_guide.dart';
 import '../models/child_profile.dart';
 import '../models/shoe_records.dart';
 import '../monetization/pro_status.dart';
+import '../widgets/footprint_icon.dart';
 import '../widgets/pro_gate.dart';
 
 /// 履歴一覧の絞り込み。
@@ -115,10 +116,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
                 Expanded(
                   child: FilledButton.tonalIcon(
                     onPressed: () => _showMeasurementDialog(),
-                    icon: const PhosphorIcon(
-                      PhosphorIconsFill.footprints,
-                      size: 18,
-                    ),
+                    icon: const FootprintIcon(size: 18),
                     label: const Text('足長を記録'),
                   ),
                 ),
@@ -499,8 +497,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
               size: 20,
               color: _purchaseColor,
             )
-          : const PhosphorIcon(
-              PhosphorIconsFill.footprints,
+          : const FootprintIcon(
               size: 20,
               color: _measureColor,
             ),
