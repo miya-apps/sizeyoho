@@ -8,6 +8,7 @@ import '../models/child_profile.dart';
 import '../models/shoe_records.dart';
 import '../monetization/pro_status.dart';
 import '../widgets/footprint_icon.dart';
+import '../widgets/pro_gate.dart';
 
 /// 履歴一覧の絞り込み。
 enum _HistoryFilter { all, measurement, purchase }
@@ -221,21 +222,72 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
             ),
           ],
         ),
-        // 次の購入目安は Pro 版のみ表示。無料版ではボックスごと非表示にする。
+        // 無料版：サイズアウト警告は表示、購入時期の先読みはぼかし＋鍵。
+        // 書き出し画像（サイズガイド）は別ルールで非表示のまま。
         ValueListenableBuilder<bool>(
           valueListenable: ProStatus.isPro,
           builder: (context, isPro, _) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                if (isPro) ...[
+            if (isPro) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
                   const SizedBox(height: 12),
                   _nextPurchaseBanner(plan, next, bannerColor),
                   if (_laterEntry(plan) != null) ...[
                     const SizedBox(height: 6),
                     _laterText(plan),
                   ],
+                  const SizedBox(height: 10),
                 ],
+              );
+            }
+            if (plan.currentShoeOutgrown) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 12),
+                  _outgrownWarningBanner(bannerColor),
+                  const SizedBox(height: 6),
+                  ProGate(
+                    lockLabel: '購入時期の先読みはPro版で',
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (next != null)
+                          _nextPurchaseBanner(
+                            plan,
+                            next,
+                            bannerColor,
+                            includeOutgrownWarning: false,
+                          ),
+                        if (_laterEntry(plan) != null) ...[
+                          if (next != null) const SizedBox(height: 6),
+                          _laterText(plan),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              );
+            }
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 12),
+                ProGate(
+                  lockLabel: '購入時期の先読みはPro版で',
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _nextPurchaseBanner(plan, next, bannerColor),
+                      if (_laterEntry(plan) != null) ...[
+                        const SizedBox(height: 6),
+                        _laterText(plan),
+                      ],
+                    ],
+                  ),
+                ),
                 const SizedBox(height: 10),
               ],
             );
@@ -270,12 +322,42 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
     );
   }
 
+  /// 無料版向け：サイズアウト時の警告のみ（購入サイズ・時期は Pro ゲート側）。
+  Widget _outgrownWarningBanner(Color bannerColor) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: bannerColor.withValues(alpha: 0.10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: bannerColor.withValues(alpha: 0.35)),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.priority_high_rounded, size: 20, color: bannerColor),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'いまの靴が小さくなっている可能性があります。',
+              style: TextStyle(
+                fontSize: 13.5,
+                fontWeight: FontWeight.w700,
+                height: 1.4,
+                color: _staleColor,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// 「次の購入」帯（サイズアウト時は買い替え警告）。
   Widget _nextPurchaseBanner(
     ShoeSizePurchasePlan plan,
     ShoePurchaseEntry? next,
-    Color bannerColor,
-  ) {
+    Color bannerColor, {
+    bool includeOutgrownWarning = true,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -295,7 +377,11 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              _nextPurchaseText(plan, next),
+              _nextPurchaseText(
+                plan,
+                next,
+                includeOutgrownWarning: includeOutgrownWarning,
+              ),
               style: TextStyle(
                 fontSize: 13.5,
                 fontWeight: FontWeight.w700,
@@ -332,11 +418,17 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
     return plan.upcoming.length > 1 ? plan.upcoming[1] : null;
   }
 
-  String _nextPurchaseText(ShoeSizePurchasePlan plan, ShoePurchaseEntry? next) {
+  String _nextPurchaseText(
+    ShoeSizePurchasePlan plan,
+    ShoePurchaseEntry? next, {
+    bool includeOutgrownWarning = true,
+  }) {
     if (next == null) return '当面はサイズアップの予定はありません';
     if (plan.currentShoeOutgrown) {
-      return 'いまの靴が小さくなっている可能性があります。'
+      final size =
           '${next.shoeSizeCm.toStringAsFixed(1)}cm への買い替えをおすすめします';
+      if (!includeOutgrownWarning) return size;
+      return 'いまの靴が小さくなっている可能性があります。$size';
     }
     return '次の購入：${next.shoeSizeCm.toStringAsFixed(1)}cm を'
         '${formatShoeMonthLabel(next.approxDate)}に購入おすすめ';
