@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'pro_pricing.dart';
+import 'pro_status.dart';
 import 'purchase_manager.dart';
 
 /// Pro版の案内（ペイウォール）シートを開く。
@@ -16,10 +17,41 @@ Future<void> showProPaywallSheet(BuildContext context) {
   );
 }
 
-class _ProPaywallSheet extends StatelessWidget {
+class _ProPaywallSheet extends StatefulWidget {
   const _ProPaywallSheet();
 
+  @override
+  State<_ProPaywallSheet> createState() => _ProPaywallSheetState();
+}
+
+class _ProPaywallSheetState extends State<_ProPaywallSheet> {
   static const Color _gold = Color(0xFFB8860B);
+
+  @override
+  void initState() {
+    super.initState();
+    // 購入・復元が完了（purchaseStream 経由で Pro 有効化）したら
+    // シートを自動で閉じてお礼を表示する。
+    ProStatus.isPro.addListener(_onProChanged);
+  }
+
+  @override
+  void dispose() {
+    ProStatus.isPro.removeListener(_onProChanged);
+    super.dispose();
+  }
+
+  void _onProChanged() {
+    if (!ProStatus.isPro.value || !mounted) return;
+    final messenger = ScaffoldMessenger.of(context);
+    Navigator.of(context).pop();
+    messenger.showSnackBar(
+      const SnackBar(
+        content: Text('Pro版が有効になりました。ありがとうございます！'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

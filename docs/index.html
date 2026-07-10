@@ -3,18 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>サイズ予報｜子どもの成長記録と服・靴サイズの先読みアプリ</title>
-  <meta name="description" content="サイズ予報は、子どもの成長曲線・SDスコアの記録と、洋服・靴サイズの予測ができる保護者向けアプリです。">
+  <title>サイズ予報｜成長曲線で、服と靴のサイズを予報する子育てアプリ</title>
+  <meta name="description" content="サイズ予報は、子どもの身長・体重を成長曲線に記録し、洋服・靴サイズの買い替え時期を先読みできる保護者向けアプリです。健診で使えるPDFレポートやお誕生日アルバムも。">
+  <meta name="author" content="MIYA APPS">
+  <meta property="og:title" content="サイズ予報｜成長曲線で、服と靴のサイズを予報">
+  <meta property="og:description" content="子どもの成長記録から、服・靴サイズの買い替え時期を先読み。健診向けPDFレポートやお誕生日アルバムも。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://miya-apps.github.io/sizeyoho/">
+  <meta property="og:image" content="https://miya-apps.github.io/sizeyoho/icon.png">
+  <meta property="og:locale" content="ja_JP">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="サイズ予報｜成長曲線で、服と靴のサイズを予報">
+  <meta name="twitter:description" content="子どもの成長記録から、服・靴サイズの買い替え時期を先読み。">
+  <meta name="twitter:image" content="https://miya-apps.github.io/sizeyoho/icon.png">
   <link rel="icon" type="image/png" href="icon.png">
+  <link rel="canonical" href="https://miya-apps.github.io/sizeyoho/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MobileApplication",
+    "name": "サイズ予報",
+    "operatingSystem": "Android, iOS",
+    "applicationCategory": "HealthApplication",
+    "description": "子どもの身長・体重を成長曲線に記録し、洋服・靴サイズの買い替え時期を先読みできる保護者向けアプリ。",
+    "url": "https://miya-apps.github.io/sizeyoho/",
+    "image": "https://miya-apps.github.io/sizeyoho/icon.png",
+    "author": {
+      "@type": "Organization",
+      "name": "MIYA APPS"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "JPY"
+    }
+  }
+  </script>
   <style>
     :root {
       --mint: #C8EDDB;
       --mint-light: #EAF8F0;
       --ink: #3D444D;
       --accent: #4CAF87;
+      --accent-dark: #38875F;
+      --gold: #B8860B;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -23,44 +58,273 @@
       background: var(--mint-light);
       line-height: 1.8;
     }
+
+    /* ── ヒーロー ── */
     .hero {
-      background: var(--mint);
+      background: linear-gradient(180deg, var(--mint) 0%, #DDF3E7 100%);
       text-align: center;
-      padding: 56px 20px 48px;
+      padding: 64px 20px 56px;
     }
-    .hero img {
-      width: 140px;
-      height: 140px;
-      border-radius: 32px;
-      box-shadow: 0 8px 24px rgba(61, 68, 77, 0.15);
+    .hero img.appicon {
+      width: 148px;
+      height: 148px;
+      border-radius: 34px;
+      box-shadow: 0 10px 28px rgba(61, 68, 77, 0.18);
     }
-    .hero h1 { font-size: 2rem; margin-top: 20px; font-weight: 700; }
-    .hero p.tagline { font-size: 1.05rem; margin-top: 8px; }
-    .container { max-width: 720px; margin: 0 auto; padding: 40px 20px 24px; }
-    section { margin-bottom: 36px; }
+    .hero h1 { font-size: 2.2rem; margin-top: 22px; font-weight: 900; letter-spacing: 0.04em; }
+    .hero p.tagline { font-size: 1.1rem; margin-top: 10px; font-weight: 700; }
+    .hero p.sub {
+      font-size: 0.95rem;
+      margin-top: 8px;
+      color: #55606B;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .store-badges {
+      margin-top: 26px;
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .store-badges span {
+      display: inline-block;
+      background: rgba(255,255,255,0.85);
+      border: 1.5px dashed var(--accent);
+      color: var(--accent-dark);
+      border-radius: 12px;
+      padding: 10px 22px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    /* ── 共通 ── */
+    .container { max-width: 760px; margin: 0 auto; padding: 48px 20px 24px; }
+    section { margin-bottom: 48px; }
     h2 {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       border-left: 6px solid var(--accent);
       padding-left: 12px;
-      margin-bottom: 14px;
+      margin-bottom: 18px;
+      font-weight: 700;
     }
-    ul.features { list-style: none; }
-    ul.features li {
+    .lead { font-size: 0.98rem; margin-bottom: 18px; }
+
+    /* ── スクリーンショット ── */
+    .screenshots {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .phone {
+      width: 200px;
+      background: #fff;
+      border-radius: 28px;
+      padding: 10px;
+      box-shadow: 0 6px 20px rgba(61, 68, 77, 0.12);
+    }
+    .phone-screen {
+      aspect-ratio: 9 / 19.5;
+      border-radius: 20px;
+      background: linear-gradient(160deg, var(--mint-light) 0%, #fff 60%);
+      border: 1.5px solid #D8E8DF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 16px 12px;
+      font-size: 0.78rem;
+      color: #6B7680;
+      line-height: 1.5;
+    }
+    .phone-screen .emoji { font-size: 2rem; margin-bottom: 8px; }
+    .phone-screen strong { color: var(--accent-dark); font-size: 0.82rem; }
+    .phone-caption {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #6B7680;
+      margin-top: 8px;
+      font-weight: 700;
+    }
+
+    /* ── 悩み ── */
+    .pains {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 12px;
+    }
+    .pain {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+      font-size: 0.93rem;
+    }
+    .pain::before { content: "💭 "; }
+
+    /* ── 機能カード ── */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 14px;
+    }
+    .feature {
+      background: #fff;
+      border-radius: 16px;
+      padding: 20px 22px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+    }
+    .feature .emoji { font-size: 1.6rem; }
+    .feature h3 { font-size: 1.02rem; margin: 6px 0 4px; color: var(--accent-dark); }
+    .feature p { font-size: 0.9rem; color: #55606B; }
+
+    /* ── 比較表 ── */
+    .compare-wrap { overflow-x: auto; }
+    table.compare {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+      font-size: 0.9rem;
+    }
+    table.compare th,
+    table.compare td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #E8F0EB;
+      text-align: center;
+    }
+    table.compare th {
+      background: var(--mint);
+      font-weight: 700;
+    }
+    table.compare th:first-child,
+    table.compare td:first-child {
+      text-align: left;
+      font-weight: 700;
+    }
+    table.compare tr:last-child td { border-bottom: none; }
+    table.compare .yes { color: var(--accent-dark); font-weight: 700; }
+    table.compare .no { color: #AAB2BA; }
+
+    /* ── 使い方 ── */
+    .steps { counter-reset: step; }
+    .step {
+      background: #fff;
+      border-radius: 14px;
+      padding: 16px 18px 16px 58px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+      position: relative;
+      font-size: 0.95rem;
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+    .step strong { color: var(--accent-dark); }
+
+    /* ── Pro ── */
+    .pro-card {
+      background: linear-gradient(135deg, #FFF9E8 0%, #FFF4D6 100%);
+      border: 1.5px solid #EAD9A6;
+      border-radius: 16px;
+      padding: 24px 22px;
+    }
+    .pro-card h3 {
+      color: var(--gold);
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+    .pro-card ul { list-style: none; margin-bottom: 14px; }
+    .pro-card li { font-size: 0.93rem; margin-bottom: 6px; }
+    .pro-card li::before { content: "✨ "; }
+    .pro-price {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pro-price span {
+      background: #fff;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(61, 68, 77, 0.08);
+    }
+    .pro-note { font-size: 0.8rem; color: #8A7B55; margin-top: 10px; }
+
+    /* ── FAQ ── */
+    .faq details {
       background: #fff;
       border-radius: 14px;
       padding: 14px 18px;
       margin-bottom: 10px;
       box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+      font-size: 0.93rem;
     }
-    ul.features li strong { color: var(--accent); }
+    .faq summary {
+      font-weight: 700;
+      cursor: pointer;
+      list-style-position: inside;
+    }
+    .faq details p { margin-top: 8px; color: #55606B; }
+
     .note {
       font-size: 0.85rem;
       background: #fff;
       border-radius: 14px;
-      padding: 14px 18px;
+      padding: 16px 18px;
       color: #666;
     }
     a { color: var(--accent); }
+
+    .about-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+      font-size: 0.93rem;
+    }
+    .about-card p { margin-bottom: 8px; }
+
+    .cta {
+      text-align: center;
+      background: var(--mint);
+      border-radius: 18px;
+      padding: 30px 20px;
+    }
+    .cta p { font-weight: 700; margin-bottom: 12px; }
+    .cta a.button {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 12px;
+      padding: 12px 28px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
     footer {
       text-align: center;
       font-size: 0.85rem;
@@ -73,21 +337,206 @@
 </head>
 <body>
   <div class="hero">
-    <img src="icon.png" alt="サイズ予報のアイコン">
+    <img class="appicon" src="icon.png" alt="サイズ予報のアイコン">
     <h1>サイズ予報</h1>
-    <p class="tagline">子どもの成長記録と、服・靴サイズの先読みアプリ</p>
+    <p class="tagline">成長曲線で、服と靴のサイズを予報</p>
+    <p class="sub">身長・体重・足長をさっと記録するだけ。「次はいつ、何cmを買えばいい？」に、アプリが答えます。</p>
+    <div class="store-badges">
+      <span>App Store：準備中</span>
+      <span>Google Play：準備中</span>
+    </div>
   </div>
 
   <div class="container">
     <section>
+      <h2>画面イメージ</h2>
+      <p class="lead">成長曲線・サイズ予報・健診レポートまで、ひとつのアプリで。</p>
+      <div class="screenshots">
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <span class="emoji">📈</span>
+              <strong>成長曲線</strong><br>
+              身長・体重を<br>SDスコア付きで表示
+            </div>
+          </div>
+          <p class="phone-caption">成長曲線</p>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <span class="emoji">👕</span>
+              <strong>サイズ予報</strong><br>
+              服・靴の買い替え<br>時期を先読み
+            </div>
+          </div>
+          <p class="phone-caption">サイズ予報</p>
+        </div>
+        <div>
+          <div class="phone">
+            <div class="phone-screen">
+              <span class="emoji">🏥</span>
+              <strong>受診レポート</strong><br>
+              健診向けPDFを<br>ワンタップ出力
+            </div>
+          </div>
+          <p class="phone-caption">受診レポート</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>こんな経験ありませんか？</h2>
+      <div class="pains">
+        <div class="pain">セールで買った来年用の服、着せる頃には小さかった…</div>
+        <div class="pain">保育園から「靴がきつそうです」と言われて慌てて買いに走った</div>
+        <div class="pain">母子手帳の成長曲線、最近ぜんぜん書いてない</div>
+        <div class="pain">健診で「最近の身長の伸びは？」と聞かれてパッと答えられない</div>
+      </div>
+    </section>
+
+    <section>
       <h2>サイズ予報でできること</h2>
-      <ul class="features">
-        <li><strong>成長曲線・SDスコア</strong>：厚生労働省・文部科学省の公的データ（2000年度）に基づく成長曲線に、身長・体重の記録をプロットできます。</li>
-        <li><strong>サイズ予報</strong>：いまの成長トレンドから、季節ごとの洋服サイズ（80・90・100…）と靴の買い替え時期を予測します。</li>
-        <li><strong>受診レポート（PDF）</strong>：健診や小児科の受診時にそのまま見せられる、A4・1枚のレポートを出力できます。</li>
-        <li><strong>お誕生日の思い出</strong>：毎年のお誕生日の写真とサイズを、アルバムとして残せます。</li>
-        <li><strong>バックアップ</strong>：ファイル書き出しによる手動バックアップのほか、Pro版ではオンライン自動バックアップが使えます。</li>
-      </ul>
+      <div class="features">
+        <div class="feature">
+          <span class="emoji">📈</span>
+          <h3>成長曲線・SDスコア</h3>
+          <p>厚生労働省・文部科学省の公的データ（2000年度）に基づく成長曲線に、身長・体重をプロット。SDスコアの推移もひと目でわかります。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">👕</span>
+          <h3>洋服サイズの予報</h3>
+          <p>いまの成長トレンドから、来シーズンに着るサイズ（80・90・100…）を先読み。セールでの「来年用の買い物」に自信が持てます。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">👟</span>
+          <h3>靴ガイド</h3>
+          <p>足長の実測から「いまの靴がいつまで履けるか」を予測。Pro版なら「次に買うサイズと時期」まで先読みできます。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">🏥</span>
+          <h3>受診レポート（PDF）</h3>
+          <p>健診や小児科の受診時にそのまま見せられる、A4・1枚のレポートを出力。成長の経過説明がスムーズに。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">🎂</span>
+          <h3>お誕生日の思い出</h3>
+          <p>毎年のお誕生日の写真と身長・体重を、成長の記録としてアルバムに残せます。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">💾</span>
+          <h3>バックアップ</h3>
+          <p>ファイル書き出しによる手動バックアップのほか、Pro版ではオンライン自動バックアップに対応します。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>無料版と Pro版の違い</h2>
+      <div class="compare-wrap">
+        <table class="compare">
+          <thead>
+            <tr>
+              <th>機能</th>
+              <th>無料版</th>
+              <th>Pro版</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>成長曲線・SDスコア</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>洋服サイズの目安</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>靴の先読みシミュレーション</td>
+              <td class="no">—</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>受診レポート（PDF）</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>お誕生日アルバム</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>手動バックアップ（書き出し）</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>オンライン自動バックアップ</td>
+              <td class="no">—</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>広告</td>
+              <td>表示あり</td>
+              <td class="yes">非表示</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>使い方はかんたん3ステップ</h2>
+      <div class="steps">
+        <div class="step"><strong>お子様を登録</strong>：生年月日と性別を入れるだけ。きょうだいの登録もできます。</div>
+        <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
+        <div class="step"><strong>予報をチェック</strong>：服・靴のサイズと買い替え時期の目安が表示されます。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Pro版でもっと便利に</h2>
+      <div class="pro-card">
+        <h3>サイズ予報 Pro</h3>
+        <ul>
+          <li>サイズの先読みシミュレーション（次に買う靴のサイズと時期＋その先まで）</li>
+          <li>オンライン自動バックアップ（機種変更・故障に備えて自動保存）</li>
+          <li>広告非表示</li>
+        </ul>
+        <div class="pro-price">
+          <span>月額 ¥200</span>
+          <span>年額 ¥1,980（月あたり約¥165）</span>
+        </div>
+        <p class="pro-note">
+          価格は消費税込み。お支払いは App Store / Google Play のアカウントに請求されます。<br>
+          サブスクリプションは自動更新されます。更新日の24時間前までに、各ストアの
+          アカウント設定から解約しない限り、同じ期間・同じ価格で更新されます。
+          解約手続きは App Store または Google Play の「定期購入」設定から行えます。
+        </p>
+      </div>
+    </section>
+
+    <section class="faq">
+      <h2>よくある質問</h2>
+      <details>
+        <summary>無料で使えますか？</summary>
+        <p>成長曲線の記録・洋服サイズの目安・PDFレポート・お誕生日アルバムなど、主要な機能は無料でお使いいただけます。靴サイズの先読みやオンライン自動バックアップはPro版の機能です。</p>
+      </details>
+      <details>
+        <summary>予測はどのくらい当たりますか？</summary>
+        <p>公的な成長曲線とお子様ご自身の記録をもとにした統計的な目安です。成長には個人差がありますので、あくまで買い物の参考としてご活用ください。</p>
+      </details>
+      <details>
+        <summary>記録したデータはどこに保存されますか？</summary>
+        <p>基本はお使いの端末の中に保存されます。Pro版のオンライン自動バックアップを有効にした場合のみ、暗号化された通信でクラウドに保存されます。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+      </details>
+      <details>
+        <summary>医療的な診断に使えますか？</summary>
+        <p>本アプリは医療機器ではなく、診断には使えません。発育・健康について気になることがある場合は、健診やかかりつけの小児科医・保健師にご相談ください。</p>
+      </details>
     </section>
 
     <section>
@@ -100,8 +549,22 @@
     </section>
 
     <section>
-      <h2>お問い合わせ</h2>
-      <p>ご意見・ご要望・不具合のご報告は <a href="contact.html">お問い合わせページ</a> からお送りください。</p>
+      <h2>開発者について</h2>
+      <div class="about-card">
+        <p><strong>MIYA APPS</strong>（個人事業主）が開発・運営しています。</p>
+        <p>子育て中の保護者目線で、「服と靴の買い替えタイミングがわからない」という日常の悩みを、成長記録アプリで解決したいと考えて作りました。</p>
+        <p>
+          お問い合わせ：<a href="contact.html">お問い合わせページ</a><br>
+          プライバシー：<a href="privacy.html">プライバシーポリシー</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="cta">
+        <p>ご意見・ご要望をお聞かせください</p>
+        <a class="button" href="contact.html">お問い合わせページへ</a>
+      </div>
     </section>
   </div>
 
