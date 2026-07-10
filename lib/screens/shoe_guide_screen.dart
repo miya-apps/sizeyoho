@@ -8,7 +8,6 @@ import '../models/child_profile.dart';
 import '../models/shoe_records.dart';
 import '../monetization/pro_status.dart';
 import '../widgets/footprint_icon.dart';
-import '../widgets/pro_gate.dart';
 
 /// 履歴一覧の絞り込み。
 enum _HistoryFilter { all, measurement, purchase }
@@ -222,35 +221,26 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
             ),
           ],
         ),
-        const SizedBox(height: 12),
-        // 次の購入目安（このカードの主役）。
-        // サイズアウト警告は「いまのサイズ」由来の情報なので無料でも表示し、
-        // 将来の時期・サイズのシミュレーションはPro限定（ぼかし＋鍵）。
-        // 「次の購入」と「その先」は1つのゲートにまとめて鍵を1個にする。
-        if (plan.currentShoeOutgrown) ...[
-          _nextPurchaseBanner(plan, next, bannerColor),
-          if (_laterEntry(plan) != null) ...[
-            const SizedBox(height: 6),
-            ProGate(
-              lockLabel: 'その先の予報はPro版で',
-              child: _laterText(plan),
-            ),
-          ],
-        ] else
-          ProGate(
-            lockLabel: '購入時期の先読みはPro版で',
-            child: Column(
+        // 次の購入目安は Pro 版のみ表示。無料版ではボックスごと非表示にする。
+        ValueListenableBuilder<bool>(
+          valueListenable: ProStatus.isPro,
+          builder: (context, isPro, _) {
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _nextPurchaseBanner(plan, next, bannerColor),
-                if (_laterEntry(plan) != null) ...[
-                  const SizedBox(height: 6),
-                  _laterText(plan),
+                if (isPro) ...[
+                  const SizedBox(height: 12),
+                  _nextPurchaseBanner(plan, next, bannerColor),
+                  if (_laterEntry(plan) != null) ...[
+                    const SizedBox(height: 6),
+                    _laterText(plan),
+                  ],
                 ],
+                const SizedBox(height: 10),
               ],
-            ),
-          ),
-        const SizedBox(height: 10),
+            );
+          },
+        ),
         Row(
           children: [
             if (isStale) ...[

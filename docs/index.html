@@ -131,6 +131,9 @@
       border-radius: 20px;
       background: linear-gradient(160deg, var(--mint-light) 0%, #fff 60%);
       border: 1.5px solid #D8E8DF;
+      overflow: hidden;
+    }
+    .phone-screen.placeholder {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -140,6 +143,13 @@
       font-size: 0.78rem;
       color: #6B7680;
       line-height: 1.5;
+    }
+    .phone-screen img.screenshot {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
     }
     .phone-screen .emoji { font-size: 2rem; margin-bottom: 8px; }
     .phone-screen strong { color: var(--accent-dark); font-size: 0.82rem; }
@@ -350,37 +360,35 @@
   <div class="container">
     <section>
       <h2>画面イメージ</h2>
-      <p class="lead">成長曲線・サイズ予報・健診レポートまで、ひとつのアプリで。</p>
+      <p class="lead">成長曲線・サイズ予報・健診レポートまで、ひとつのアプリで。残り2枚は準備でき次第差し替えます。</p>
       <div class="screenshots">
         <div>
           <div class="phone">
-            <div class="phone-screen">
+            <div class="phone-screen placeholder">
               <span class="emoji">📈</span>
               <strong>成長曲線</strong><br>
               身長・体重を<br>SDスコア付きで表示
             </div>
           </div>
-          <p class="phone-caption">成長曲線</p>
+          <p class="phone-caption">成長曲線（準備中）</p>
         </div>
         <div>
           <div class="phone">
             <div class="phone-screen">
-              <span class="emoji">👕</span>
-              <strong>サイズ予報</strong><br>
-              服・靴の買い替え<br>時期を先読み
+              <img class="screenshot" src="screenshots/size-guide.png" alt="サイズ予報の画面">
             </div>
           </div>
           <p class="phone-caption">サイズ予報</p>
         </div>
         <div>
           <div class="phone">
-            <div class="phone-screen">
+            <div class="phone-screen placeholder">
               <span class="emoji">🏥</span>
               <strong>受診レポート</strong><br>
               健診向けPDFを<br>ワンタップ出力
             </div>
           </div>
-          <p class="phone-caption">受診レポート</p>
+          <p class="phone-caption">受診レポート（準備中）</p>
         </div>
       </div>
     </section>
@@ -411,7 +419,7 @@
         <div class="feature">
           <span class="emoji">👟</span>
           <h3>靴ガイド</h3>
-          <p>足長の実測から「いまの靴がいつまで履けるか」を予測。Pro版なら「次に買うサイズと時期」まで先読みできます。</p>
+          <p>足長の実測からいまの目安を表示。Pro版なら「次に買うサイズと時期」まで先読みできます（無料版では表示されません）。</p>
         </div>
         <div class="feature">
           <span class="emoji">🏥</span>
@@ -427,6 +435,16 @@
           <span class="emoji">💾</span>
           <h3>バックアップ</h3>
           <p>ファイル書き出しによる手動バックアップのほか、Pro版ではオンライン自動バックアップに対応します。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">🎨</span>
+          <h3>お子様ごとのカスタマイズ</h3>
+          <p>登録時にアイコンとテーマカラーを選べます。きょうだいがいる家庭でも、ひと目で誰の画面かわかります。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">📅</span>
+          <h3>修正月齢表示</h3>
+          <p>早産児など出産予定日ベースの修正月齢に対応。成長曲線の横軸を、暦月齢と修正月齢で切り替えられます。</p>
         </div>
       </div>
     </section>
@@ -454,7 +472,12 @@
               <td class="yes">○</td>
             </tr>
             <tr>
-              <td>靴の先読みシミュレーション</td>
+              <td>靴のいまの目安</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>靴の次の購入予報</td>
               <td class="no">—</td>
               <td class="yes">○</td>
             </tr>
@@ -479,6 +502,16 @@
               <td class="yes">○</td>
             </tr>
             <tr>
+              <td>修正月齢表示</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>お子様ごとのアイコン・テーマカラー</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
               <td>広告</td>
               <td>表示あり</td>
               <td class="yes">非表示</td>
@@ -491,9 +524,9 @@
     <section>
       <h2>使い方はかんたん3ステップ</h2>
       <div class="steps">
-        <div class="step"><strong>お子様を登録</strong>：生年月日と性別を入れるだけ。きょうだいの登録もできます。</div>
+        <div class="step"><strong>お子様を登録</strong>：生年月日と性別に加え、アイコンとテーマカラーも選べます。きょうだいの登録もOK。早産児の場合は修正月齢の設定もできます。</div>
         <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
-        <div class="step"><strong>予報をチェック</strong>：服・靴のサイズと買い替え時期の目安が表示されます。</div>
+        <div class="step"><strong>予報をチェック</strong>：洋服サイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
       </div>
     </section>
 
@@ -502,13 +535,13 @@
       <div class="pro-card">
         <h3>サイズ予報 Pro</h3>
         <ul>
-          <li>サイズの先読みシミュレーション（次に買う靴のサイズと時期＋その先まで）</li>
+          <li>靴の次の購入サイズと時期の予報（その先まで）</li>
           <li>オンライン自動バックアップ（機種変更・故障に備えて自動保存）</li>
           <li>広告非表示</li>
         </ul>
         <div class="pro-price">
-          <span>月額 ¥200</span>
-          <span>年額 ¥1,980（月あたり約¥165）</span>
+          <span>月額 ¥100</span>
+          <span>年額 ¥980（月あたり約¥81）</span>
         </div>
         <p class="pro-note">
           価格は消費税込み。お支払いは App Store / Google Play のアカウントに請求されます。<br>
@@ -523,7 +556,7 @@
       <h2>よくある質問</h2>
       <details>
         <summary>無料で使えますか？</summary>
-        <p>成長曲線の記録・洋服サイズの目安・PDFレポート・お誕生日アルバムなど、主要な機能は無料でお使いいただけます。靴サイズの先読みやオンライン自動バックアップはPro版の機能です。</p>
+        <p>成長曲線の記録・洋服サイズの目安・PDFレポート・お誕生日アルバムなど、主要な機能は無料でお使いいただけます。靴の次の購入予報やオンライン自動バックアップはPro版の機能です。</p>
       </details>
       <details>
         <summary>予測はどのくらい当たりますか？</summary>
@@ -532,6 +565,10 @@
       <details>
         <summary>記録したデータはどこに保存されますか？</summary>
         <p>基本はお使いの端末の中に保存されます。Pro版のオンライン自動バックアップを有効にした場合のみ、暗号化された通信でクラウドに保存されます。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+      </details>
+      <details>
+        <summary>修正月齢とは？</summary>
+        <p>早産などで生まれたお子様は、出産予定日をもとにした修正月齢で成長を見ることがあります。登録時に設定でき、成長曲線の表示を暦月齢と修正月齢で切り替えられます。</p>
       </details>
       <details>
         <summary>医療的な診断に使えますか？</summary>

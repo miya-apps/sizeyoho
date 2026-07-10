@@ -332,13 +332,22 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
   @override
   void didUpdateWidget(covariant GrowthHomeScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // 別の子に切り替わったら、修正月齢表示はいったん暦月齢へ戻し、
-    // 表示範囲もその子の年齢に合わせて選び直す。
+    // 別の子に切り替わったら、修正月齢表示はいったん暦月齢へ戻す。
     if (widget.child.id != oldWidget.child.id) {
       _useCorrectedAgeView = false;
-      _selectedAgeRangeYears = _autoAgeRangeFor(widget.child);
+    }
+    // 子の切り替え・生年月日（出産予定日）の変更時は、年齢に合った表示範囲へ選び直す。
+    final birthChanged =
+        widget.child.birthDate != oldWidget.child.birthDate ||
+        widget.child.expectedBirthDate != oldWidget.child.expectedBirthDate;
+    if (widget.child.id != oldWidget.child.id || birthChanged) {
+      _selectedAgeRangeYears = _autoAgeRangeFor(
+        widget.child,
+        corrected: _isCorrectedView,
+      );
     }
     if (widget.child.id != oldWidget.child.id ||
+        birthChanged ||
         !identical(widget.child.growthRecords, oldWidget.child.growthRecords)) {
       _reloadForChild();
     }

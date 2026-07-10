@@ -446,10 +446,13 @@ class _AppShellState extends State<AppShell> {
 
     await _persistChildren();
 
-    await _maybeStartGuide();
+    // お子様が1人目のときだけ使い方ガイドを自動表示する（2人目以降は出さない）。
+    if (_children.length == 1) {
+      await _maybeStartGuide();
+    }
   }
 
-  /// 子供の登録直後、初回のみ使い方ガイドを開始する（グラフタブへ移動）。
+  /// 1人目の登録直後のみ、未完了なら使い方ガイドを開始する（グラフタブへ移動）。
   Future<void> _maybeStartGuide() async {
     final prefs = await SharedPreferences.getInstance();
     if (prefs.getBool(_kGuideDoneKey) ?? false) return;

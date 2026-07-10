@@ -396,23 +396,21 @@ class _ShoeExportSection extends StatelessWidget {
   Widget _body(ColorScheme scheme, ShoeSizePurchasePlan plan) {
     final lastPurchase = plan.lastPurchase;
     final next = plan.nextPurchase;
-    // 画面（靴ガイド）と同じルール：サイズアウト警告は無料でも出すが、
-    // 将来の時期・サイズのシミュレーションはPro限定。
-    // 書き出し画像はぼかしではなく案内文に置き換えて情報が漏れないようにする。
-    final locked = !ProStatus.isPro.value && !plan.currentShoeOutgrown;
+    // 画面（靴ガイド）と同じルール：次の購入ボックスは Pro 版のみ表示。
+    final isPro = ProStatus.isPro.value;
     final bannerColor = plan.currentShoeOutgrown ? _staleColor : scheme.primary;
 
-    final String nextText;
-    if (locked) {
-      nextText = '次の購入サイズ・時期の予報はPro版で確認できます';
-    } else if (next == null) {
-      nextText = '当面はサイズアップの予定はありません';
-    } else if (plan.currentShoeOutgrown) {
-      nextText = 'いまの靴が小さいかも。'
-          '${next.shoeSizeCm.toStringAsFixed(1)}cm への買い替えをおすすめ';
-    } else {
-      nextText = '次は ${next.shoeSizeCm.toStringAsFixed(1)}cm を'
-          '${formatShoeMonthLabel(next.approxDate)}に購入おすすめ';
+    String? nextText;
+    if (isPro) {
+      if (next == null) {
+        nextText = '当面はサイズアップの予定はありません';
+      } else if (plan.currentShoeOutgrown) {
+        nextText = 'いまの靴が小さいかも。'
+            '${next.shoeSizeCm.toStringAsFixed(1)}cm への買い替えをおすすめ';
+      } else {
+        nextText = '次は ${next.shoeSizeCm.toStringAsFixed(1)}cm を'
+            '${formatShoeMonthLabel(next.approxDate)}に購入おすすめ';
+      }
     }
 
     return Column(
@@ -442,24 +440,26 @@ class _ShoeExportSection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-          decoration: BoxDecoration(
-            color: bannerColor.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(9),
-            border: Border.all(color: bannerColor.withValues(alpha: 0.35)),
-          ),
-          child: Text(
-            nextText,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              height: 1.4,
-              color: plan.currentShoeOutgrown ? _staleColor : _titleColor,
+        if (nextText != null) ...[
+          const SizedBox(height: 8),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
+            decoration: BoxDecoration(
+              color: bannerColor.withValues(alpha: 0.10),
+              borderRadius: BorderRadius.circular(9),
+              border: Border.all(color: bannerColor.withValues(alpha: 0.35)),
+            ),
+            child: Text(
+              nextText,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                height: 1.4,
+                color: plan.currentShoeOutgrown ? _staleColor : _titleColor,
+              ),
             ),
           ),
-        ),
+        ],
         const SizedBox(height: 5),
         Text(
           '実測 ${plan.measuredFootLengthCm.toStringAsFixed(1)}cm'

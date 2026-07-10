@@ -9,12 +9,12 @@
 library;
 
 /// 月額プランの価格（円・税込）。
-const int kProMonthlyPriceYen = 200;
+const int kProMonthlyPriceYen = 100;
 
 /// 年額プランの価格（円・税込）。
-const int kProYearlyPriceYen = 1980;
+const int kProYearlyPriceYen = 980;
 
-/// 「¥1,980」のような3桁区切りの表示文字列にする。
+/// 「¥980」のような3桁区切りの表示文字列にする。
 String _yen(int amount) {
   final s = amount.toString();
   final buf = StringBuffer('¥');
@@ -25,13 +25,13 @@ String _yen(int amount) {
   return buf.toString();
 }
 
-/// 月額プランの表示価格（例：¥200）。
+/// 月額プランの表示価格（例：¥100）。
 String get proMonthlyPriceLabel => _yen(kProMonthlyPriceYen);
 
-/// 年額プランの表示価格（例：¥1,980）。
+/// 年額プランの表示価格（例：¥980）。
 String get proYearlyPriceLabel => _yen(kProYearlyPriceYen);
 
-/// 年額プランを月あたりに換算した表示（例：月あたり¥165）。
+/// 年額プランを月あたりに換算した表示（例：月あたり¥81）。
 String get proYearlyPerMonthLabel => '月あたり${_yen(kProYearlyPriceYen ~/ 12)}';
 
 /// 年額プランの割引率（月額×12との比較・％切り捨て）。
