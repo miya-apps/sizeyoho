@@ -266,7 +266,15 @@ class _AppShellState extends State<AppShell> {
   }
 
   Future<void> _loadInitialData() async {
-    final loaded = await _repository.loadChildren();
+    var loaded = await _repository.loadChildren();
+    final withoutScreenshotChild = [
+      for (final child in loaded)
+        if (child.id != 'screenshot_child') child,
+    ];
+    if (withoutScreenshotChild.length != loaded.length) {
+      await _repository.saveChildren(withoutScreenshotChild);
+      loaded = withoutScreenshotChild;
+    }
 
     if (!mounted) return;
 
