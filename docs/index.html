@@ -10,12 +10,12 @@
   <meta property="og:description" content="子どもの成長記録から、服・靴サイズの買い替え時期を先読み。健診向けPDFレポートやお誕生日アルバムも。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://miya-apps.github.io/sizeyoho/">
-  <meta property="og:image" content="https://miya-apps.github.io/sizeyoho/icon.png">
+  <meta property="og:image" content="https://miya-apps.github.io/sizeyoho/store-assets/slide-05-overview.png">
   <meta property="og:locale" content="ja_JP">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="サイズ予報｜成長曲線で、服と靴のサイズを予報">
   <meta name="twitter:description" content="子どもの成長記録から、服・靴サイズの買い替え時期を先読み。">
-  <meta name="twitter:image" content="https://miya-apps.github.io/sizeyoho/icon.png">
+  <meta name="twitter:image" content="https://miya-apps.github.io/sizeyoho/store-assets/slide-05-overview.png">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="canonical" href="https://miya-apps.github.io/sizeyoho/">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,39 +116,81 @@
     }
     .lead { font-size: 0.98rem; margin-bottom: 18px; }
 
-    /* ── スクリーンショット ── */
-    .screenshot-gallery {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 20px;
-      margin-top: 8px;
-    }
-    .screenshot-card {
-      margin: 0;
+    /* ── スクリーンショット（横スライド） ── */
+    .screenshots-section {
       background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 8px 28px rgba(61, 68, 77, 0.10);
-      border: 1px solid rgba(61, 68, 77, 0.06);
+      border-radius: 24px;
+      padding: 28px 0 26px;
+      box-shadow: 0 6px 28px rgba(61, 68, 77, 0.10);
+      border: 1px solid rgba(61, 68, 77, 0.07);
     }
-    .screenshot-card img {
+    .screenshots-section h2 {
+      padding: 0 20px;
+    }
+    .screenshots-section .lead {
+      padding: 0 20px;
+    }
+    .screenshot-carousel {
+      --slide-w: 220px;
+      display: flex;
+      gap: 18px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px max(20px, calc((100% - var(--slide-w)) / 2)) 16px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) transparent;
+    }
+    .screenshot-carousel::-webkit-scrollbar {
+      height: 6px;
+    }
+    .screenshot-carousel::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 3px;
+    }
+    .screenshot-slide {
+      flex: 0 0 var(--slide-w);
+      margin: 0;
+      scroll-snap-align: center;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(61, 68, 77, 0.14);
+    }
+    .screenshot-slide img {
       width: 100%;
       height: auto;
       display: block;
+      border-radius: 16px;
       vertical-align: top;
     }
-    .screenshot-card figcaption {
-      padding: 12px 14px 14px;
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--accent-dark);
-      text-align: center;
-      background: linear-gradient(180deg, #fff 0%, var(--mint-light) 100%);
+    .screenshot-dots {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+      padding: 0 20px;
     }
-    @media (max-width: 640px) {
-      .screenshot-gallery {
-        grid-template-columns: 1fr;
-        gap: 16px;
+    .screenshot-dots button {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
+      background: #C5D5CC;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .screenshot-dots button.active {
+      background: var(--accent);
+      transform: scale(1.25);
+    }
+    .screenshot-dots button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+    @media (min-width: 641px) {
+      .screenshot-carousel {
+        --slide-w: 240px;
       }
     }
 
@@ -182,6 +224,24 @@
     .feature .emoji { font-size: 1.6rem; }
     .feature h3 { font-size: 1.02rem; margin: 6px 0 4px; color: var(--accent-dark); }
     .feature p { font-size: 0.9rem; color: #55606B; }
+
+    .features-more {
+      margin-top: 14px;
+    }
+    .features-more > summary {
+      font-weight: 700;
+      cursor: pointer;
+      padding: 14px 18px;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+      list-style-position: inside;
+      font-size: 0.95rem;
+      color: var(--accent-dark);
+    }
+    .features-more .features {
+      margin-top: 14px;
+    }
 
     /* ── 比較表 ── */
     .compare-wrap { overflow-x: auto; }
@@ -341,99 +401,121 @@
     <img class="appicon" src="icon.png" alt="サイズ予報のアイコン">
     <h1>サイズ予報</h1>
     <p class="tagline">成長曲線で、服と靴のサイズを予報</p>
-    <p class="sub">身長・体重・足長をさっと記録するだけ。「次はいつ、何cmを買えばいい？」に、アプリが答えます。</p>
+    <p class="sub">身長・体重を記録するだけ。次に買う服と靴のサイズが見えてくる。</p>
     <div class="store-badges">
       <span>App Store：準備中</span>
       <span>Google Play：準備中</span>
     </div>
-  </div>
-
-  </div>
-
-  <div class="container-wide">
-    <section>
-      <h2>画面イメージ</h2>
-      <p class="lead">成長曲線から洋服・靴のサイズ予報まで。実際のアプリ画面です。</p>
-      <div class="screenshot-gallery">
-        <figure class="screenshot-card">
-          <img src="screenshots/growth-curve.png" alt="成長曲線グラフ（身長・体重）" width="575" height="1024" loading="lazy">
-          <figcaption>成長曲線（身長・体重）</figcaption>
-        </figure>
-        <figure class="screenshot-card">
-          <img src="screenshots/sd-score.png" alt="SDスコアの推移グラフ" width="575" height="1024" loading="lazy">
-          <figcaption>SDスコア</figcaption>
-        </figure>
-        <figure class="screenshot-card">
-          <img src="screenshots/clothing-guide.png" alt="洋服ガイドのサイズ予測" width="575" height="1024" loading="lazy">
-          <figcaption>洋服ガイド</figcaption>
-        </figure>
-        <figure class="screenshot-card">
-          <img src="screenshots/shoe-guide.png" alt="靴ガイドの買い替え予報" width="575" height="1024" loading="lazy">
-          <figcaption>靴ガイド</figcaption>
-        </figure>
-      </div>
-    </section>
-  </div>
+    </div>
 
   <div class="container">
     <section>
       <h2>こんな経験ありませんか？</h2>
       <div class="pains">
         <div class="pain">セールで買った来年用の服、着せる頃には小さかった…</div>
-        <div class="pain">保育園から「靴がきつそうです」と言われて慌てて買いに走った</div>
+        <div class="pain">「足痛い」と言い出して、慌てて靴を買いに走った</div>
         <div class="pain">母子手帳の成長曲線、最近ぜんぜん書いてない</div>
         <div class="pain">健診で「最近の身長の伸びは？」と聞かれてパッと答えられない</div>
       </div>
     </section>
+  </div>
 
+  <div class="container-wide">
+    <section class="screenshots-section">
+      <h2>まずは画面から</h2>
+      <p class="lead">成長記録からサイズ予報まで。横にスライドしてご覧ください。</p>
+      <div class="screenshot-carousel" id="screenshot-carousel">
+        <figure class="screenshot-slide">
+          <img src="store-assets/slide-05-overview.png" alt="成長曲線で、服と靴のサイズを予報" width="1290" height="2796" loading="eager">
+        </figure>
+        <figure class="screenshot-slide">
+          <img src="store-assets/slide-01-growth-curve.png" alt="母子手帳の代わりに、成長曲線アプリ" width="1290" height="2796" loading="lazy">
+        </figure>
+        <figure class="screenshot-slide">
+          <img src="store-assets/slide-02-sd-score.png" alt="健診の準備に、成長の記録を" width="1290" height="2796" loading="lazy">
+        </figure>
+        <figure class="screenshot-slide">
+          <img src="store-assets/slide-03-clothing-guide.png" alt="来シーズン、何cmを買えばいい？" width="1290" height="2796" loading="lazy">
+        </figure>
+        <figure class="screenshot-slide">
+          <img src="store-assets/slide-04-shoe-guide.png" alt="足痛いと言われる前に、買い替えが見える" width="1290" height="2796" loading="lazy">
+        </figure>
+      </div>
+      <div class="screenshot-dots" id="screenshot-dots" role="tablist" aria-label="スクリーンショット">
+        <button type="button" role="tab" aria-label="1枚目" aria-selected="true" class="active"></button>
+        <button type="button" role="tab" aria-label="2枚目" aria-selected="false"></button>
+        <button type="button" role="tab" aria-label="3枚目" aria-selected="false"></button>
+        <button type="button" role="tab" aria-label="4枚目" aria-selected="false"></button>
+        <button type="button" role="tab" aria-label="5枚目" aria-selected="false"></button>
+      </div>
+    </section>
+  </div>
+
+  <div class="container">
     <section>
-      <h2>サイズ予報でできること</h2>
-      <div class="features">
-        <div class="feature">
-          <span class="emoji">📈</span>
-          <h3>成長曲線・SDスコア</h3>
-          <p>厚生労働省・文部科学省の公的データ（2000年度）に基づく成長曲線に、身長・体重をプロット。SDスコアの推移もひと目でわかります。</p>
-        </div>
-        <div class="feature">
-          <span class="emoji">👕</span>
-          <h3>洋服サイズの予報</h3>
-          <p>いまの成長トレンドから、来シーズンに着るサイズ（80・90・100…）を先読み。セールでの「来年用の買い物」に自信が持てます。</p>
-        </div>
-        <div class="feature">
-          <span class="emoji">👟</span>
-          <h3>靴ガイド</h3>
-          <p>足長の実測からいまの目安を表示。Pro版なら「次に買うサイズと時期」まで先読みできます（無料版では表示されません）。</p>
-        </div>
-        <div class="feature">
-          <span class="emoji">🏥</span>
-          <h3>受診レポート（PDF）</h3>
-          <p>健診や小児科の受診時にそのまま見せられる、A4・1枚のレポートを出力。成長の経過説明がスムーズに。</p>
-        </div>
-        <div class="feature">
-          <span class="emoji">🎂</span>
-          <h3>お誕生日の思い出</h3>
-          <p>毎年のお誕生日の写真と身長・体重を、成長の記録としてアルバムに残せます。</p>
-        </div>
-        <div class="feature">
-          <span class="emoji">💾</span>
-          <h3>バックアップ</h3>
-          <p>ファイル書き出しによる手動バックアップのほか、Pro版ではオンライン自動バックアップに対応します。</p>
-        </div>
-        <div class="feature">
-          <span class="emoji">🎨</span>
-          <h3>お子様ごとのカスタマイズ</h3>
-          <p>登録時にアイコンとテーマカラーを選べます。きょうだいがいる家庭でも、ひと目で誰の画面かわかります。</p>
-        </div>
-        <div class="feature">
-          <span class="emoji">📅</span>
-          <h3>修正月齢表示</h3>
-          <p>早産児など出産予定日ベースの修正月齢に対応。成長曲線の横軸を、暦月齢と修正月齢で切り替えられます。</p>
-        </div>
+      <h2>はじめかた（3ステップ）</h2>
+      <div class="steps">
+        <div class="step"><strong>お子様を登録</strong>：生年月日と性別に加え、アイコンとテーマカラーも選べます。きょうだいの登録もOK。早産児の場合は修正月齢の設定もできます。</div>
+        <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
+        <div class="step"><strong>予報をチェック</strong>：洋服サイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
       </div>
     </section>
 
     <section>
-      <h2>無料版と Pro版の違い</h2>
+      <h2>記録から、買い替えまで</h2>
+      <p class="lead">成長を記録するだけで、服と靴の買い替えまでひとつながりでサポートします。</p>
+      <div class="features">
+        <div class="feature">
+          <span class="emoji">📈</span>
+          <h3>健診でもすぐ説明できる成長記録</h3>
+          <p>厚生労働省・文部科学省の公的データ（2000年度）に基づく成長曲線に、身長・体重をプロット。SDスコアの推移もひと目でわかります。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">👕</span>
+          <h3>来シーズン、何cm買えばいいか先にわかる</h3>
+          <p>いまの成長トレンドから、来シーズンに着るサイズ（80・90・100…）を先読み。セールでの「来年用の買い物」に自信が持てます。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">👟</span>
+          <h3>「足痛い」と言われる前に気づける</h3>
+          <p>足長の実測からいまの目安を表示。小さくなる前に買い替えのタイミングがわかります。Pro版なら「次に買うサイズと時期」まで先読みできます（無料版では表示されません）。</p>
+        </div>
+        <div class="feature">
+          <span class="emoji">🏥</span>
+          <h3>そのまま見せられる健診用レポート</h3>
+          <p>健診や小児科の受診時にそのまま見せられる、A4・1枚のレポートを出力。成長の経過説明がスムーズに。</p>
+        </div>
+      </div>
+      <details class="features-more">
+        <summary>その他の機能を見る</summary>
+        <div class="features">
+          <div class="feature">
+            <span class="emoji">🎂</span>
+            <h3>お誕生日の思い出</h3>
+            <p>毎年のお誕生日の写真と身長・体重を、成長の記録としてアルバムに残せます。</p>
+          </div>
+          <div class="feature">
+            <span class="emoji">💾</span>
+            <h3>バックアップ</h3>
+            <p>ファイル書き出しによる手動バックアップのほか、Pro版ではオンライン自動バックアップに対応します。</p>
+          </div>
+          <div class="feature">
+            <span class="emoji">🎨</span>
+            <h3>お子様ごとのカスタマイズ</h3>
+            <p>登録時にアイコンとテーマカラーを選べます。きょうだいがいる家庭でも、ひと目で誰の画面かわかります。</p>
+          </div>
+          <div class="feature">
+            <span class="emoji">📅</span>
+            <h3>修正月齢表示</h3>
+            <p>早産児など出産予定日ベースの修正月齢に対応。成長曲線の横軸を、暦月齢と修正月齢で切り替えられます。</p>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section>
+      <h2>料金と機能の違い</h2>
+      <p class="lead">主要機能は無料。靴の先読み予報・広告非表示などは Pro でご利用いただけます。</p>
       <div class="compare-wrap">
         <table class="compare">
           <thead>
@@ -502,20 +584,7 @@
           </tbody>
         </table>
       </div>
-    </section>
-
-    <section>
-      <h2>使い方はかんたん3ステップ</h2>
-      <div class="steps">
-        <div class="step"><strong>お子様を登録</strong>：生年月日と性別に加え、アイコンとテーマカラーも選べます。きょうだいの登録もOK。早産児の場合は修正月齢の設定もできます。</div>
-        <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
-        <div class="step"><strong>予報をチェック</strong>：洋服サイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
-      </div>
-    </section>
-
-    <section>
-      <h2>Pro版でもっと便利に</h2>
-      <div class="pro-card">
+      <div class="pro-card" style="margin-top: 20px;">
         <h3>サイズ予報 Pro</h3>
         <ul>
           <li>靴の次の購入サイズと時期の予報（その先まで）</li>
@@ -557,19 +626,14 @@
         <summary>医療的な診断に使えますか？</summary>
         <p>本アプリは医療機器ではなく、診断には使えません。発育・健康について気になることがある場合は、健診やかかりつけの小児科医・保健師にご相談ください。</p>
       </details>
+      <details>
+        <summary>ご利用上の注意</summary>
+        <p>本アプリは保護者がお子様の成長を記録・整理するためのツールです。表示される数値は統計的な基準に基づく目安であり、医療機器ではありません。お子様の発育・健康について気になることがある場合は、乳幼児健診やかかりつけの小児科医・保健師にご相談ください。</p>
+      </details>
     </section>
 
     <section>
-      <h2>大切なお願い</h2>
-      <p class="note">
-        本アプリは保護者がお子様の成長を記録・整理するためのツールであり、医療機器ではありません。
-        表示される数値は統計的な基準に基づく目安です。お子様の発育・健康について気になることが
-        ある場合は、乳幼児健診やかかりつけの小児科医・保健師にご相談ください。
-      </p>
-    </section>
-
-    <section>
-      <h2>開発者について</h2>
+      <h2>作った人より</h2>
       <div class="about-card">
         <p><strong>MIYA APPS</strong>（個人事業主）が開発・運営しています。</p>
         <p>子育て中の保護者目線で、「服と靴の買い替えタイミングがわからない」という日常の悩みを、成長記録アプリで解決したいと考えて作りました。</p>
@@ -582,7 +646,8 @@
 
     <section>
       <div class="cta">
-        <p>ご意見・ご要望をお聞かせください</p>
+        <p>App Store / Google Play、公開準備中です</p>
+        <p style="font-size: 0.9rem; font-weight: 400; color: #55606B; margin-bottom: 14px;">ご質問・ご要望・リリースのお知らせはお気軽にどうぞ</p>
         <a class="button" href="contact.html">お問い合わせページへ</a>
       </div>
     </section>
@@ -595,5 +660,115 @@
     </nav>
     &copy; 2026 MIYA APPS
   </footer>
+  <script>
+    (function () {
+      const carousel = document.getElementById('screenshot-carousel');
+      const dots = document.querySelectorAll('#screenshot-dots button');
+      const originals = Array.from(carousel.querySelectorAll('.screenshot-slide'));
+      if (!carousel || !originals.length) return;
+
+      const realCount = originals.length;
+      const firstClone = originals[0].cloneNode(true);
+      const lastClone = originals[realCount - 1].cloneNode(true);
+      firstClone.setAttribute('data-clone', 'first');
+      lastClone.setAttribute('data-clone', 'last');
+      firstClone.setAttribute('aria-hidden', 'true');
+      lastClone.setAttribute('aria-hidden', 'true');
+      carousel.insertBefore(lastClone, originals[0]);
+      carousel.appendChild(firstClone);
+
+      const slides = carousel.querySelectorAll('.screenshot-slide');
+      let looping = false;
+
+      function scrollLeftForDom(domIndex) {
+        const slide = slides[domIndex];
+        return slide.offsetLeft - (carousel.clientWidth - slide.offsetWidth) / 2;
+      }
+
+      function scrollToReal(realIndex, behavior) {
+        scrollToDom(realIndex + 1, behavior);
+      }
+
+      function scrollToDom(domIndex, behavior) {
+        carousel.scrollTo({
+          left: scrollLeftForDom(domIndex),
+          behavior: behavior || 'smooth',
+        });
+      }
+
+      function activeRealIndex() {
+        const center = carousel.scrollLeft + carousel.clientWidth / 2;
+        let closestDom = 0;
+        let minDist = Infinity;
+        slides.forEach(function (slide, i) {
+          const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+          const dist = Math.abs(center - slideCenter);
+          if (dist < minDist) {
+            minDist = dist;
+            closestDom = i;
+          }
+        });
+        if (closestDom === 0) return realCount - 1;
+        if (closestDom === realCount + 1) return 0;
+        return closestDom - 1;
+      }
+
+      function updateDots() {
+        const active = activeRealIndex();
+        dots.forEach(function (dot, i) {
+          const on = i === active;
+          dot.classList.toggle('active', on);
+          dot.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+      }
+
+      function checkLoop() {
+        if (looping) return;
+        const center = carousel.scrollLeft + carousel.clientWidth / 2;
+        let closestDom = 0;
+        let minDist = Infinity;
+        slides.forEach(function (slide, i) {
+          const slideCenter = slide.offsetLeft + slide.offsetWidth / 2;
+          const dist = Math.abs(center - slideCenter);
+          if (dist < minDist) {
+            minDist = dist;
+            closestDom = i;
+          }
+        });
+        if (closestDom === 0) {
+          looping = true;
+          scrollToDom(realCount, 'auto');
+          looping = false;
+        } else if (closestDom === realCount + 1) {
+          looping = true;
+          scrollToDom(1, 'auto');
+          looping = false;
+        }
+        updateDots();
+      }
+
+      let scrollTimer;
+      function onScroll() {
+        updateDots();
+        clearTimeout(scrollTimer);
+        scrollTimer = setTimeout(checkLoop, 120);
+      }
+
+      dots.forEach(function (dot, i) {
+        dot.addEventListener('click', function () { scrollToReal(i); });
+      });
+      carousel.addEventListener('scroll', onScroll, { passive: true });
+      if ('onscrollend' in carousel) {
+        carousel.addEventListener('scrollend', checkLoop);
+      }
+      window.addEventListener('resize', function () {
+        scrollToReal(activeRealIndex(), 'auto');
+        updateDots();
+      });
+
+      scrollToReal(0, 'auto');
+      updateDots();
+    })();
+  </script>
 </body>
 </html>
