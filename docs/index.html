@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>サイズ予報｜成長曲線で、服と靴のサイズを予報する子育てアプリ</title>
-  <meta name="description" content="サイズ予報は、子どもの身長・体重を成長曲線に記録し、洋服・靴サイズの買い替え時期を先読みできる保護者向けアプリです。健診で使える受診レポート（PDF）やお誕生日アルバムも。">
+  <title>サイズ予報｜成長曲線で、服・靴・おむつのサイズを予報する子育てアプリ</title>
+  <meta name="description" content="サイズ予報は、子どもの身長・体重を成長曲線に記録し、洋服・靴・おむつサイズの買い替え時期を先読みできる保護者向けアプリです。健診で使える受診レポート（PDF）やお誕生日アルバムも。">
   <meta name="author" content="MIYA APPS">
-  <meta property="og:title" content="サイズ予報｜成長曲線で、服と靴のサイズを予報">
-  <meta property="og:description" content="子どもの成長記録から、服・靴サイズの買い替え時期を先読み。健診向け受診レポート（PDF）やお誕生日アルバムも。">
+  <meta property="og:title" content="サイズ予報｜成長曲線で、服・靴・おむつのサイズを予報">
+  <meta property="og:description" content="子どもの成長記録から、服・靴・おむつサイズの買い替え時期を先読み。健診向け受診レポート（PDF）やお誕生日アルバムも。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://miya-apps.github.io/sizeyoho/">
   <meta property="og:image" content="https://miya-apps.github.io/sizeyoho/og-image.png">
@@ -15,8 +15,8 @@
   <meta property="og:image:height" content="630">
   <meta property="og:locale" content="ja_JP">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="サイズ予報｜成長曲線で、服と靴のサイズを予報">
-  <meta name="twitter:description" content="子どもの成長記録から、服・靴サイズの買い替え時期を先読み。">
+  <meta name="twitter:title" content="サイズ予報｜成長曲線で、服・靴・おむつのサイズを予報">
+  <meta name="twitter:description" content="子どもの成長記録から、服・靴・おむつサイズの買い替え時期を先読み。">
   <meta name="twitter:image" content="https://miya-apps.github.io/sizeyoho/og-image.png">
   <link rel="icon" type="image/png" href="icon.png">
   <link rel="canonical" href="https://miya-apps.github.io/sizeyoho/">
@@ -30,7 +30,7 @@
     "name": "サイズ予報",
     "operatingSystem": "Android, iOS",
     "applicationCategory": "HealthApplication",
-    "description": "子どもの身長・体重を成長曲線に記録し、洋服・靴サイズの買い替え時期を先読みできる保護者向けアプリ。",
+    "description": "子どもの身長・体重を成長曲線に記録し、洋服・靴・おむつサイズの買い替え時期を先読みできる保護者向けアプリ。",
     "url": "https://miya-apps.github.io/sizeyoho/",
     "image": "https://miya-apps.github.io/sizeyoho/icon.png",
     "author": {
@@ -299,6 +299,28 @@
       margin-top: 14px;
     }
 
+    /* ── 共有用画像のサンプル ── */
+    .share-samples {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .share-samples figure {
+      margin: 0;
+    }
+    .share-samples img {
+      width: 100%;
+      height: auto;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.08);
+    }
+    .share-samples figcaption {
+      font-size: 0.85rem;
+      color: #55606B;
+      text-align: center;
+      margin-top: 6px;
+    }
+
     /* ── 比較表 ── */
     .compare-wrap { overflow-x: auto; }
     table.compare {
@@ -456,8 +478,8 @@
   <div class="hero">
     <img class="appicon" src="icon.png" alt="サイズ予報のアイコン">
     <h1>サイズ予報</h1>
-    <p class="tagline">成長曲線で、服と靴のサイズを予報</p>
-    <p class="sub">身長・体重を記録するだけ。次に買う服と靴のサイズが見えてくる。</p>
+    <p class="tagline">成長曲線で、服・靴・おむつのサイズを予報</p>
+    <p class="sub">身長・体重を記録するだけ。次に買う服・靴・おむつのサイズが見えてくる。</p>
     <div class="store-badges">
       <span>App Store：準備中</span>
       <span>Google Play：準備中</span>
@@ -483,7 +505,7 @@
       <h2>こんなアプリです</h2>
       <div class="screenshot-carousel" id="screenshot-carousel" tabindex="0" role="group" aria-roledescription="カルーセル" aria-label="アプリのスクリーンショット">
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-05-overview.png" alt="成長曲線で、服と靴のサイズを予報" width="472" height="1024" loading="eager">
+          <img src="store-assets/slide-05-overview.png" alt="成長曲線で、服・靴・おむつのサイズを予報" width="472" height="1024" loading="eager">
         </figure>
         <figure class="screenshot-slide">
           <img src="store-assets/slide-01-growth-curve.png" alt="母子手帳の成長曲線、アプリでかんたん記録" width="472" height="1024" loading="lazy">
@@ -497,6 +519,9 @@
         <figure class="screenshot-slide">
           <img src="store-assets/slide-04-shoe-guide.png" alt="「足痛い」の前に、気づける" width="472" height="1024" loading="lazy">
         </figure>
+        <figure class="screenshot-slide">
+          <img src="store-assets/slide-06-diaper-guide.png" alt="おむつのサイズアップ、いつ？に答える" width="472" height="1024" loading="lazy">
+        </figure>
       </div>
       <div class="screenshot-dots" id="screenshot-dots" aria-label="スクリーンショットの切り替え">
         <button type="button" aria-label="1枚目" aria-current="true" class="active"></button>
@@ -504,6 +529,7 @@
         <button type="button" aria-label="3枚目"></button>
         <button type="button" aria-label="4枚目"></button>
         <button type="button" aria-label="5枚目"></button>
+        <button type="button" aria-label="6枚目"></button>
       </div>
     </section>
   </div>
@@ -514,13 +540,13 @@
       <div class="steps">
         <div class="step"><strong>お子様を登録</strong>：生年月日と性別に加え、アイコンとテーマカラーも選べます。きょうだいの登録もOK。早産児の場合は修正月齢の設定もできます。</div>
         <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
-        <div class="step"><strong>予報をチェック</strong>：洋服サイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
+        <div class="step"><strong>予報をチェック</strong>：洋服・おむつサイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
       </div>
     </section>
 
     <section>
       <h2>記録から、買い替えまで</h2>
-      <p class="lead">成長を記録するだけで、服と靴の買い替えまでひとつながりでサポートします。</p>
+      <p class="lead">成長を記録するだけで、服・靴・おむつの買い替えまでひとつながりでサポートします。</p>
       <div class="features">
         <div class="feature">
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 17.5 9 12l3.5 3L20 6.5"/><circle cx="9" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12.5" cy="15" r="1.5" fill="currentColor" stroke="none"/><circle cx="20" cy="6.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="17.5" r="1.5" fill="currentColor" stroke="none"/></svg></span>
@@ -536,6 +562,16 @@
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17v-4.2c2.8-.2 4.9-1.2 6.4-2.8l1.5 1.5 1.5-1 1.5 1.5 1.6-1c1.9 1.9 3.7 2.5 5.5 2.9V17Z"/><path d="M3 17h18"/></svg></span>
           <h3>「足痛い」と言われる前に気づける</h3>
           <p>足長の実測からいまの目安を表示。小さくなる前に買い替えのタイミングがわかります。Pro版なら「次に買うサイズと時期」まで先読みできます（無料版では表示されません）。</p>
+        </div>
+        <div class="feature">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8.5h14v3.5a7 7 0 0 1-14 0Z"/><path d="M5 8.5C5 6 6.8 4.5 9 4.5h6c2.2 0 4 1.5 4 4"/><path d="M9.5 15.5c.7.7 1.5 1 2.5 1s1.8-.3 2.5-1"/></svg></span>
+          <h3>おむつのサイズアップも、体重から先読み</h3>
+          <p>メーカー公表の対応体重とお子様の体重記録から、いまの目安サイズと切り替わりの時期を表示。よく使うブランド・シリーズを登録して使えます。</p>
+        </div>
+        <div class="feature">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 15.5 9 11l4 3.5 3-2.5 4 3.5"/><circle cx="9.5" cy="8.5" r="1.4" fill="currentColor" stroke="none"/></svg></span>
+          <h3>グラフもガイドも、そのまま画像で残せる</h3>
+          <p>成長曲線・SDスコア・サイズガイドを、共有しやすい正方形の画像で保存（Pro版）。家族への共有や成長の記念に。</p>
         </div>
         <div class="feature">
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2.5" width="6" height="3.5" rx="1.2"/><path d="M8 11h8M8 14.5h8M8 18h5"/></svg></span>
@@ -576,6 +612,25 @@
     </section>
 
     <section>
+      <h2>記録が、そのまま共有できる画像に</h2>
+      <p class="lead">Pro版の画像保存では、グラフやサイズガイドをこんな正方形の画像で保存できます。家族へのメッセージやSNSにそのまま使えます。</p>
+      <div class="share-samples">
+        <figure>
+          <img src="screenshots/share-growth-curve.png" alt="成長曲線の保存画像サンプル" width="512" height="512" loading="lazy">
+          <figcaption>成長曲線</figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/share-diaper.png" alt="おむつサイズ予報の保存画像サンプル" width="512" height="512" loading="lazy">
+          <figcaption>おむつサイズ予報</figcaption>
+        </figure>
+        <figure>
+          <img src="screenshots/share-shoe.png" alt="靴サイズ予報の保存画像サンプル" width="512" height="512" loading="lazy">
+          <figcaption>靴サイズ予報</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section>
       <h2>料金と機能の違い</h2>
       <p class="lead">主要機能は無料。靴の先読み予報・広告非表示などは Pro でご利用いただけます。</p>
       <div class="compare-wrap">
@@ -599,6 +654,11 @@
               <td class="yes">○</td>
             </tr>
             <tr>
+              <td>おむつサイズの目安・切り替え予報</td>
+              <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
               <td>靴のいまの目安</td>
               <td class="yes">○</td>
               <td class="yes">○</td>
@@ -611,6 +671,11 @@
             <tr>
               <td>受診レポート（PDF）</td>
               <td class="yes">○</td>
+              <td class="yes">○</td>
+            </tr>
+            <tr>
+              <td>グラフ・ガイドの画像保存（正方形）</td>
+              <td class="no">—</td>
               <td class="yes">○</td>
             </tr>
             <tr>
@@ -650,6 +715,7 @@
         <h3>サイズ予報 Pro</h3>
         <ul>
           <li>靴の次の購入サイズと時期の予報（その先まで）</li>
+          <li>グラフ・サイズガイドの画像保存（共有しやすい正方形）</li>
           <li>オンライン自動バックアップ（機種変更・故障に備えて自動保存）</li>
           <li>広告非表示</li>
         </ul>
@@ -670,7 +736,11 @@
       <h2>よくある質問</h2>
       <details>
         <summary>無料で使えますか？</summary>
-        <p>成長曲線の記録・洋服サイズの目安・受診レポート（PDF）・お誕生日アルバムなど、主要な機能は無料でお使いいただけます。靴の次の購入予報やオンライン自動バックアップはPro版の機能です。</p>
+        <p>成長曲線の記録・洋服やおむつサイズの目安・受診レポート（PDF）・お誕生日アルバムなど、主要な機能は無料でお使いいただけます。靴の次の購入予報・画像保存・オンライン自動バックアップはPro版の機能です。</p>
+      </details>
+      <details>
+        <summary>おむつのサイズも見られますか？</summary>
+        <p>見られます。お子様ごとに「おむつガイド」をONにすると、各メーカーが公表している対応体重と体重の記録から、いまの目安サイズとサイズが切り替わる時期を表示します。よく使うブランド・シリーズ・タイプ（テープ／パンツ）を登録して使えます。</p>
       </details>
       <details>
         <summary>予測はどのくらい当たりますか？</summary>
@@ -686,7 +756,7 @@
       </details>
       <details>
         <summary>記録したデータはどこに保存されますか？</summary>
-        <p>基本はお使いの端末の中に保存されます。Pro版のオンライン自動バックアップを有効にした場合のみ、暗号化された通信でクラウドに保存されます。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
+        <p>基本はお使いの端末の中に保存されます。Pro版のオンライン自動バックアップを有効にした場合のみ、暗号化された通信でクラウドに保存されます。なお、写真（お子様のアイコン・お誕生日の思い出）はバックアップを有効にしてもクラウドへ送信されず、端末内にのみ保存されます。詳しくは<a href="privacy.html">プライバシーポリシー</a>をご覧ください。</p>
       </details>
       <details>
         <summary>修正月齢とは？</summary>
@@ -706,7 +776,7 @@
       <h2>作った人より</h2>
       <div class="about-card">
         <p><strong>MIYA APPS</strong>（個人事業主）が開発・運営しています。</p>
-        <p>子育て中の保護者目線で、「服と靴の買い替えタイミングがわからない」という日常の悩みを、成長記録アプリで解決したいと考えて作りました。</p>
+        <p>子育て中の保護者目線で、「服・靴・おむつの買い替えタイミングがわからない」という日常の悩みを、成長記録アプリで解決したいと考えて作りました。</p>
         <p>
           お問い合わせ：<a href="contact.html">お問い合わせページ</a><br>
           プライバシー：<a href="privacy.html">プライバシーポリシー</a>

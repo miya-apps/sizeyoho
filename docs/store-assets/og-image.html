@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1200">
+  <title>OGP画像（1200×630）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+      font-family: 'Zen Maru Gothic', sans-serif;
+      background: linear-gradient(135deg, #EAF8F0 0%, #D3F0E2 60%, #C8EDDB 100%);
+      color: #3D444D;
+      position: relative;
+    }
+    .circle { position: absolute; border-radius: 50%; }
+    .c1 { width: 300px; height: 300px; top: -110px; right: -70px; background: rgba(255, 255, 255, 0.5); }
+    .c2 { width: 230px; height: 230px; bottom: -90px; right: 140px; background: rgba(76, 175, 135, 0.10); }
+    .c3 { width: 90px; height: 90px; top: 60px; left: 90px; border: 3px solid rgba(76, 175, 135, 0.22); background: transparent; }
+    .c4 { width: 150px; height: 150px; bottom: 40px; left: -50px; background: rgba(255, 255, 255, 0.4); }
+    .content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .app { font-size: 44px; font-weight: 900; color: #2E7D5B; letter-spacing: 0.08em; }
+    .line { width: 70px; height: 6px; background: #4CAF87; border-radius: 3px; margin: 22px auto 34px; }
+    h1 { font-size: 74px; font-weight: 900; line-height: 1.28; letter-spacing: 0.01em; }
+    .sub { margin-top: 26px; font-size: 30px; color: #55606B; }
+  </style>
+</head>
+<body>
+  <div class="circle c1"></div>
+  <div class="circle c2"></div>
+  <div class="circle c3"></div>
+  <div class="circle c4"></div>
+  <div class="content">
+    <div class="app">サイズ予報</div>
+    <div class="line"></div>
+    <h1>成長曲線で<br>服・靴・おむつのサイズを予報</h1>
+    <p class="sub">身長・体重を記録するだけ。買い替え時期が見えてくる。</p>
+  </div>
+</body>
+</html>
