@@ -8,6 +8,7 @@ class ChildProfileTile extends StatelessWidget {
     super.key,
     required this.child,
     required this.onEdit,
+    this.trailing,
   });
 
   static const kThemeColors = [
@@ -22,6 +23,9 @@ class ChildProfileTile extends StatelessWidget {
 
   final ChildProfile child;
   final VoidCallback onEdit;
+
+  /// 編集ボタンの右に置く追加ウィジェット（並び替えのドラッグハンドルなど）。
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +112,7 @@ class ChildProfileTile extends StatelessWidget {
               icon: const Icon(Icons.edit_outlined, size: 20),
               tooltip: 'プロフィールを編集',
             ),
+            if (trailing != null) trailing!,
           ],
         ),
       ),

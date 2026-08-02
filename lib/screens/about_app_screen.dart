@@ -54,6 +54,17 @@ class AboutAppScreen extends StatelessWidget {
                       '当てはめています。',
                 ),
                 _AboutItem(
+                  title: 'おむつサイズの目安',
+                  body:
+                      '各メーカーが公式サイトなどで公表している対応体重'
+                      '（◯〜◯kg）のデータをもとに、記録した体重から目安の'
+                      'サイズを判定しています。隣り合うサイズの対応体重が'
+                      '重なる範囲は「サイズの変わり目」として両方を表示します。\n\n'
+                      '公表データは製品の改良などで変更される場合があるほか、'
+                      '同じ体重でも体型や製品によってフィット感は異なります。'
+                      '実際のサイズ選びの参考情報としてご利用ください。',
+                ),
+                _AboutItem(
                   title: '靴サイズの予測',
                   body:
                       '保護者が実測した足長を基準に、身長の成長トレンドと'
@@ -105,7 +116,10 @@ class AboutAppScreen extends StatelessWidget {
                       '機種変更や紛失に備えて、記録データが暗号化された通信で'
                       'クラウドサーバーへ送信・保存されます。送信されるのは'
                       'バックアップに必要な記録データのみで、復元の目的以外'
-                      'には利用しません。\n\n'
+                      'には利用しません。写真（アイコン・お誕生日の思い出）は'
+                      'クラウドへ送信されず、端末内にのみ保存されます。写真も'
+                      '引き継ぎたい場合は「バックアップを書き出す」の'
+                      'ファイルをご利用ください。\n\n'
                       'オンライン自動バックアップを使わない場合、記録データが'
                       '端末の外へ送信されることはありません。',
                 ),
@@ -125,6 +139,54 @@ class AboutAppScreen extends StatelessWidget {
                       '本アプリの利用または利用できないことにより生じた'
                       'いかなる損害についても、開発者は責任を負いかねます。'
                       'あらかじめご了承ください。',
+                ),
+              ]),
+              const SizedBox(height: 16),
+              _card(context, const [
+                _AboutItem(
+                  title: 'オープンソース素材のライセンス',
+                  body:
+                      '本アプリでは、おむつガイドのバッジアイコンに次の'
+                      'オープンソース素材を使用しています。\n\n'
+                      '● Tabler Icons（MIT License）\n'
+                      'おむつ・月と星・トイレットペーパー・時計のアイコン。\n'
+                      'Copyright (c) 2020-2026 Paweł Kuna\n'
+                      'https://tabler.io/icons\n\n'
+                      'Permission is hereby granted, free of charge, to any '
+                      'person obtaining a copy of this software and associated '
+                      'documentation files (the "Software"), to deal in the '
+                      'Software without restriction, including without '
+                      'limitation the rights to use, copy, modify, merge, '
+                      'publish, distribute, sublicense, and/or sell copies of '
+                      'the Software, and to permit persons to whom the '
+                      'Software is furnished to do so, subject to the '
+                      'following conditions: The above copyright notice and '
+                      'this permission notice shall be included in all copies '
+                      'or substantial portions of the Software. '
+                      'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF '
+                      'ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED '
+                      'TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A '
+                      'PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT '
+                      'SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR '
+                      'ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN '
+                      'ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, '
+                      'OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE '
+                      'OR OTHER DEALINGS IN THE SOFTWARE.\n\n'
+                      '● Lucide Icons（ISC License）\n'
+                      '状態バッジ（サイズUP・サイズ上限・超過）のアイコン。\n'
+                      'https://github.com/lucide-icons/lucide\n\n'
+                      'Permission to use, copy, modify, and/or distribute '
+                      'this software for any purpose with or without fee is '
+                      'hereby granted, provided that the above copyright '
+                      'notice and this permission notice appear in all '
+                      'copies.\n\n'
+                      '● Streamline Icons（CC BY 4.0）\n'
+                      '水遊び用バッジのアイコン（Covid Icons セットの '
+                      'Vaccine Protection Infrared Thermometer Gun）。\n'
+                      'https://streamlinehq.com\n\n'
+                      'Creative Commons Attribution 4.0 International'
+                      '（CC BY 4.0）のもとで利用しています。\n'
+                      'https://creativecommons.org/licenses/by/4.0/',
                 ),
               ]),
               const SizedBox(height: 24),

@@ -7,11 +7,12 @@ import 'adaptive_layout.dart';
 import '../ads/ad_banner.dart';
 import '../cloud/cloud_backup.dart';
 import '../export/growth_pdf.dart';
+import '../export/guide_export_cards.dart';
 import '../export/screen_capture.dart';
-import '../export/size_guide_export_card.dart';
 import '../models/child_profile.dart';
 
 import '../models/gender.dart';
+import '../monetization/pro_paywall.dart';
 import '../monetization/pro_status.dart';
 import '../models/growth_record.dart';
 import '../settings/export_privacy.dart';
@@ -62,9 +63,16 @@ class _AppShellState extends State<AppShell> {
   /// ヘッダー右上のトグルと GrowthHomeScreen の PageView を双方向同期する。
   final ValueNotifier<int> _graphChartType = ValueNotifier<int>(0);
 
+  /// 「サイズ予報」タブ内で表示中のサブタブ（おむつ/洋服/靴）。
+  /// ClothingGuideScreen から毎フレーム同期され、ヘッダーの「画像保存」
+  /// ボタンの文言・書き出し対象をこれに合わせて切り替える。
+  final ValueNotifier<GuideSizeTab> _guideMode =
+      ValueNotifier<GuideSizeTab>(GuideSizeTab.clothing);
+
   @override
   void dispose() {
     _graphChartType.dispose();
+    _guideMode.dispose();
     super.dispose();
   }
 
@@ -140,9 +148,11 @@ class _AppShellState extends State<AppShell> {
       arrowTop: true,
     ),
     (
-      title: '受診レポート（PDF）',
-      body: 'この左上のボタンから、成長曲線と記録一覧をまとめたPDFレポートを出力できます。\n'
-          '健診や小児科の受診時に、そのまま先生に見せられる形式です。',
+      title: '画像保存と受診レポート',
+      body: 'この左上の「画像保存」から、成長曲線やサイズガイドを'
+          '共有しやすい正方形の画像で保存できます（Pro版）。\n'
+          '健診や小児科の受診時にそのまま先生に見せられる'
+          '受診レポート（PDF）の出力もここからできます。',
       arrowX: -0.86,
       arrowTop: true,
     ),
@@ -155,10 +165,10 @@ class _AppShellState extends State<AppShell> {
       arrowTop: false,
     ),
     (
-      title: 'サイズ予報（洋服・靴）',
+      title: 'サイズ予報（洋服・靴・おむつ）',
       body: '「サイズ予報」タブでは、いまの身長から季節ごとの洋服サイズの目安がわかります。\n'
           '「靴ガイド」に切り替えると、足長の実測から靴の買い替え時期を予測できます。'
-          '左上の「画像保存」で1枚の画像にして共有もできます。',
+          'お子様の設定で「おむつガイド」をONにすると、おむつのサイズ目安も見られます。',
       arrowX: 0.37,
       arrowTop: false,
     ),
@@ -460,6 +470,42 @@ class _AppShellState extends State<AppShell> {
     }
   }
 
+  /// お子様を1名削除する（プロフィール編集シートの削除ボタンから）。
+  ///
+  /// アプリ全体が「常に1名以上」を前提に作られているため、最後の1名は
+  /// 削除できない（呼び出し側のUIでもブロックしている）。
+  Future<void> _removeChild(int index) async {
+    if (_children.length <= 1) return;
+    setState(() {
+      _children = [
+        for (int i = 0; i < _children.length; i++)
+          if (i != index) _children[i],
+      ];
+      // 選択中の子を維持する：選択より前が消えたら位置を1つ詰め、
+      // 選択中の子自身が消えたら同じ位置（末尾なら最後）の子へ移る。
+      if (index < _selectedChildIndex) {
+        _selectedChildIndex -= 1;
+      } else if (_selectedChildIndex >= _children.length) {
+        _selectedChildIndex = _children.length - 1;
+      }
+    });
+    appThemeNotifier.value = createChildTheme(_selectedChild.themeColor);
+    await _persistChildren();
+  }
+
+  /// お子様の表示順を入れ替える（プロフィール一覧のドラッグ並び替えから）。
+  /// 選択中の子は ID で追跡し、並び替え後も同じ子が選ばれたままにする。
+  Future<void> _reorderChildren(int oldIndex, int newIndex) async {
+    final selectedId = _selectedChild.id;
+    setState(() {
+      final list = [..._children];
+      list.insert(newIndex, list.removeAt(oldIndex));
+      _children = list;
+      _selectedChildIndex = _children.indexWhere((c) => c.id == selectedId);
+    });
+    await _persistChildren();
+  }
+
   /// 1人目の登録直後のみ、未完了なら使い方ガイドを開始する（グラフタブへ移動）。
   Future<void> _maybeStartGuide() async {
     final prefs = await SharedPreferences.getInstance();
@@ -575,30 +621,229 @@ class _AppShellState extends State<AppShell> {
   /// ファイル名にも名前が入るため、伏せ字設定はここにも反映する。
   String _exportBaseName() => '成長記録_${_exportDisplayName}_${_dateStamp()}';
 
-  /// 洋服＋靴のサイズガイドを1枚の画像にして端末に保存する
-  /// （Web ではダウンロード）。保存した画像を LINE 等の別アプリで
-  /// 送れば共有できる（画面のスクショではなく専用レイアウトで描画）。
-  Future<void> _saveSizeGuideImage() async {
-    final bytes = await captureSizeGuideImage(
+  /// 書き出しファイル名（例: 成長曲線_たろう_20260702_2130）。
+  /// 伏せ字設定はファイル名にも反映する。
+  String _exportImageFileName(SizeExportItem item) {
+    final label = switch (item) {
+      SizeExportItem.growthChart ||
+      SizeExportItem.sdChart => sizeExportItemLabel(item),
+      _ => '${sizeExportItemLabel(item)}サイズガイド',
+    };
+    return '${label}_${_exportDisplayName}_${_dateStamp()}';
+  }
+
+  /// 書き出し対象の選択UIに添えるアイコン。
+  static Widget _exportItemIcon(SizeExportItem item) => switch (item) {
+    SizeExportItem.growthChart => const Icon(Icons.show_chart_rounded),
+    SizeExportItem.sdChart => const Icon(Icons.stacked_line_chart_rounded),
+    SizeExportItem.diaper => const PhosphorIcon(PhosphorIconsRegular.baby),
+    SizeExportItem.clothing => const PhosphorIcon(
+      PhosphorIconsRegular.tShirt,
+    ),
+    SizeExportItem.shoe => const PhosphorIcon(PhosphorIconsRegular.sneaker),
+  };
+
+  /// ヘッダー左上の「画像保存」から開く保存ダイアログ。
+  ///
+  /// チェックボックスで保存したい画像（成長曲線・SDスコア・おむつ・洋服・靴）
+  /// を選び、まとめて正方形PNGとして保存する（Pro版の機能）。表示中の
+  /// ページが最初からチェックされているので、そのまま保存すれば「このページ」、
+  /// 「すべて選択」で全部保存になる。受診レポート（PDF）の出力もここに置く
+  /// （こちらは無料版でも使える）。
+  Future<void> _showImageSaveDialog() async {
+    final items = <SizeExportItem>[
+      SizeExportItem.growthChart,
+      SizeExportItem.sdChart,
+      if (_selectedChild.diaperGuideEnabled) SizeExportItem.diaper,
+      SizeExportItem.clothing,
+      SizeExportItem.shoe,
+    ];
+    // 表示中のページに対応する項目を最初からチェックしておく。
+    final current = switch (_tabIndex) {
+      0 =>
+        _graphChartType.value == 0
+            ? SizeExportItem.growthChart
+            : SizeExportItem.sdChart,
+      2 => exportItemForGuideTab(_guideMode.value),
+      _ => SizeExportItem.growthChart,
+    };
+    final selected = <SizeExportItem>{if (items.contains(current)) current};
+
+    final action = await showDialog<Object>(
       context: context,
-      child: _selectedChild,
-      displayName: _exportDisplayName,
+      builder: (ctx) => StatefulBuilder(
+        builder: (ctx, setDialogState) {
+          final allSelected = selected.length == items.length;
+          return AlertDialog(
+            title: const Text('画像保存'),
+            contentPadding: const EdgeInsets.fromLTRB(8, 16, 8, 0),
+            content: SizedBox(
+              width: 340,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        '保存したい画像を選んでください。'
+                        '共有しやすい正方形のPNGで保存されます。'
+                        '${ProStatus.isPro.value ? '' : '（Pro版の機能）'}',
+                        style: TextStyle(
+                          fontSize: 12.5,
+                          color: Colors.grey[700],
+                          height: 1.5,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    CheckboxListTile(
+                      dense: true,
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: const Text(
+                        'すべて選択',
+                        style: TextStyle(
+                          fontSize: 13.5,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      value: allSelected,
+                      onChanged: (v) => setDialogState(() {
+                        selected.clear();
+                        if (v ?? false) selected.addAll(items);
+                      }),
+                    ),
+                    const Divider(height: 1),
+                    for (final item in items)
+                      CheckboxListTile(
+                        dense: true,
+                        controlAffinity: ListTileControlAffinity.leading,
+                        secondary: IconTheme(
+                          data: IconThemeData(
+                            size: 20,
+                            color: Colors.grey[700],
+                          ),
+                          child: _exportItemIcon(item),
+                        ),
+                        title: Text(
+                          switch (item) {
+                            SizeExportItem.growthChart ||
+                            SizeExportItem.sdChart => sizeExportItemLabel(
+                              item,
+                            ),
+                            _ => '${sizeExportItemLabel(item)}サイズガイド',
+                          },
+                          style: const TextStyle(fontSize: 13.5),
+                        ),
+                        value: selected.contains(item),
+                        onChanged: (v) => setDialogState(() {
+                          if (v ?? false) {
+                            selected.add(item);
+                          } else {
+                            selected.remove(item);
+                          }
+                        }),
+                      ),
+                    const Divider(height: 8),
+                    // 受診レポートはここに集約（無料版でも使える）。
+                    ListTile(
+                      dense: true,
+                      leading: Icon(
+                        Icons.medical_information_outlined,
+                        size: 20,
+                        color: Colors.grey[700],
+                      ),
+                      title: const Text(
+                        '受診レポート（PDF）を出力',
+                        style: TextStyle(fontSize: 13.5),
+                      ),
+                      subtitle: Text(
+                        '成長曲線と記録一覧をまとめた受診用レポート',
+                        style: TextStyle(
+                          fontSize: 10.5,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      onTap: () => Navigator.of(ctx).pop('pdf'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text('キャンセル'),
+              ),
+              FilledButton.icon(
+                onPressed: selected.isEmpty
+                    ? null
+                    : () => Navigator.of(ctx).pop(Set.of(selected)),
+                icon: ProStatus.isPro.value
+                    ? const Icon(Icons.image_outlined, size: 18)
+                    : const Icon(Icons.lock_outline, size: 18),
+                label: Text('画像を保存（${selected.length}枚）'),
+              ),
+            ],
+          );
+        },
+      ),
     );
+
     if (!mounted) return;
-    if (bytes == null) {
-      _showSnack('画像の生成に失敗しました');
+    if (action == 'pdf') {
+      await _exportPdf();
+    } else if (action is Set<SizeExportItem>) {
+      await _saveExportImages(action);
+    }
+  }
+
+  /// 選択された対象を1枚ずつ正方形PNGとして端末に保存する
+  /// （Web ではダウンロード）。保存した画像を LINE・Instagram 等の
+  /// 別アプリで送れば共有できる（画面のスクショではなく専用レイアウトで描画）。
+  ///
+  /// Pro版の機能。無料版でもダイアログまでは開けるようにして機能の存在に
+  /// 気づけるようにし、保存実行時にペイウォールを開く。
+  Future<void> _saveExportImages(Set<SizeExportItem> items) async {
+    if (!ProStatus.isPro.value) {
+      showProPaywallSheet(context);
       return;
     }
-    try {
-      await FileSaver.instance.saveFile(
-        name: 'サイズガイド_${_selectedChild.displayName}_${_dateStamp()}',
-        bytes: bytes,
-        fileExtension: 'png',
-        mimeType: MimeType.png,
+    var saved = 0;
+    for (final item in items) {
+      if (!mounted) return;
+      final bytes = await captureGuideSquareImage(
+        context: context,
+        item: item,
+        child: _selectedChild,
+        displayName: _exportDisplayName,
+        // 名前を伏せる設定ONのとき、画像は名前の代わりにアイコンだけを載せる
+        // （PDF・ファイル名は従来どおり「第一子」などの表記）。
+        maskName: ExportPrivacy.maskNames.value,
       );
-      if (mounted) _showSnack('サイズガイド画像を保存しました');
-    } on Exception {
-      if (mounted) _showSnack('画像の保存に失敗しました');
+      if (bytes == null) {
+        if (mounted) {
+          _showSnack('${sizeExportItemLabel(item)}の画像の生成に失敗しました');
+        }
+        continue;
+      }
+      try {
+        await FileSaver.instance.saveFile(
+          name: _exportImageFileName(item),
+          bytes: bytes,
+          fileExtension: 'png',
+          mimeType: MimeType.png,
+        );
+        saved++;
+      } on Exception {
+        if (mounted) {
+          _showSnack('${sizeExportItemLabel(item)}の画像の保存に失敗しました');
+        }
+      }
+    }
+    if (mounted && saved > 0) {
+      _showSnack(saved == 1 ? '画像を保存しました' : '$saved枚の画像を保存しました');
     }
   }
 
@@ -817,26 +1062,31 @@ class _AppShellState extends State<AppShell> {
     );
   }
 
+  /// 保存・書き出しの統一の入り口（グラフ／サイズ予報タブの左上）。
+  /// 押すと保存ダイアログが開き、画像（Pro版）と受診レポートPDFを選べる。
+  Widget _buildImageSaveHeaderButton(ColorScheme scheme) {
+    return _headerLabeledAction(
+      icon: Icons.image_outlined,
+      label: '画像保存',
+      tooltip:
+          '成長曲線・SDスコア・サイズガイドを正方形の画像で保存（Pro版）。'
+          '受診レポート（PDF）の出力もこちらから',
+      onPressed: _showImageSaveDialog,
+      scheme: scheme,
+    );
+  }
+
   /// 通常ヘッダー：左右とも「アイコン＋小さな文字」で統一。
-  /// グラフ／履歴：左=PDF出力、右=グラフ種類切り替え／成長ペース。
-  /// 洋服ガイド：左=サイズガイド画像の保存（洋服＋靴を1枚にまとめた画像。
-  /// 保存後に LINE 等の別アプリから送って共有する想定）。
+  /// グラフ／サイズ予報：左=画像保存（保存ダイアログ。PDF出力もこの中）、
+  /// 右=グラフ種類切り替え。保存した画像は LINE・Instagram 等の
+  /// 別アプリから送って共有する想定。
+  /// 履歴：左=思い出、右=成長ペース。
   Widget _buildMainHeader(ColorScheme scheme) {
     final Widget? leftAction = switch (_tabIndex) {
-      // 受診時に医師へ見せるレポートを出力するボタン。
-      // アイコン内の「PDF」文字とラベルが二重にならないよう、
-      // 医療モチーフのアイコン＋用途がわかるラベルにする。
-      // 受診レポートの入り口はグラフのみに集約する。
       0 => KeyedSubtree(
         // チュートリアルのスポットライト位置取得用。
         key: _guideHeaderLeftKey,
-        child: _headerLabeledAction(
-          icon: Icons.medical_information_outlined,
-          label: '受診レポート',
-          tooltip: '受診用の成長記録レポート（PDF）を出力',
-          onPressed: _exportPdf,
-          scheme: scheme,
-        ),
+        child: _buildImageSaveHeaderButton(scheme),
       ),
       // 履歴＝その子の時系列、という文脈に合わせて思い出アルバムへの入り口を置く。
       1 => _headerLabeledAction(
@@ -846,13 +1096,7 @@ class _AppShellState extends State<AppShell> {
         onPressed: _openBirthdayMemories,
         scheme: scheme,
       ),
-      2 => _headerLabeledAction(
-        icon: Icons.image_outlined,
-        label: '画像保存',
-        tooltip: '洋服＋靴のサイズガイドを1枚の画像で保存',
-        onPressed: _saveSizeGuideImage,
-        scheme: scheme,
-      ),
+      2 => _buildImageSaveHeaderButton(scheme),
       _ => null,
     };
     final Widget? rightAction = switch (_tabIndex) {
@@ -1026,6 +1270,7 @@ class _AppShellState extends State<AppShell> {
                   key: ValueKey('clothing_${_selectedChild.id}'),
                   child: _selectedChild,
                   onUpdateChild: _saveSelectedChild,
+                  modeNotifier: _guideMode,
                 ),
                 // 設定画面は子のテーマ色を切り離し、ニュートラルなテーマで描画する。
                 _scaledTextSubtree(
@@ -1036,6 +1281,8 @@ class _AppShellState extends State<AppShell> {
                       children: _children,
                       onUpdateChild: _updateChild,
                       onAddChild: _addChild,
+                      onDeleteChild: _removeChild,
+                      onReorderChild: _reorderChildren,
                       onReplayTutorial: _replayGuide,
                       onRestoreChildren: _restoreChildren,
                     ),
@@ -1113,8 +1360,34 @@ class _AppShellState extends State<AppShell> {
                 ],
               ),
             ),
-            // 中央：FAB のためのノッチ用スペース
-            const SizedBox(width: 56),
+            // 中央：FAB のためのノッチ用スペース。沈み込んだ＋ボタンの
+            // すぐ下に「何の入力か」を示すラベルを置く（靴ガイドなどで
+            // ＋＝身長・体重入力だと分かりにくい、というフィードバック対応）。
+            SizedBox(
+              width: 56,
+              height: double.infinity,
+              child: _isSettings
+                  ? null
+                  : Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 5),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            '身長・体重',
+                            maxLines: 1,
+                            softWrap: false,
+                            style: TextStyle(
+                              fontSize: 10 * uiScale,
+                              fontWeight: FontWeight.w500,
+                              color: scheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+            ),
             // 右：洋服ガイド・設定
             Expanded(
               child: Row(

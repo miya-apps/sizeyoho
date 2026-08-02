@@ -77,6 +77,7 @@ void showChildProfileModal(
   required List<ChildProfile> children,
   void Function(int index, ChildProfile updated)? onUpdateChild,
   ValueChanged<ChildProfile>? onAddChild,
+  void Function(int index)? onDeleteChild,
   ChildProfile? editing,
   int? editingIndex,
 }) {
@@ -85,6 +86,7 @@ void showChildProfileModal(
     children: children,
     onUpdateChild: onUpdateChild,
     onAddChild: onAddChild,
+    onDeleteChild: onDeleteChild,
     editing: editing,
     editingIndex: editingIndex,
   );
@@ -95,6 +97,7 @@ void _showChildProfileModalImpl(
   required List<ChildProfile> children,
   void Function(int index, ChildProfile updated)? onUpdateChild,
   ValueChanged<ChildProfile>? onAddChild,
+  void Function(int index)? onDeleteChild,
   ChildProfile? editing,
   int? editingIndex,
 }) {
@@ -143,6 +146,8 @@ void _showChildProfileModalImpl(
   // 修正月齢（Corrected Age）関連の状態
   var useCorrectedAge = editing?.useCorrectedAge ?? false;
   DateTime? expectedBirthDate = editing?.expectedBirthDate;
+  // おむつガイドの表示（子どもごとのオプトイン。デフォルトOFF）
+  var diaperGuideEnabled = editing?.diaperGuideEnabled ?? false;
   showModalBottomSheet<void>(
     context: context,
     isScrollControlled: true,
@@ -763,6 +768,32 @@ void _showChildProfileModalImpl(
                   ],
                 ),
                 const SizedBox(height: 12),
+                // ─ おむつガイドの表示（子どもごとのオプトイン） ─
+                // ONにすると、この子のサイズ予報タブに「おむつガイド」が出る。
+                SwitchListTile(
+                  contentPadding: EdgeInsets.zero,
+                  dense: true,
+                  title: Text(
+                    'おむつガイドを表示する',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'サイズ予報タブに、体重の記録と各社公表の体重めやすから'
+                    'おむつサイズの目安を表示します',
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: scheme.onSurfaceVariant,
+                    ),
+                  ),
+                  value: diaperGuideEnabled,
+                  activeThumbColor: themeColor,
+                  onChanged: (v) => setS(() => diaperGuideEnabled = v),
+                ),
+                const SizedBox(height: 12),
                 // ─ テーマカラー ─
                 InputDecorator(
                   decoration: const InputDecoration(
@@ -1193,6 +1224,7 @@ void _showChildProfileModalImpl(
                                 expectedBirthDate: savedExpected,
                                 fatherHeightCm: fatherHeight,
                                 motherHeightCm: motherHeight,
+                                diaperGuideEnabled: diaperGuideEnabled,
                                 // 出生時身長・体重の変更（生年月日の変更含む）を
                                 // 出生記録へ反映。両方クリアなら記録も削除する。
                                 growthRecords: _syncBirthRecord(
@@ -1227,6 +1259,7 @@ void _showChildProfileModalImpl(
                                 expectedBirthDate: savedExpected,
                                 fatherHeightCm: fatherHeight,
                                 motherHeightCm: motherHeight,
+                                diaperGuideEnabled: diaperGuideEnabled,
                                 // 出生時身長・体重が入力されていれば、
                                 // 生まれた日の記録として最初の成長記録を自動登録。
                                 growthRecords: _syncBirthRecord(
@@ -1261,6 +1294,27 @@ void _showChildProfileModalImpl(
                     ),
                   ],
                 ),
+                // ─ 削除（編集時のみ・誤操作防止のため控えめな導線） ─
+                if (isEditing && onDeleteChild != null) ...[
+                  const SizedBox(height: 16),
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () => _confirmAndDeleteChild(
+                        sheetCtx,
+                        context,
+                        children: children,
+                        child: editing,
+                        index: editingIndex!,
+                        onDeleteChild: onDeleteChild,
+                      ),
+                      icon: const Icon(Icons.delete_outline_rounded, size: 18),
+                      label: const Text('このお子様のデータを削除'),
+                      style: TextButton.styleFrom(
+                        foregroundColor: scheme.error,
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 8),
               ],
             ),
@@ -1271,6 +1325,122 @@ void _showChildProfileModalImpl(
   );
 }
 
+/// お子様の削除フロー。誤操作で消えないよう、次の順に確認を挟む：
+/// ① シート内の削除ボタン → ② 確認ダイアログで削除内容を表示 →
+/// ③ 「元に戻せないことを理解しました」にチェック → ④ 削除ボタンが有効化。
+///
+/// アプリは常に1名以上の登録を前提としているため、最後の1名は削除できない
+/// 旨をダイアログで案内する。
+Future<void> _confirmAndDeleteChild(
+  BuildContext sheetCtx,
+  BuildContext rootContext, {
+  required List<ChildProfile> children,
+  required ChildProfile child,
+  required int index,
+  required void Function(int index) onDeleteChild,
+}) async {
+  // 最後の1名は削除不可（アプリ全体が1名以上を前提のため）。
+  if (children.length <= 1) {
+    await showDialog<void>(
+      context: sheetCtx,
+      builder: (ctx) => AlertDialog(
+        title: const Text('削除できません'),
+        content: const Text(
+          'お子様の登録は最低1名必要なため、最後のお子様は削除できません。\n\n'
+          'すべてのデータを消したい場合は、先に別のお子様を追加してから'
+          '削除するか、アプリ自体を削除してください。',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+    return;
+  }
+
+  final recordCount = child.growthRecords.length;
+  final shoeCount = child.footMeasurements.length + child.shoePurchases.length;
+  final memoryCount = child.birthdayMemories.length;
+
+  var understood = false;
+  final agreed = await showDialog<bool>(
+    context: sheetCtx,
+    builder: (dialogCtx) => StatefulBuilder(
+      builder: (ctx, setS) {
+        final scheme = Theme.of(ctx).colorScheme;
+        return AlertDialog(
+          title: Text('「${child.name}」を削除しますか？'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'この端末に保存されている次のデータをすべて削除します。\n\n'
+                  '・成長記録：$recordCount件\n'
+                  '・足長・靴の購入記録：$shoeCount件\n'
+                  '・お誕生日の思い出：$memoryCount件\n'
+                  '・写真・おむつ設定・プロフィール\n\n'
+                  'この操作は取り消せません。',
+                  style: const TextStyle(fontSize: 14, height: 1.5),
+                ),
+                const SizedBox(height: 8),
+                CheckboxListTile(
+                  value: understood,
+                  onChanged: (v) => setS(() => understood = v ?? false),
+                  contentPadding: EdgeInsets.zero,
+                  controlAffinity: ListTileControlAffinity.leading,
+                  dense: true,
+                  activeColor: scheme.error,
+                  title: const Text(
+                    '削除すると元に戻せないことを理解しました',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogCtx, false),
+              child: const Text('キャンセル'),
+            ),
+            FilledButton(
+              // チェックを入れるまで削除ボタンは押せない（順番タップのガード）。
+              onPressed: understood
+                  ? () => Navigator.pop(dialogCtx, true)
+                  : null,
+              style: FilledButton.styleFrom(
+                backgroundColor: scheme.error,
+                foregroundColor: scheme.onError,
+              ),
+              child: const Text('削除する'),
+            ),
+          ],
+        );
+      },
+    ),
+  );
+
+  if (agreed != true) return;
+  if (sheetCtx.mounted) Navigator.pop(sheetCtx);
+  onDeleteChild(index);
+  if (rootContext.mounted) {
+    ScaffoldMessenger.of(rootContext).showSnackBar(
+      SnackBar(
+        content: Text('「${child.name}」のデータを削除しました'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+}
+
 class ChildrenScreen extends StatelessWidget {
   const ChildrenScreen({
     super.key,
@@ -1278,6 +1448,8 @@ class ChildrenScreen extends StatelessWidget {
     required this.children,
     required this.onUpdateChild,
     required this.onAddChild,
+    this.onDeleteChild,
+    this.onReorderChild,
     this.footer = const [],
   });
 
@@ -1285,6 +1457,13 @@ class ChildrenScreen extends StatelessWidget {
   final List<ChildProfile> children;
   final void Function(int index, ChildProfile updated) onUpdateChild;
   final ValueChanged<ChildProfile> onAddChild;
+
+  /// お子様を削除するとき呼ぶ。null なら編集シートに削除ボタンを出さない。
+  final void Function(int index)? onDeleteChild;
+
+  /// 並び替え確定時に呼ぶ（newIndex は削除後の挿入位置に補正済み）。
+  /// null なら並び替え不可（ドラッグハンドルも出さない）。
+  final void Function(int oldIndex, int newIndex)? onReorderChild;
 
   /// リスト末尾に追加で表示する項目（設定画面のヘルプ欄など）。
   final List<Widget> footer;
@@ -1299,6 +1478,7 @@ class ChildrenScreen extends StatelessWidget {
       children: children,
       onUpdateChild: onUpdateChild,
       onAddChild: onAddChild,
+      onDeleteChild: onDeleteChild,
       editing: editing,
       editingIndex: editingIndex,
     );
@@ -1306,6 +1486,8 @@ class ChildrenScreen extends StatelessWidget {
 
   Widget _buildBody(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    // 2名以上いるときだけ並び替えできる（1名では意味がないためハンドルも出さない）。
+    final canReorder = onReorderChild != null && children.length > 1;
 
     // 大画面では設定項目が横に間延びしないよう幅を制限して中央寄せする。
     return Center(
@@ -1331,7 +1513,7 @@ class ChildrenScreen extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '登録済みのお子様：${children.length}人\n'
-                        '✏️ アイコンをタップして編集できます',
+                        '${canReorder ? '✏️ タップで編集・≡ ドラッグで並び替え' : '✏️ アイコンをタップして編集できます'}',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           color: scheme.onSurface,
@@ -1344,20 +1526,63 @@ class ChildrenScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            ...List.generate(
-              children.length,
-              (index) => Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: ChildProfileTile(
-                  child: children[index],
-                  onEdit: () => _showProfileModal(
-                    context,
-                    editing: children[index],
-                    editingIndex: index,
+            if (canReorder)
+              ReorderableListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                // ハンドル（≡）を掴んだときだけドラッグを開始する。
+                buildDefaultDragHandles: false,
+                itemCount: children.length,
+                onReorder: (oldIndex, newIndex) {
+                  // ReorderableListView の newIndex は「取り除く前」の位置なので、
+                  // 下方向への移動は 1 つ詰めて挿入位置に補正する。
+                  if (newIndex > oldIndex) newIndex -= 1;
+                  if (oldIndex != newIndex) {
+                    onReorderChild!(oldIndex, newIndex);
+                  }
+                },
+                itemBuilder: (context, index) => Padding(
+                  key: ValueKey(children[index].id),
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ChildProfileTile(
+                    child: children[index],
+                    onEdit: () => _showProfileModal(
+                      context,
+                      editing: children[index],
+                      editingIndex: index,
+                    ),
+                    trailing: ReorderableDragStartListener(
+                      index: index,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 8,
+                        ),
+                        child: Icon(
+                          Icons.drag_indicator_rounded,
+                          size: 22,
+                          color: scheme.outline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            else
+              ...List.generate(
+                children.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: ChildProfileTile(
+                    child: children[index],
+                    onEdit: () => _showProfileModal(
+                      context,
+                      editing: children[index],
+                      editingIndex: index,
+                    ),
                   ),
                 ),
               ),
-            ),
             if (embedded) ...[
               const SizedBox(height: 8),
               if (children.length < 6)

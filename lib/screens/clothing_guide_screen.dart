@@ -4,7 +4,15 @@ import 'package:phosphoricons_flutter/phosphoricons_flutter.dart';
 import '../app/adaptive_layout.dart';
 import '../growth/clothing_size_guide.dart';
 import '../models/child_profile.dart';
+import '../widgets/guide_summary_card.dart';
+import 'diaper_guide_screen.dart';
 import 'shoe_guide_screen.dart';
+
+/// 「サイズ予報」タブ内の表示中サブタブ（成長の順序：おむつ→洋服→靴）。
+/// AppShell がヘッダーの「画像保存」ボタンの文言・書き出し内容を
+/// 現在のサブタブに合わせるために、[ClothingGuideScreen.modeNotifier]
+/// 経由で参照する。
+enum GuideSizeTab { diaper, clothing, shoe }
 
 /// LMS ベースライン SD からサイズを予測する「洋服ガイド」タブ。
 /// 上部の切り替えで「洋服ガイド（季節ごとの服サイズ）」と
@@ -18,6 +26,7 @@ class ClothingGuideScreen extends StatefulWidget {
     super.key,
     required this.child,
     required this.onUpdateChild,
+    this.modeNotifier,
   });
 
   final ChildProfile child;
@@ -25,12 +34,16 @@ class ClothingGuideScreen extends StatefulWidget {
   /// 靴の記録などを保存するときに呼ぶ（AppShell が永続化する）。
   final ValueChanged<ChildProfile> onUpdateChild;
 
+  /// 表示中のサブタブを AppShell に伝える（画像保存ボタンの文言・書き出し
+  /// 対象の切り替えに使う）。初期値の反映・実際に表示している内容（おむつ
+  /// 設定OFF時のフォールバック含む）は毎フレーム同期する。
+  final ValueNotifier<GuideSizeTab>? modeNotifier;
+
   /// カードのデザイン基準幅（論理px）。スクショ画像もこの幅で描画する想定。
   /// 表示時は [kContentMaxWidth] を上限（= 1.5倍）として比例拡大され、
   /// 他画面と最大幅が揃う。
   static const double _designWidth = 400;
 
-  static const _titleColor = Color(0xFF1A1A1A);
   static const _currentSeasonBadgeBg = Color(0xFFFFF3E0);
   static const _currentSeasonBadgeText = Color(0xFFE65100);
 
@@ -39,12 +52,48 @@ class ClothingGuideScreen extends StatefulWidget {
 }
 
 class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
-  /// 0 = 洋服ガイド, 1 = 靴ガイド。
-  int _mode = 0;
+  /// 初期表示は従来どおり洋服ガイド。
+  GuideSizeTab _mode = GuideSizeTab.clothing;
+
+  @override
+  void initState() {
+    super.initState();
+    // 子どもを切り替えると画面ごと作り直されるため、直前に表示していた
+    // サブタブ（おむつ/洋服/靴）を modeNotifier から引き継ぐ。
+    // 新しい子でおむつガイドがOFFの場合は _effectiveMode が洋服に丸める。
+    final initial = widget.modeNotifier?.value;
+    if (initial != null) _mode = initial;
+  }
+
+  /// おむつガイドタブを出すか（子どもごとのオプトイン設定）。
+  bool get _showDiaper => widget.child.diaperGuideEnabled;
+
+  /// 設定OFF中におむつモードが残っていた場合は洋服ガイドへ丸める。
+  GuideSizeTab get _effectiveMode =>
+      (!_showDiaper && _mode == GuideSizeTab.diaper)
+          ? GuideSizeTab.clothing
+          : _mode;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final mode = _effectiveMode;
+
+    // AppShell の「画像保存」ボタンが現在の表示に合わせて文言・書き出し
+    // 対象を切り替えるための通知（初期値・フォールバックも含めて毎フレーム
+    // 同期する。値が同じ場合は ValueNotifier 側で通知が抑制される）。
+    final notifier = widget.modeNotifier;
+    if (notifier != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) notifier.value = mode;
+      });
+    }
+
+    final subtitle = switch (mode) {
+      GuideSizeTab.diaper => '体重の記録と各社公表のめやすから計算（目安）',
+      GuideSizeTab.clothing => '直近の成長トレンドから予測（目安）',
+      GuideSizeTab.shoe => '実測と購入の記録から予測（目安）',
+    };
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -56,7 +105,7 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
             _buildModeSwitcher(scheme),
             const SizedBox(height: 3),
             Text(
-              _mode == 0 ? '直近の成長トレンドから予測（目安）' : '実測と購入の記録から予測（目安）',
+              subtitle,
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 11, color: Colors.grey[600]),
               maxLines: 1,
@@ -64,12 +113,17 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
             ),
             const SizedBox(height: 4),
             Expanded(
-              child: _mode == 0
-                  ? _buildClothingBody()
-                  : ShoeGuideView(
-                      child: widget.child,
-                      onUpdateChild: widget.onUpdateChild,
-                    ),
+              child: switch (mode) {
+                GuideSizeTab.diaper => DiaperGuideView(
+                    child: widget.child,
+                    onUpdateChild: widget.onUpdateChild,
+                  ),
+                GuideSizeTab.clothing => _buildClothingBody(),
+                GuideSizeTab.shoe => ShoeGuideView(
+                    child: widget.child,
+                    onUpdateChild: widget.onUpdateChild,
+                  ),
+              },
             ),
           ],
         ),
@@ -77,16 +131,19 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
     );
   }
 
-  /// 「洋服ガイド / 靴ガイド」の切り替えセグメント（タブ上部中央）。
+  /// 「(おむつガイド /) 洋服ガイド / 靴ガイド」の切り替えセグメント。
   /// アイコン＋文字で直感的に。高さ・パディングを固定して文字が
   /// 切れないようにする（compact 密度だと縦に潰れて欠けることがある）。
+  /// おむつガイド表示時は3つになるため、パディング・ラベル幅を詰めて
+  /// 狭い端末でも収まるようにする（ラベルは FittedBox で自動縮小）。
   Widget _buildModeSwitcher(ColorScheme scheme) {
-    return SegmentedButton<int>(
+    final compact = _showDiaper;
+    return SegmentedButton<GuideSizeTab>(
       showSelectedIcon: false,
       style: SegmentedButton.styleFrom(
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         minimumSize: const Size(0, 40),
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: compact ? 9 : 16),
         textStyle: const TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
@@ -98,18 +155,24 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
         foregroundColor: Colors.grey[700],
       ),
       segments: [
+        if (_showDiaper)
+          ButtonSegment(
+            value: GuideSizeTab.diaper,
+            icon: const PhosphorIcon(PhosphorIconsRegular.baby, size: 18),
+            label: _segmentLabel('おむつ', compact),
+          ),
         ButtonSegment(
-          value: 0,
+          value: GuideSizeTab.clothing,
           icon: const PhosphorIcon(PhosphorIconsRegular.shirtFolded, size: 18),
-          label: _segmentLabel('洋服ガイド'),
+          label: _segmentLabel(_showDiaper ? '洋服' : '洋服ガイド', compact),
         ),
         ButtonSegment(
-          value: 1,
+          value: GuideSizeTab.shoe,
           icon: const PhosphorIcon(PhosphorIconsRegular.sneaker, size: 18),
-          label: _segmentLabel('靴ガイド'),
+          label: _segmentLabel(_showDiaper ? '靴' : '靴ガイド', compact),
         ),
       ],
-      selected: {_mode},
+      selected: {_effectiveMode},
       onSelectionChanged: (s) => setState(() => _mode = s.first),
     );
   }
@@ -118,8 +181,9 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
   /// 読み込みが間に合わず、代替字形でテキスト幅が実測より狭く計測されて
   /// 文字が切れることがある。幅をフォント計測に依存しない固定値にし、
   /// 万一収まらない場合も FittedBox の縮小で見切れを防ぐ。
-  static Widget _segmentLabel(String text) => SizedBox(
-        width: 68,
+  /// 3タブ時（[compact]）は「ガイド」を省いた短いラベル＋狭い幅にする。
+  static Widget _segmentLabel(String text, bool compact) => SizedBox(
+        width: compact ? 44 : 68,
         child: FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(text, maxLines: 1, softWrap: false),
@@ -128,23 +192,37 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
 
   Widget _buildClothingBody() {
     final guide = ClothingSizeGuideCalculator.compute(widget.child);
-    if (!guide.hasData) {
-      return ListView(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-        children: [_EmptyState(message: guide.message ?? 'データ不足')],
-      );
-    }
+    // おむつガイド（DiaperGuideView）と外枠の組み方を完全に揃える：
+    // Center > ConstrainedBox(maxWidth) > Padding という同じ順番・同じ値に
+    // することで、タブ切り替え時に枠の幅・位置がずれて画面が揺らがないよう
+    // にする（パディングを ConstrainedBox の外に置くと、幅が広い画面で
+    // 「制限後に引く」おむつ側と「引いてから制限する」洋服側の実効幅が
+    // ズレていた）。
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 2, 16, 12),
       child: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: kContentMaxWidth),
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: SizedBox(
-              width: ClothingGuideScreen._designWidth,
-              child: ClothingGuideCard(child: widget.child, guide: guide),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+            child: !guide.hasData
+                ? _EmptyState(message: guide.message ?? 'データ不足')
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // サマリーカード（現在の身長・成長トレンド）は、おむつ
+                      // ガイドと文字サイズを完全に揃えるため、季節グリッドの
+                      // FittedBox 拡縮の対象外にする（変更依頼2・§8）。
+                      _SummaryCard(guide: guide),
+                      const SizedBox(height: 10),
+                      FittedBox(
+                        fit: BoxFit.contain,
+                        child: SizedBox(
+                          width: ClothingGuideScreen._designWidth,
+                          child: ClothingGuideCard(guide: guide),
+                        ),
+                      ),
+                    ],
+                  ),
           ),
         ),
       ),
@@ -152,18 +230,14 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
   }
 }
 
-/// 洋服ガイドの本体カード（タイトル〜季節グリッド）。
+/// 洋服ガイドの本体カード（「サイズ予測」タイトル〜季節グリッド）。
 ///
-/// 固定幅前提の自己完結ウィジェット。画面表示では FittedBox で拡縮され、
-/// 将来のスクショ共有機能では RepaintBoundary で囲んでこのまま画像化する。
+/// サマリー（現在の身長・成長トレンド）は含まない：おむつガイドと文字サイズを
+/// 揃えるため、呼び出し側で FittedBox 拡縮の外に別途置いている（§8）。
+/// 固定幅前提の自己完結ウィジェットで、画面表示では FittedBox で拡縮される。
 class ClothingGuideCard extends StatelessWidget {
-  const ClothingGuideCard({
-    super.key,
-    required this.child,
-    required this.guide,
-  });
+  const ClothingGuideCard({super.key, required this.guide});
 
-  final ChildProfile child;
   final ClothingGuideResult guide;
 
   @override
@@ -174,8 +248,6 @@ class ClothingGuideCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _SummaryCard(guide: guide),
-        const SizedBox(height: 10),
         Text(
           'サイズ予測',
           style: TextStyle(
@@ -198,86 +270,15 @@ class _SummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.15)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: _SummaryMetric(
-              label: '現在の身長',
-              value: guide.currentHeightCm != null
-                  ? '${guide.currentHeightCm!.toStringAsFixed(1)} cm'
-                  : '—',
-            ),
-          ),
-          Container(
-            width: 1,
-            height: 36,
-            color: Colors.grey.withValues(alpha: 0.15),
-          ),
-          Expanded(
-            child: _SummaryMetric(
-              label: '成長トレンド',
-              value: guide.baselineSdScore != null
-                  ? formatBaselineSdScore(guide.baselineSdScore!)
-                  : '—',
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryMetric extends StatelessWidget {
-  const _SummaryMetric({
-    required this.label,
-    required this.value,
-  });
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.5,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-              color: ClothingGuideScreen._titleColor,
-              height: 1.2,
-            ),
-          ),
-        ],
-      ),
+    return GuideSummaryCard(
+      primaryLabel: '現在の身長',
+      primaryValue: guide.currentHeightCm != null
+          ? '${guide.currentHeightCm!.toStringAsFixed(1)} cm'
+          : '—',
+      trendLabel: '成長トレンド',
+      trendValue: guide.baselineSdScore != null
+          ? formatBaselineSdScoreValue(guide.baselineSdScore!)
+          : '—',
     );
   }
 }

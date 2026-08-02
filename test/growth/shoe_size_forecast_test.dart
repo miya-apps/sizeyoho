@@ -130,6 +130,37 @@ void main() {
     expect(tight.nextPurchase!.shoeSizeCm, tight.currentShoeSizeCm);
   });
 
+  test('おすすめ通りのサイズを買った直後に「サイズアウト」や次の購入がすぐ出ない', () {
+    final now = DateTime.now();
+    // 実測13.8 → 13.8+0.7=14.5 でちょうど境界。おすすめの 14.5 を購入直後。
+    // 旧ロジックではわずかな予測成長で目安が15.0に上がり、即サイズアウト
+    // 扱いになっていた（買うときと買い替えのしきい値が同じ0.7cmだったため）。
+    final plan = computeShoeSizePurchasePlan(
+      childWith(
+        footMeasurements: [
+          FootMeasurement(
+            date: now.subtract(const Duration(days: 7)),
+            footLengthCm: 13.8,
+          ),
+        ],
+        shoePurchases: [
+          ShoePurchase(
+            date: now.subtract(const Duration(days: 3)),
+            sizeCm: 14.5,
+          ),
+        ],
+      ),
+    );
+
+    expect(plan, isNotNull);
+    // つま先余裕はまだ約0.7cmあるので、サイズアウト扱いにならない。
+    expect(plan!.currentShoeOutgrown, isFalse);
+    // 次の購入は「余裕が0.5cmを切る時期」＝足が0.2cm以上伸びてから。
+    expect(plan.nextPurchase, isNotNull);
+    expect(plan.nextPurchase!.shoeSizeCm, greaterThan(14.5));
+    expect(plan.nextPurchase!.approxDate.isAfter(now), isTrue);
+  });
+
   test('大きめを先買いした場合、次以降の候補は持っているサイズより大きいものに繰り上がる', () {
     final now = DateTime.now();
     // 実測13.0 → いまの目安は 14.0（13.0+0.7=13.7 → 0.5cm刻み切り上げ）。

@@ -35,6 +35,8 @@ class SettingsScreen extends StatelessWidget {
     required this.children,
     required this.onUpdateChild,
     required this.onAddChild,
+    required this.onDeleteChild,
+    required this.onReorderChild,
     required this.onReplayTutorial,
     required this.onRestoreChildren,
   });
@@ -42,6 +44,12 @@ class SettingsScreen extends StatelessWidget {
   final List<ChildProfile> children;
   final void Function(int index, ChildProfile updated) onUpdateChild;
   final ValueChanged<ChildProfile> onAddChild;
+
+  /// お子様を1名削除するとき呼ぶ（AppShell が削除・永続化する）。
+  final void Function(int index) onDeleteChild;
+
+  /// お子様の表示順を入れ替えるとき呼ぶ（AppShell が並び替え・永続化する）。
+  final void Function(int oldIndex, int newIndex) onReorderChild;
 
   /// 「チュートリアルを見る」タップ時に呼ぶ（AppShell がガイドを再生する）。
   final VoidCallback onReplayTutorial;
@@ -81,6 +89,8 @@ class SettingsScreen extends StatelessWidget {
                             initialChildren: children,
                             onUpdateChild: onUpdateChild,
                             onAddChild: onAddChild,
+                            onDeleteChild: onDeleteChild,
+                            onReorderChild: onReorderChild,
                           ),
                         ),
                       ),
@@ -151,9 +161,9 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ),
                     subtitle: Text(
-                      'レポートPDF・サイズガイド画像の名前を「第一子」'
-                      '「第二子」…にします（登録中のお子様の生まれた順・'
-                      '双子など同日生まれは登録順）',
+                      '保存画像は名前の代わりにお子様のアイコンだけを'
+                      '表示します。レポートPDFとファイル名は「第一子」'
+                      '「第二子」…になります（生まれた順・同日生まれは登録順）',
                       style: TextStyle(
                         fontSize: 11.5,
                         color: Colors.grey[600],
@@ -555,7 +565,8 @@ class SettingsScreen extends StatelessWidget {
   }
 }
 
-/// Pro版（先読み予報・オンライン自動バックアップ・広告非表示）のセクション。
+/// Pro版（先読み予報・画像保存・オンライン自動バックアップ・広告非表示）の
+/// セクション。
 ///
 /// ストア審査に出す本番ビルドでは動作確認用スイッチを含めず、
 /// 購入（ペイウォール）と復元の導線だけを出す。
@@ -598,7 +609,7 @@ class _ProSection extends StatelessWidget {
                   style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text(
-                  '先読み予報＋オンライン自動バックアップ＋広告非表示\n'
+                  '先読み予報＋画像保存＋オンライン自動バックアップ＋広告非表示\n'
                   '（開発ビルド専用の動作確認スイッチです）',
                   style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
                 ),
@@ -616,7 +627,7 @@ class _ProSection extends StatelessWidget {
                   style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
                 ),
                 subtitle: Text(
-                  'サイズの先読み予報＋オンライン自動バックアップ＋広告非表示',
+                  'サイズの先読み予報＋画像保存＋オンライン自動バックアップ＋広告非表示',
                   style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
                 ),
                 trailing: const Icon(Icons.chevron_right, size: 20),
@@ -716,7 +727,8 @@ class _ProSection extends StatelessWidget {
                             ),
                           ),
                           subtitle: Text(
-                            '記録を変更するたびに自動でクラウドへ保存します',
+                            '記録を変更するたびに自動でクラウドへ保存します。'
+                            '写真はクラウドに送信されず、この端末にのみ保存されます',
                             style: TextStyle(
                               fontSize: 11.5,
                               color: Colors.grey[600],
@@ -883,7 +895,9 @@ class _ProSection extends StatelessWidget {
           'クラウドのバックアップ（$dateText 保存・'
           '${info!.childNames.join('・')}）で、いまの端末のデータ'
           '（${childrenData.length}名）を置き換えます。\n\n'
-          'いまのデータは失われます。よろしいですか？',
+          'いまのデータは失われます。よろしいですか？\n\n'
+          '※写真はクラウドに含まれません。同じお子様の写真が'
+          'この端末にあればそのまま引き継がれます。',
           style: const TextStyle(fontSize: 13.5, height: 1.6),
         ),
         actions: [
@@ -910,8 +924,11 @@ class _ProSection extends StatelessWidget {
       _snackWith(messenger, 'クラウドからの読み込みに失敗しました');
       return;
     }
-    onRestoreChildren(restored);
-    _snackWith(messenger, 'クラウドから復元しました（${restored.length}名）');
+    // クラウドには写真が含まれないため、同じお子様（ID一致）が端末に
+    // いれば、アイコン・お誕生日の写真を端末側から引き継ぐ。
+    final merged = mergeLocalPhotos(restored: restored, local: childrenData);
+    onRestoreChildren(merged);
+    _snackWith(messenger, 'クラウドから復元しました（${merged.length}名）');
   }
 
   static void _snackWith(ScaffoldMessengerState messenger, String message) {
@@ -931,11 +948,15 @@ class _ChildrenManagePage extends StatefulWidget {
     required this.initialChildren,
     required this.onUpdateChild,
     required this.onAddChild,
+    required this.onDeleteChild,
+    required this.onReorderChild,
   });
 
   final List<ChildProfile> initialChildren;
   final void Function(int index, ChildProfile updated) onUpdateChild;
   final ValueChanged<ChildProfile> onAddChild;
+  final void Function(int index) onDeleteChild;
+  final void Function(int oldIndex, int newIndex) onReorderChild;
 
   @override
   State<_ChildrenManagePage> createState() => _ChildrenManagePageState();
@@ -954,12 +975,24 @@ class _ChildrenManagePageState extends State<_ChildrenManagePage> {
     widget.onAddChild(child);
   }
 
+  void _delete(int index) {
+    setState(() => _children.removeAt(index));
+    widget.onDeleteChild(index);
+  }
+
+  void _reorder(int oldIndex, int newIndex) {
+    setState(() => _children.insert(newIndex, _children.removeAt(oldIndex)));
+    widget.onReorderChild(oldIndex, newIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChildrenScreen(
       children: _children,
       onUpdateChild: _update,
       onAddChild: _add,
+      onDeleteChild: _delete,
+      onReorderChild: _reorder,
     );
   }
 }

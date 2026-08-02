@@ -1,0 +1,24 @@
+brand_id,series_id,series_name,series_name_tape,series_name_pants,source_url,last_checked,badge_color_bg,badge_color_icon,badge_color_ring,badge_color_bg_tape,badge_color_icon_tape,badge_color_ring_tape,badge_color_bg_pants,badge_color_icon_pants,badge_color_ring_pants,badge_color_bg_boy,badge_color_icon_boy,badge_color_ring_boy,badge_color_bg_girl,badge_color_icon_girl,badge_color_ring_girl,badge_color_confirmed,notes,category
+pampers,pampers_sarasara,さらさらケア,,,https://www.jp.pampers.com/products/pampers-mainline-tape,2026/7/18,#01B3AE,#FFFFFF,#FA7283,,,,,,,,,,,,,2026-07-18,,
+pampers,pampers_hadaichi,肌へのいちばん,,,https://www.jp.pampers.com/products/pampers-premium-line-pants,2026/7/18,#91CBC2,#FBF9F7,#C3A551,,,,,,,,,,,,,2026-07-18,,
+pampers,pampers_airy,超吸収エアリーパンツ,,,https://www.jp.pampers.com/products/pampers-tsukisei-plus-pants,2026/7/18,#71CFF6,#FEFFFF,#06B6AE,,,,,,,,,,,,,2026-07-18,,
+pampers,pampers_oyasumi,おやすみパンツ,,,https://www.jp.pampers.com/products/pampers-oyasumipants,2026/7/18,#003045,#FBDD06,#00B2AD,,,,,,,,,,,,,2026-07-18,,night
+merries,merries_first,ファーストプレミアム,,,https://www.kao.co.jp/merries/products/fp/,2026/7/18,#FBDAD1,#FEFAF8,#A88B6C,,,,,,,,,,,,,2026-07-18,,
+merries,merries_airthrough,肌さらエアスルー,,,https://www.kao.co.jp/merries/products/air/,2026/7/18,#E71F9B,#FFFFFF,#0E1D95,,,,,,,,,,,,,2026-07-18,,
+merries,merries_gussuri,ぐっすりパンツ,,,https://www.kao.co.jp/merries/products/night/,2026/7/18,#0E1D95,#FFF317,#E71F9B,,,,,,,,,,,,,2026-07-18,,night
+moony,moony_natural,低刺激であんしん,,,https://jp.moony.com/,2026/7/18,#B7CFE3,#F1EDEA,#5F1904,,,,,,,,,,,,,2026-07-18,,
+moony,moony,ムーニー,ムーニー,ムーニーマン,https://jp.moony.com/ja/products/mn.html,2026/7/18,#C1DFF2,#F5F2F7,#16234E,,,,,,,,,,,,,2026-07-18,テープは「ムーニー」、パンツは「ムーニーマン」と商品名が変わるためタイプ別表示名を使用。公式ページはテープ=mn.html / パンツ=mnm.html に分かれている,
+moony,moony_oyasumi,オヤスミマン,,,https://jp.moony.com/,2026/7/18,#009DE2,#FFD803,#00509E,,,,,,,,,,,,,2026-07-18,,night
+goon,goon_more0,グーン,,,https://www.elleair.jp/product/detail/goon_08_0022,2026/7/18,#E1B1D1,#F1D3B7,#9BD2E6,,,,,,,,,,,,,2026-07-18,テープBIG(XL)12-20kgは2026-07-18に追加（公式商品ページで確認済み）,
+goon,goon_chouusu,超うす通気,,,https://www.elleair.jp/goon/,2026/7/18,#1D160F,#F9F7F6,#BFB487,,,,,,,,,,,,,2026-07-18,,
+goon,goon_12h,12時間ぐんぐん吸収,,,https://www.elleair.jp/goon/,2026/7/18,#241F80,#F7CF34,#C93433,,,,,,,,,,,,,2026-07-18,,duration
+goon,goon_gungun,ぐんぐん吸収,,,https://www.elleair.jp/goon/,2026/7/18,#FDD234,#FFFFFF,#D22C25,,,,,,,,,,,,,2026-07-18,,
+goon,goon_night,ナイトシリーズ,,,https://www.elleair.jp/goon/,2026/7/18,#FFFFFF,#4AA5DE,#004993,,,,,,,,,,,,,2026-07-18,,night
+goon,goon_superbig,スーパーBIG,,,https://www.elleair.jp/goon/,2026/7/18,#B74895,#FFEE84,#AD1E87,,,,,,,,,,,,,2026-07-18,,
+mamypoko,mamypoko_std,マミーポコ,,,https://jp.mamypoko.com/,2026/7/18,#BA0025,#FFFFFF,#910000,,,,,,,,,,,,,2026-07-18,,
+mamypoko,mamypoko_night,マミーポコ夜用,,,https://jp.mamypoko.com/,2026/7/18,#033490,#FFFFFF,#910000,,,,,,,,,,,,,2026-07-18,,night
+genki,genki_std,Genki!,,,https://www.irisohyama.co.jp/healthcare-portal/genki/baby-omutsu/,2026/7/18,#D1E6F5,#FFFFFF,#1081C6,,,,,,,,,,,,,2026-07-18,,
+nishimatsuya,nishimatsuya_baby,ベビーおむつ,ベビーおむつ テープ,ベビーパンツ,https://www.24028.jp/ir/wp-content/uploads/sites/5/syohin260115.pdf,2026/7/18,#FFFFFF,#F3C0C8,#838383,,,,,,,,,,,,,2026-07-18,テープは「ベビーおむつ テープ」、パンツは「ベビーパンツ」と商品名が変わるためタイプ別表示名を使用。テープは2026年1月発売,
+moony,moony_trepan,トレパンマン,,,https://www.torepanman.jp/ja/home.html,2026/7/18,#2BA8BC,#FFFFFF,#00429C,,,,,,,#2BA8BC,#FFFFFF,#00429C,#DD8E91,#FFFFFF,#183F94,2026-07-18,,training
+moony,moony_mizuasobi,水あそびパンツ,,,https://jp.moony.com/ja/products/mnm/mnm-mizuasobi.html,2026/7/18,#A6D1EB,#FFFFFF,#201F88,,,,,,,,,,,,,2026-07-18,,swim
+goon,goon_swimming,スイミングパンツ,,,https://www.elleair.jp/goo-n/swimming/,2026/7/18,#FFF100,#FFFFFF,#0261AC,,,,,,,,,,,,,2026-07-18,,swim

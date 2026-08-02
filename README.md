@@ -2,6 +2,10 @@
 
 A new Flutter project.
 
+## おむつマスタデータの再生成
+
+`assets/diaper/*.csv` を編集したら `dart run tool/generate_diaper_data.dart` を実行して `lib/growth/diaper_master_data.g.dart` を再生成する。
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

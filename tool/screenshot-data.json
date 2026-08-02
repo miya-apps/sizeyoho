@@ -1,0 +1,349 @@
+{
+  "app": "grow_app",
+  "format": 1,
+  "exportedAt": "2026-08-02T02:03:36.863167",
+  "children": [
+    {
+      "id": "demo_haruto",
+      "name": "はると",
+      "birthDate": "2024-05-10T00:00:00.000",
+      "gender": "male",
+      "iconIndex": 0,
+      "photoBytes": null,
+      "themeColor": 4286555862,
+      "useCorrectedAge": false,
+      "expectedBirthDate": null,
+      "fatherHeightCm": 172.0,
+      "motherHeightCm": 158.0,
+      "birthdayCelebrationEnabled": true,
+      "diaperGuideEnabled": true,
+      "celebratedBirthdayAges": [
+        1,
+        2
+      ],
+      "birthdayMemories": [],
+      "footMeasurements": [
+        {
+          "date": "2026-02-15T10:00:00.000",
+          "footLengthCm": 13.1
+        },
+        {
+          "date": "2026-07-20T10:00:00.000",
+          "footLengthCm": 13.6
+        }
+      ],
+      "shoePurchases": [
+        {
+          "date": "2025-11-03T10:00:00.000",
+          "sizeCm": 14.0
+        },
+        {
+          "date": "2026-05-05T10:00:00.000",
+          "sizeCm": 14.5
+        }
+      ],
+      "diaperSlots": [
+        {
+          "slotIndex": 0,
+          "seriesId": "pampers_sarasara",
+          "type": "tape"
+        },
+        {
+          "slotIndex": 1,
+          "seriesId": "mamypoko_std",
+          "type": "pants"
+        },
+        {
+          "slotIndex": 2,
+          "seriesId": "moony_oyasumi",
+          "type": "pants"
+        }
+      ],
+      "diaperGuideLastOpenedAt": "2026-07-28T09:00:00.000",
+      "diaperGuideHideSuggestedAt": null,
+      "growthRecords": [
+        {
+          "id": "demo_haruto_0",
+          "date": "2024-05-10T00:00:00.000",
+          "heightCm": 50.0,
+          "weightKg": 3.3
+        },
+        {
+          "id": "demo_haruto_1",
+          "date": "2024-06-10T00:00:00.000",
+          "heightCm": 54.7,
+          "weightKg": 4.5
+        },
+        {
+          "id": "demo_haruto_2",
+          "date": "2024-07-10T00:00:00.000",
+          "heightCm": 59.2,
+          "weightKg": 5.8
+        },
+        {
+          "id": "demo_haruto_3",
+          "date": "2024-08-10T00:00:00.000",
+          "heightCm": 62.7,
+          "weightKg": 6.7
+        },
+        {
+          "id": "demo_haruto_4",
+          "date": "2024-09-10T00:00:00.000",
+          "heightCm": 65.1,
+          "weightKg": 7.4
+        },
+        {
+          "id": "demo_haruto_5",
+          "date": "2024-10-10T00:00:00.000",
+          "heightCm": 67.0,
+          "weightKg": 7.9
+        },
+        {
+          "id": "demo_haruto_6",
+          "date": "2024-11-10T00:00:00.000",
+          "heightCm": 68.8,
+          "weightKg": 8.3
+        },
+        {
+          "id": "demo_haruto_7",
+          "date": "2024-12-10T00:00:00.000",
+          "heightCm": 70.3,
+          "weightKg": 8.7
+        },
+        {
+          "id": "demo_haruto_8",
+          "date": "2025-01-10T00:00:00.000",
+          "heightCm": 71.7,
+          "weightKg": 9.1
+        },
+        {
+          "id": "demo_haruto_9",
+          "date": "2025-02-10T00:00:00.000",
+          "heightCm": 72.9,
+          "weightKg": 9.4
+        },
+        {
+          "id": "demo_haruto_10",
+          "date": "2025-03-10T00:00:00.000",
+          "heightCm": 74.0,
+          "weightKg": 9.6
+        },
+        {
+          "id": "demo_haruto_11",
+          "date": "2025-04-10T00:00:00.000",
+          "heightCm": 74.9,
+          "weightKg": 9.8
+        },
+        {
+          "id": "demo_haruto_12",
+          "date": "2025-05-10T00:00:00.000",
+          "heightCm": 75.9,
+          "weightKg": 9.9
+        },
+        {
+          "id": "demo_haruto_14",
+          "date": "2025-07-10T00:00:00.000",
+          "heightCm": 78.1,
+          "weightKg": 10.2
+        },
+        {
+          "id": "demo_haruto_16",
+          "date": "2025-09-10T00:00:00.000",
+          "heightCm": 80.2,
+          "weightKg": 10.6
+        },
+        {
+          "id": "demo_haruto_18",
+          "date": "2025-11-10T00:00:00.000",
+          "heightCm": 81.9,
+          "weightKg": 11.0
+        },
+        {
+          "id": "demo_haruto_20",
+          "date": "2026-01-10T00:00:00.000",
+          "heightCm": 83.8,
+          "weightKg": 11.4
+        },
+        {
+          "id": "demo_haruto_22",
+          "date": "2026-03-10T00:00:00.000",
+          "heightCm": 85.8,
+          "weightKg": 11.7
+        },
+        {
+          "id": "demo_haruto_24",
+          "date": "2026-05-10T00:00:00.000",
+          "heightCm": 87.4,
+          "weightKg": 12.0
+        },
+        {
+          "id": "demo_haruto_26",
+          "date": "2026-07-10T00:00:00.000",
+          "heightCm": 88.5,
+          "weightKg": 12.5
+        }
+      ]
+    },
+    {
+      "id": "demo_yui",
+      "name": "ゆい",
+      "birthDate": "2021-11-20T00:00:00.000",
+      "gender": "female",
+      "iconIndex": 1,
+      "photoBytes": null,
+      "themeColor": 4292714666,
+      "useCorrectedAge": false,
+      "expectedBirthDate": null,
+      "fatherHeightCm": 172.0,
+      "motherHeightCm": 158.0,
+      "birthdayCelebrationEnabled": true,
+      "celebratedBirthdayAges": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "diaperGuideEnabled": false,
+      "birthdayMemories": [],
+      "footMeasurements": [
+        {
+          "date": "2026-01-12T10:00:00.000",
+          "footLengthCm": 16.2
+        },
+        {
+          "date": "2026-06-28T10:00:00.000",
+          "footLengthCm": 16.6
+        }
+      ],
+      "shoePurchases": [
+        {
+          "date": "2025-09-15T10:00:00.000",
+          "sizeCm": 17.0
+        },
+        {
+          "date": "2026-03-08T10:00:00.000",
+          "sizeCm": 17.5
+        }
+      ],
+      "diaperSlots": [],
+      "diaperGuideLastOpenedAt": null,
+      "diaperGuideHideSuggestedAt": null,
+      "growthRecords": [
+        {
+          "id": "demo_yui_0",
+          "date": "2021-11-20T00:00:00.000",
+          "heightCm": 49.0,
+          "weightKg": 3.0
+        },
+        {
+          "id": "demo_yui_2",
+          "date": "2022-01-20T00:00:00.000",
+          "heightCm": 57.4,
+          "weightKg": 5.1
+        },
+        {
+          "id": "demo_yui_4",
+          "date": "2022-03-20T00:00:00.000",
+          "heightCm": 63.0,
+          "weightKg": 6.4
+        },
+        {
+          "id": "demo_yui_6",
+          "date": "2022-05-20T00:00:00.000",
+          "heightCm": 66.6,
+          "weightKg": 7.3
+        },
+        {
+          "id": "demo_yui_8",
+          "date": "2022-07-20T00:00:00.000",
+          "heightCm": 69.7,
+          "weightKg": 8.0
+        },
+        {
+          "id": "demo_yui_10",
+          "date": "2022-09-20T00:00:00.000",
+          "heightCm": 72.0,
+          "weightKg": 8.5
+        },
+        {
+          "id": "demo_yui_12",
+          "date": "2022-11-20T00:00:00.000",
+          "heightCm": 73.9,
+          "weightKg": 8.8
+        },
+        {
+          "id": "demo_yui_15",
+          "date": "2023-02-20T00:00:00.000",
+          "heightCm": 77.3,
+          "weightKg": 9.2
+        },
+        {
+          "id": "demo_yui_18",
+          "date": "2023-05-20T00:00:00.000",
+          "heightCm": 80.0,
+          "weightKg": 9.9
+        },
+        {
+          "id": "demo_yui_21",
+          "date": "2023-08-20T00:00:00.000",
+          "heightCm": 82.9,
+          "weightKg": 10.5
+        },
+        {
+          "id": "demo_yui_24",
+          "date": "2023-11-20T00:00:00.000",
+          "heightCm": 85.4,
+          "weightKg": 11.0
+        },
+        {
+          "id": "demo_yui_28",
+          "date": "2024-03-20T00:00:00.000",
+          "heightCm": 88.0,
+          "weightKg": 11.9
+        },
+        {
+          "id": "demo_yui_32",
+          "date": "2024-07-20T00:00:00.000",
+          "heightCm": 90.2,
+          "weightKg": 12.4
+        },
+        {
+          "id": "demo_yui_36",
+          "date": "2024-11-20T00:00:00.000",
+          "heightCm": 92.8,
+          "weightKg": 13.3
+        },
+        {
+          "id": "demo_yui_40",
+          "date": "2025-03-20T00:00:00.000",
+          "heightCm": 94.8,
+          "weightKg": 13.7
+        },
+        {
+          "id": "demo_yui_44",
+          "date": "2025-07-20T00:00:00.000",
+          "heightCm": 97.9,
+          "weightKg": 14.5
+        },
+        {
+          "id": "demo_yui_48",
+          "date": "2025-11-20T00:00:00.000",
+          "heightCm": 100.2,
+          "weightKg": 15.2
+        },
+        {
+          "id": "demo_yui_52",
+          "date": "2026-03-20T00:00:00.000",
+          "heightCm": 103.1,
+          "weightKg": 15.8
+        },
+        {
+          "id": "demo_yui_56",
+          "date": "2026-07-20T00:00:00.000",
+          "heightCm": 105.5,
+          "weightKg": 16.7
+        }
+      ]
+    }
+  ]
+}

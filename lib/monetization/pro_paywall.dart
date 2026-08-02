@@ -92,6 +92,13 @@ class _ProPaywallSheetState extends State<_ProPaywallSheet> {
               body: '靴の「次の購入サイズと時期」＋その先の予報',
             ),
             _feature(
+              icon: Icons.image_outlined,
+              scheme: scheme,
+              title: 'ガイド・グラフの画像保存',
+              body: '成長曲線・SDスコア・おむつ・洋服・靴を'
+                  '共有しやすい正方形画像で保存',
+            ),
+            _feature(
               icon: Icons.cloud_done_outlined,
               scheme: scheme,
               title: 'オンライン自動バックアップ',

@@ -51,6 +51,7 @@ dependencies:
   web: ^1.1.1
   google_mobile_ads: ^9.0.0
   in_app_purchase: ^3.3.0
+  flutter_svg: ^2.3.0
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +94,16 @@ flutter:
     - assets/fonts/ZenKakuGothicNew-Regular.ttf
     - assets/fonts/ZenKakuGothicNew-Bold.ttf
     - assets/branding/app_icon_art.png
+    # おむつガイドのシリーズ識別バッジ用アイコン（実行時に色と合成する）。
+    - assets/diaper/icons/diaper.svg
+    - assets/diaper/icons/moon-stars.svg
+    - assets/diaper/icons/water-gun.svg
+    - assets/diaper/icons/toilet-paper.svg
+    - assets/diaper/icons/clock.svg
+    # おむつガイドの状態バッジ用アイコン（Lucide・ISCライセンス）。
+    - assets/diaper/icons/status/size-up.svg
+    - assets/diaper/icons/status/max.svg
+    - assets/diaper/icons/status/exceeds.svg
 
   # アプリ全体のUIフォント（アイコンの文字と同じ丸ゴシックで統一）。
   # PDF（受診レポート）は文書らしさを優先して Zen Kaku Gothic New のまま。

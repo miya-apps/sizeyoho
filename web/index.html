@@ -95,6 +95,20 @@
     <div class="splash-loading"><span></span><span></span><span></span></div>
   </div>
   <script>
+    // 開発中の動作確認用：古いビルドが登録した Service Worker が残っていると
+    // 何度リロードしても古い画面がキャッシュから出てしまうため、確実に解除する。
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (var registration of registrations) { registration.unregister(); }
+      });
+    }
+    if (window.caches) {
+      caches.keys().then(function (names) {
+        for (var name of names) { caches.delete(name); }
+      });
+    }
+  </script>
+  <script>
     // 最初から大きく表示し、最低 2.5 秒はこの画面を保つ。
     var splashStart = Date.now();
     var minSplashMs = 2500;

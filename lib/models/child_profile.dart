@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
 import 'birthday_memory.dart';
+import 'diaper_records.dart';
 import 'gender.dart';
 import 'growth_record.dart';
 import 'shoe_records.dart';
@@ -29,16 +30,21 @@ class ChildProfile {
     this.fatherHeightCm,
     this.motherHeightCm,
     this.birthdayCelebrationEnabled = true,
+    this.diaperGuideEnabled = false,
     List<int>? celebratedBirthdayAges,
     List<BirthdayMemory>? birthdayMemories,
     List<GrowthRecord>? growthRecords,
     List<FootMeasurement>? footMeasurements,
     List<ShoePurchase>? shoePurchases,
+    List<DiaperSlot>? diaperSlots,
+    this.diaperGuideLastOpenedAt,
+    this.diaperGuideHideSuggestedAt,
   })  : celebratedBirthdayAges = celebratedBirthdayAges ?? [],
         birthdayMemories = birthdayMemories ?? [],
         growthRecords = growthRecords ?? [],
         footMeasurements = footMeasurements ?? [],
-        shoePurchases = shoePurchases ?? [];
+        shoePurchases = shoePurchases ?? [],
+        diaperSlots = diaperSlots ?? [];
 
   final String id;
   String name;
@@ -66,8 +72,23 @@ class ChildProfile {
   /// 靴の購入記録（時系列）。「今の靴がいつまで履けるか」の予測に使う。
   List<ShoePurchase> shoePurchases;
 
+  /// おむつガイドの選択枠（最大3つ、slotIndex 0〜2）。
+  /// 「いま使っているサイズ」は記録しない（体重から毎回計算する）。
+  List<DiaperSlot> diaperSlots;
+
+  /// おむつガイドを最後に開いた日時（非表示提案の行動ベース判定用）。
+  /// 体重・年齢・サイズ到達は提案のトリガーにしない。
+  DateTime? diaperGuideLastOpenedAt;
+
+  /// 非表示提案を最後に出した日時（「あとで」後の再提案抑制用）。
+  DateTime? diaperGuideHideSuggestedAt;
+
   /// お誕生日のお祝い表示を有効にするか（「今後表示しない」で false）。
   bool birthdayCelebrationEnabled;
+
+  /// サイズ予報タブに「おむつガイド」を表示するか（子どもごとのオプトイン）。
+  /// 全員に必要な機能ではないためデフォルトは false。
+  bool diaperGuideEnabled;
 
   /// お祝いを表示済みの年齢リスト（同じ誕生日に繰り返し出さないため）。
   List<int> celebratedBirthdayAges;
@@ -154,10 +175,15 @@ class ChildProfile {
         'fatherHeightCm': fatherHeightCm,
         'motherHeightCm': motherHeightCm,
         'birthdayCelebrationEnabled': birthdayCelebrationEnabled,
+        'diaperGuideEnabled': diaperGuideEnabled,
         'celebratedBirthdayAges': celebratedBirthdayAges,
         'birthdayMemories': birthdayMemories.map((m) => m.toJson()).toList(),
         'footMeasurements': footMeasurements.map((m) => m.toJson()).toList(),
         'shoePurchases': shoePurchases.map((p) => p.toJson()).toList(),
+        'diaperSlots': diaperSlots.map((s) => s.toJson()).toList(),
+        'diaperGuideLastOpenedAt': diaperGuideLastOpenedAt?.toIso8601String(),
+        'diaperGuideHideSuggestedAt':
+            diaperGuideHideSuggestedAt?.toIso8601String(),
         'growthRecords': growthRecords.map((r) => r.toJson()).toList(),
       };
 
@@ -186,6 +212,7 @@ class ChildProfile {
       motherHeightCm: (json['motherHeightCm'] as num?)?.toDouble(),
       birthdayCelebrationEnabled:
           json['birthdayCelebrationEnabled'] as bool? ?? true,
+      diaperGuideEnabled: json['diaperGuideEnabled'] as bool? ?? false,
       celebratedBirthdayAges: (json['celebratedBirthdayAges'] as List<dynamic>?)
               ?.map((e) => e as int)
               .toList() ??
@@ -199,6 +226,16 @@ class ChildProfile {
               ?.map((e) => ShoePurchase.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
+      diaperSlots: (json['diaperSlots'] as List<dynamic>?)
+              ?.map((e) => DiaperSlot.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      diaperGuideLastOpenedAt: json['diaperGuideLastOpenedAt'] != null
+          ? DateTime.parse(json['diaperGuideLastOpenedAt'] as String)
+          : null,
+      diaperGuideHideSuggestedAt: json['diaperGuideHideSuggestedAt'] != null
+          ? DateTime.parse(json['diaperGuideHideSuggestedAt'] as String)
+          : null,
       growthRecords: (json['growthRecords'] as List<dynamic>?)
               ?.map(
                 (e) => GrowthRecord.fromJson(e as Map<String, dynamic>),
@@ -241,11 +278,15 @@ class ChildProfile {
     Object? fatherHeightCm = _kKeepParentHeight,
     Object? motherHeightCm = _kKeepParentHeight,
     bool? birthdayCelebrationEnabled,
+    bool? diaperGuideEnabled,
     List<int>? celebratedBirthdayAges,
     List<BirthdayMemory>? birthdayMemories,
     List<GrowthRecord>? growthRecords,
     List<FootMeasurement>? footMeasurements,
     List<ShoePurchase>? shoePurchases,
+    List<DiaperSlot>? diaperSlots,
+    DateTime? diaperGuideLastOpenedAt,
+    DateTime? diaperGuideHideSuggestedAt,
   }) {
     return ChildProfile(
       id: id ?? this.id,
@@ -269,6 +310,7 @@ class ChildProfile {
           : motherHeightCm as double?,
       birthdayCelebrationEnabled:
           birthdayCelebrationEnabled ?? this.birthdayCelebrationEnabled,
+      diaperGuideEnabled: diaperGuideEnabled ?? this.diaperGuideEnabled,
       celebratedBirthdayAges: celebratedBirthdayAges ??
           List<int>.from(this.celebratedBirthdayAges),
       birthdayMemories:
@@ -279,6 +321,11 @@ class ChildProfile {
           List<FootMeasurement>.from(this.footMeasurements),
       shoePurchases:
           shoePurchases ?? List<ShoePurchase>.from(this.shoePurchases),
+      diaperSlots: diaperSlots ?? List<DiaperSlot>.from(this.diaperSlots),
+      diaperGuideLastOpenedAt:
+          diaperGuideLastOpenedAt ?? this.diaperGuideLastOpenedAt,
+      diaperGuideHideSuggestedAt:
+          diaperGuideHideSuggestedAt ?? this.diaperGuideHideSuggestedAt,
     );
   }
 }

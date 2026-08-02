@@ -12,7 +12,8 @@ class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
 
   static const Color _background = Color(0xFFF6F6F8);
-  static const String _revisedAt = '2026年7月8日';
+  static const String _establishedAt = '2026年7月7日';
+  static const String _revisedAt = '2026年8月1日';
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,11 @@ class PrivacyPolicyScreen extends StatelessWidget {
                         'する Firebase）へ送信・保存します。この目的以外に'
                         '記録データを利用することはありません。オンライン自動'
                         'バックアップを使わない場合、記録データが端末の外へ'
-                        '送信されることはありません。',
+                        '送信されることはありません。\n\n'
+                        'なお、写真（お子様のアイコン写真・お誕生日の思い出'
+                        '写真）はオンライン自動バックアップをオンにしていても'
+                        'クラウドへ送信されず、お使いの端末内にのみ保存され'
+                        'ます。',
                         style: _bodyStyle,
                       ),
                       _sub('（2）アカウント情報'),
@@ -146,7 +151,9 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 20),
                       Text(
-                        '制定日：$_revisedAt\nMIYA APPS（$kAppName 運営者）',
+                        '制定日：$_establishedAt\n'
+                        '最終改定日：$_revisedAt\n'
+                        'MIYA APPS（$kAppName 運営者）',
                         style: TextStyle(
                           fontSize: 12,
                           height: 1.6,

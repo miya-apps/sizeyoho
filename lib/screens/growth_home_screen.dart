@@ -4,48 +4,11 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../app/adaptive_layout.dart';
-import '../graph/graph_layout_constants.dart';
 import '../growth/growth_lms_2000.dart';
-import '../growth/sd_curves.dart';
 import '../models/child_profile.dart';
 import '../models/gender.dart';
 import '../models/growth_record.dart';
-
-/// グラフの Y 軸スケール（描画範囲のみ。ラベル数値は固定定数で指定）。
-typedef _AxisScale = ({double plotMin, double plotMax});
-
-/// 横スクロール年齢セレクターの選択肢（歳）。
-const _kAgeRangeOptions = [1, 2, 4, 8, 12, 18];
-
-/// 年齢モード別・X 軸固定目盛り（左→右）。
-const _kXAxisTickLabels = <int, List<int>>{
-  1: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-  2: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
-  4: [0, 4, 8, 12, 16, 20, 24, 28, 32, 36, 40, 44, 48],
-  8: [0, 1, 2, 3, 4, 5, 6, 7, 8],
-  12: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-  18: [0, 2, 4, 6, 8, 10, 12, 14, 16, 18],
-};
-
-/// 年齢モード別・X 軸単位（数字行の下に独立配置）。
-const _kXAxisUnitSuffix = <int, String>{
-  1: '月齢（か月）',
-  2: '月齢（か月）',
-  4: '月齢（か月）',
-  8: '年齢（歳）',
-  12: '年齢（歳）',
-  18: '年齢（歳）',
-};
-
-/// 年齢モード別・X 軸縦グリッド間隔（chart 座標 = 年）。
-const _kXAxisVerticalInterval = <int, double>{
-  1: 1 / 12,
-  2: 2 / 12,
-  4: 4 / 12,
-  8: 1.0,
-  12: 1.0,
-  18: 2.0,
-};
+import '../widgets/growth_charts.dart';
 
 class GrowthHomeScreen extends StatefulWidget {
   const GrowthHomeScreen({
@@ -140,143 +103,16 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
   Color get _correctedAccent =>
       Color.lerp(_viewingChild.themeColor, Colors.black, 0.40)!;
 
-  // ── Y 軸数値・単位は fl_chart titlesData（getTitlesWidget）で描画 ────────
-
-  /// SD 基準線・帯は LMS 基準（0〜17.5歳）ぶん生成し、表示範囲外は fl_chart がクリップする。
+  // ── グラフ本体の描画は lib/widgets/growth_charts.dart の共有ウィジェットに
+  //    委譲する（書き出し画像と見た目を一本化）。ここにはタップ検出・
+  //    詳細ボックスなど画面専用の層だけが残っている。
 
   /// 画面幅に応じた UI 拡大率（軸ラベル・年齢セレクター等に適用、最大1.3倍）。
   /// フォントと確保領域（reservedSize 等）を同率で拡大するため、
   /// 大画面でもラベルとグリッドの位置整合が保たれる。
   double get _uiScale => uiScaleForWidth(MediaQuery.sizeOf(context).width);
 
-  double get _growthChartYAxisReservedSize => 34 * _uiScale;
-
-  /// X 軸：数字行 + 単位行。
-  double get _growthChartXAxisNumbersHeight => 22 * _uiScale;
-  double get _growthChartXAxisUnitHeight => 16 * _uiScale;
-  double get _growthChartBottomAxisReservedSize =>
-      _growthChartXAxisNumbersHeight + _growthChartXAxisUnitHeight;
-
-  /// 成長曲線グラフの軸数値ラベル（横・縦共通）。
-  double get _growthChartAxisNumberFontSize => 12 * _uiScale;
-  static const FontWeight _growthChartAxisNumberFontWeight = FontWeight.w500;
-
-  /// LineChart 内の軸ラベル・余白をすべて無効化（SD スコア chart 等）。
-  static const FlTitlesData _hiddenChartTitles = FlTitlesData(
-    leftTitles: AxisTitles(
-      sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-    ),
-    rightTitles: AxisTitles(
-      sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-    ),
-    topTitles: AxisTitles(
-      sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-    ),
-    bottomTitles: AxisTitles(
-      sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-    ),
-  );
-
-  /// 成長曲線 chart：左右 Y 軸の reservedSize のみ確保（上層オーバーレイ用）。
-  FlTitlesData _growthChartYAxisPlaceholderTitles({
-    required double horizontalInterval,
-  }) {
-    final side = SideTitles(
-      showTitles: true,
-      reservedSize: _growthChartYAxisReservedSize,
-      interval: horizontalInterval,
-      getTitlesWidget: (_, _) => const SizedBox.shrink(),
-    );
-    return FlTitlesData(
-      leftTitles: AxisTitles(sideTitles: side),
-      rightTitles: AxisTitles(sideTitles: side),
-      topTitles: const AxisTitles(
-        sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-      ),
-      bottomTitles: const AxisTitles(
-        sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-      ),
-    );
-  }
-
-  /// GraphLayoutConstants 配列を fl_chart グリッド線位置に同期して描画。
-  FlTitlesData _buildGrowthChartYAxisTitlesData({
-    required ColorScheme scheme,
-    required List<String> weightLabels,
-    required List<String> heightLabels,
-    required double horizontalInterval,
-  }) {
-    SideTitles sideTitles({
-      required List<String> labelList,
-      required Color seriesColor,
-      required TextAlign textAlign,
-      required String unitLabelText,
-    }) {
-      final topIndex = labelList.indexWhere((e) => e.isNotEmpty);
-      final unitStyle = _growthYAxisUnitTitleStyle(seriesColor, scheme);
-
-      return SideTitles(
-        showTitles: true,
-        reservedSize: _growthChartYAxisReservedSize,
-        interval: horizontalInterval,
-        getTitlesWidget: (value, meta) {
-          final interval = meta.appliedInterval;
-          if (interval <= 0) return const SizedBox.shrink();
-          final index = ((meta.max - value) / interval).round();
-          if (index < 0 || index >= labelList.length) {
-            return const SizedBox.shrink();
-          }
-          if (topIndex >= 0 && index == topIndex - 1) {
-            return Text(unitLabelText, textAlign: textAlign, style: unitStyle);
-          }
-          final text = labelList[index];
-          if (text.isEmpty) {
-            return const SizedBox.shrink();
-          }
-          return Text(
-            text,
-            textAlign: textAlign,
-            maxLines: 1,
-            softWrap: false,
-            overflow: TextOverflow.clip,
-            style: _yAxisNumberStyle(seriesColor),
-          );
-        },
-      );
-    }
-
-    return FlTitlesData(
-      leftTitles: AxisTitles(
-        sideTitles: sideTitles(
-          labelList: weightLabels,
-          seriesColor: _weightSeriesColor,
-          textAlign: TextAlign.right,
-          unitLabelText: '\n(kg)',
-        ),
-      ),
-      rightTitles: AxisTitles(
-        sideTitles: sideTitles(
-          labelList: heightLabels,
-          seriesColor: _heightSeriesColor,
-          textAlign: TextAlign.left,
-          unitLabelText: '\n(cm)',
-        ),
-      ),
-      topTitles: const AxisTitles(
-        sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-      ),
-      bottomTitles: const AxisTitles(
-        sideTitles: SideTitles(showTitles: false, reservedSize: 0),
-      ),
-    );
-  }
-
-  static const Color _heightSeriesColor = Color(0xFF1565C0);
-  static const Color _weightSeriesColor = Color(0xFFE65100);
-
-  /// 系列色を軸ラベル向けにわずかに落ち着かせ、白背景でも読みやすくする。
-  static Color _seriesAxisLabelColor(Color seriesColor) =>
-      Color.lerp(seriesColor, const Color(0xFF263238), 0.18)!;
+  GrowthChartStyle get _chartStyle => GrowthChartStyle(uiScale: _uiScale);
 
   /// 現在タブで選択中の子供
   ChildProfile get _viewingChild => widget.child;
@@ -289,11 +125,7 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
     final base = corrected && child.expectedBirthDate != null
         ? child.expectedBirthDate!
         : child.birthDate;
-    final years = DateTime.now().difference(base).inDays / 365.25;
-    for (final opt in _kAgeRangeOptions) {
-      if (years < opt) return opt;
-    }
-    return _kAgeRangeOptions.last;
+    return autoGrowthAgeRangeYears(base);
   }
 
   @override
@@ -394,404 +226,6 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
     return pts;
   }
 
-  ({double minX, double maxX}) _dynamicXRange() {
-    return (minX: 0.0, maxX: _selectedAgeRangeYears.toDouble());
-  }
-
-  /// 横軸（年齢チップ）ごとの縦グリッド間隔（chart 座標 = 年）。
-  double _xAxisVerticalIntervalForMode(int ageYears) =>
-      _kXAxisVerticalInterval[ageYears] ?? _kXAxisVerticalInterval[4]!;
-
-  List<int> _xAxisTickLabelsForMode(int ageYears) =>
-      _kXAxisTickLabels[ageYears] ?? _kXAxisTickLabels[4]!;
-
-  String _xAxisUnitSuffixForMode(int ageYears) =>
-      _kXAxisUnitSuffix[ageYears] ?? _kXAxisUnitSuffix[4]!;
-
-  /// 横軸（年齢チップ）ごとのメモリ間隔・ラベル表示設定。
-  /// ラベル配列・単位は [_kXAxisTickLabels] / [_kXAxisUnitSuffix] の定数を使用。
-  ({double interval, int verticalLineCount}) _xAxisGridConfigForMode(
-    int ageYears,
-  ) {
-    final labels = _xAxisTickLabelsForMode(ageYears);
-    return (
-      interval: _xAxisVerticalIntervalForMode(ageYears),
-      verticalLineCount: labels.length,
-    );
-  }
-
-  /// 年齢チップごとの固定 Y 軸描画範囲（身長・体重）。
-  ({_AxisScale height, _AxisScale weight}) _fixedAxisPair(int ageYears) {
-    switch (ageYears) {
-      case 1:
-        // 身長帯（下端）と体重帯（上端）が重ならないよう、身長は下へ
-        // 体重は上へレンジを広げ、身長を上段・体重を下段に分離する。
-        // 身長は上端に1目盛りの空きを確保（グラフ上部の切り替えボタン
-        // と +2SD 曲線が重ならないように全体を1目盛り下げている）。
-        return (
-          height: (plotMin: 5, plotMax: 90),
-          weight: (plotMin: 0, plotMax: 17),
-        );
-      case 2:
-        return (
-          height: (plotMin: 30, plotMax: 105),
-          weight: (plotMin: 0, plotMax: 30),
-        );
-      case 4:
-        return (
-          height: (plotMin: 30, plotMax: 115),
-          weight: (plotMin: 0, plotMax: 34),
-        );
-      case 8:
-        return (
-          height: (plotMin: 0, plotMax: 150),
-          weight: (plotMin: 0, plotMax: 75),
-        );
-      case 12:
-        // 12歳付近で身長 -2SD と体重 +2SD が接近するため、1歳と同様に
-        // レンジを広げて身長を上段・体重を下段に分離する。
-        return (
-          height: (plotMin: -20, plotMax: 180),
-          weight: (plotMin: 0, plotMax: 100),
-        );
-      case 18:
-        return (
-          height: (plotMin: 30, plotMax: 210),
-          weight: (plotMin: 0, plotMax: 180),
-        );
-      default:
-        return _fixedAxisPair(4);
-    }
-  }
-
-  List<String> _fixedHeightYLabels(int ageYears) =>
-      GraphLayoutConstants.heightLabelsForMode(ageYears);
-
-  List<String> _fixedWeightYLabels(int ageYears) =>
-      GraphLayoutConstants.weightLabelsForMode(ageYears);
-
-  /// 年齢モードごとの横グリッド線本数（= Y 軸固定ラベル配列長）。
-  int _yAxisDivisionCount(int ageYears) =>
-      GraphLayoutConstants.yGridLineCountForMode(ageYears);
-
-  double _yGridInterval(_AxisScale scale, int divisions) {
-    if (divisions <= 1) return scale.plotMax - scale.plotMin;
-    return (scale.plotMax - scale.plotMin) / (divisions - 1);
-  }
-
-  double _measureTextWidth(BuildContext context, String text, TextStyle style) {
-    final painter = TextPainter(
-      text: TextSpan(text: text, style: style),
-      textDirection: Directionality.of(context),
-      maxLines: 1,
-    )..layout();
-    return painter.width;
-  }
-
-  /// Y 軸単位ラベル（(kg)/(cm)）：X 軸単位ラベルと同じサイズ・太さ、系列色のみ差別化。
-  TextStyle _growthYAxisUnitTitleStyle(Color seriesColor, ColorScheme scheme) =>
-      _xAxisUnitSuffixStyle(scheme).copyWith(color: seriesColor);
-
-  Offset _plotSpotToOffset(
-    FlSpot spot,
-    Size plotSize, {
-    required double minX,
-    required double maxX,
-    required double minY,
-    required double maxY,
-  }) {
-    final xRange = maxX - minX;
-    final yRange = maxY - minY;
-    if (xRange <= 0 || yRange <= 0) return Offset.zero;
-    return Offset(
-      (spot.x - minX) / xRange * plotSize.width,
-      plotSize.height - (spot.y - minY) / yRange * plotSize.height,
-    );
-  }
-
-  TextStyle _yAxisNumberStyle(Color seriesColor) => TextStyle(
-    fontSize: _growthChartAxisNumberFontSize,
-    fontWeight: _growthChartAxisNumberFontWeight,
-    height: 1.0,
-    color: _seriesAxisLabelColor(seriesColor),
-  );
-
-  TextStyle _xAxisNumberStyle(ColorScheme scheme) => TextStyle(
-    fontSize: _growthChartAxisNumberFontSize,
-    fontWeight: _growthChartAxisNumberFontWeight,
-    height: 1.0,
-    color: scheme.onSurfaceVariant,
-  );
-
-  /// 成長曲線グラフの X 軸単位ラベル（「月齢（か月）」「年齢（歳）」）。
-  TextStyle _xAxisUnitSuffixStyle(ColorScheme scheme) => _xAxisNumberStyle(
-    scheme,
-  ).copyWith(fontSize: 10 * _uiScale, fontWeight: FontWeight.w600);
-
-  /// 下 X 軸数字行：各目盛りの中心を縦グリッド位置 i/(n-1) に固定。
-  Widget _buildStaticXAxisNumbersRow({
-    required List<int> tickLabels,
-    required ColorScheme scheme,
-  }) {
-    final style = _xAxisNumberStyle(scheme);
-    final tickCount = tickLabels.length;
-    if (tickCount == 0) return const SizedBox.shrink();
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final plotWidth = constraints.maxWidth;
-
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            for (var i = 0; i < tickCount; i++)
-              Builder(
-                builder: (context) {
-                  final text = '${tickLabels[i]}';
-                  final halfW = _measureTextWidth(context, text, style) / 2;
-                  final centerX = tickCount <= 1
-                      ? plotWidth
-                      : plotWidth * i / (tickCount - 1);
-                  final slotAlign = i == 0
-                      ? Alignment.centerLeft
-                      : i == tickCount - 1
-                      ? Alignment.centerRight
-                      : Alignment.center;
-
-                  return Positioned(
-                    left: centerX - halfW,
-                    width: halfW * 2,
-                    top: 0,
-                    bottom: 0,
-                    child: Align(
-                      alignment: slotAlign,
-                      child: Text(
-                        text,
-                        maxLines: 1,
-                        softWrap: false,
-                        overflow: TextOverflow.visible,
-                        style: style,
-                      ),
-                    ),
-                  );
-                },
-              ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// 下 X 軸：数字行 + 単位行（fl_chart titlesData 不使用）。
-  Widget _buildStaticXAxisLabels({
-    required List<int> tickLabels,
-    required String unitSuffix,
-    required ColorScheme scheme,
-  }) {
-    if (tickLabels.isEmpty) return const SizedBox.shrink();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        SizedBox(
-          height: _growthChartXAxisNumbersHeight,
-          child: _buildStaticXAxisNumbersRow(
-            tickLabels: tickLabels,
-            scheme: scheme,
-          ),
-        ),
-        SizedBox(
-          height: _growthChartXAxisUnitHeight,
-          child: Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              unitSuffix,
-              maxLines: 1,
-              softWrap: false,
-              style: _xAxisUnitSuffixStyle(scheme),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 静的グラフクローム：プロット + X 軸。Y 数値・単位は fl_chart 内。
-  Widget _buildStaticGrowthChartFrame({
-    required ColorScheme scheme,
-    required List<int> xTickLabels,
-    required String xUnitSuffix,
-    required Widget plotArea,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(child: plotArea),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(width: _growthChartYAxisReservedSize),
-                  Expanded(
-                    child: _buildStaticXAxisLabels(
-                      tickLabels: xTickLabels,
-                      unitSuffix: xUnitSuffix,
-                      scheme: scheme,
-                    ),
-                  ),
-                  SizedBox(width: _growthChartYAxisReservedSize),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 成長曲線 chart のグリッド（Y 固定分割 + X 目盛り数に同期した縦線）。
-  FlGridData _buildGrowthGridData({
-    required _AxisScale scale,
-    required int yDivisions,
-    required double minX,
-    required double verticalInterval,
-    required int verticalLineCount,
-  }) {
-    final horizontalInterval = _yGridInterval(scale, yDivisions);
-    return FlGridData(
-      show: true,
-      drawVerticalLine: true,
-      drawHorizontalLine: true,
-      verticalInterval: verticalInterval,
-      horizontalInterval: horizontalInterval,
-      checkToShowVerticalLine: (x) {
-        final rel = (x - minX) / verticalInterval;
-        final k = rel.round();
-        return (rel - k).abs() < 0.08 && k >= 0 && k <= verticalLineCount - 1;
-      },
-      checkToShowHorizontalLine: (y) {
-        final rel = (y - scale.plotMin) / horizontalInterval;
-        final k = rel.round();
-        return (rel - k).abs() < 0.08 && k >= 0 && k <= yDivisions - 1;
-      },
-      getDrawingVerticalLine: (x) => FlLine(
-        color: Colors.grey.withValues(alpha: 0.2),
-        strokeWidth: 0.8,
-        dashArray: const [4, 4],
-      ),
-      getDrawingHorizontalLine: (y) => FlLine(
-        color: Colors.grey.withValues(alpha: 0.2),
-        strokeWidth: 0.8,
-        dashArray: const [4, 4],
-      ),
-    );
-  }
-
-  /// SD 基準カーブから「基準線（薄い系列色）＋バンド塗り＋実データ線」を構築。
-  ///
-  /// 描画順序が重要：fl_chart は betweenBarsData→lineBars(index順) の順に描く。
-  /// 実データ線を末尾 index に置くことで、塗り・基準線の上に確実に重なる。
-  ({List<LineChartBarData> bars, List<BetweenBarsData> bands}) _sdBarsAndBands({
-    required List<SdCurve> curves,
-    required Color seriesColor,
-    required List<FlSpot> userSpots,
-  }) {
-    final bars = <LineChartBarData>[
-      for (final c in curves)
-        _refLine(
-          c.spots,
-          seriesColor.withValues(alpha: c.showLabel ? 0.30 : 0.15),
-        ),
-      if (userSpots.isNotEmpty) _userLine(userSpots, seriesColor),
-    ];
-
-    int idxOf(double sd) => curves.indexWhere((c) => (c.sd - sd).abs() < 1e-6);
-    final i2 = idxOf(2);
-    final iM2 = idxOf(-2);
-    final i1 = idxOf(1);
-    final iM1 = idxOf(-1);
-
-    final bands = <BetweenBarsData>[
-      if (i2 >= 0 && iM2 >= 0)
-        BetweenBarsData(
-          fromIndex: i2,
-          toIndex: iM2,
-          color: seriesColor.withValues(alpha: 0.05),
-        ),
-      if (i1 >= 0 && iM1 >= 0)
-        BetweenBarsData(
-          fromIndex: i1,
-          toIndex: iM1,
-          color: seriesColor.withValues(alpha: 0.08),
-        ),
-    ];
-
-    return (bars: bars, bands: bands);
-  }
-
-  /// SD 基準線の名札。帯の塗り・曲線に重なっても読めるよう半透明白の
-  /// 下敷き＋太字で浮かせる（完全な白にせず、下の測定線がうっすら透ける）。
-  /// 文字色は系列色（身長=青／体重=オレンジ）でどちらの基準か判別できる。
-  /// 右端に縦に並ぶため、隣のラベルと干渉しないようコンパクトに保つ。
-  Widget _sdInlineLabel(String text, Color seriesColor) => Container(
-    decoration: BoxDecoration(
-      color: Colors.white.withValues(alpha: 0.72),
-      borderRadius: BorderRadius.circular(3),
-      border: Border.all(
-        color: seriesColor.withValues(alpha: 0.35),
-        width: 0.5,
-      ),
-    ),
-    padding: const EdgeInsets.symmetric(horizontal: 2.5, vertical: 0.5),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontSize: 7.5 * _uiScale,
-        fontWeight: FontWeight.w700,
-        height: 1.1,
-        color: seriesColor,
-      ),
-      maxLines: 1,
-      overflow: TextOverflow.clip,
-    ),
-  );
-
-  /// 基準線は 1ヶ月刻み＋単調3次補間で点が十分滑らかなため折れ線で描く。
-  /// ベジェ補間（isCurved: true）は制御点のはみ出しで帯が波打つため使わない。
-  LineChartBarData _refLine(List<FlSpot> spots, Color color) =>
-      LineChartBarData(
-        spots: spots,
-        color: color,
-        barWidth: 0.8,
-        isCurved: false,
-        dotData: const FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-      );
-
-  LineChartBarData _userLine(
-    List<FlSpot> spots,
-    Color color, {
-    bool curved = true,
-  }) => LineChartBarData(
-    spots: spots,
-    color: color,
-    barWidth: 2.5,
-    isCurved: curved,
-    dotData: FlDotData(
-      show: true,
-      getDotPainter: (_, _, _, _) => FlDotCirclePainter(
-        radius: 3.5,
-        color: color,
-        strokeWidth: 1.5,
-        strokeColor: Colors.white,
-      ),
-    ),
-    belowBarData: BarAreaData(show: false),
-  );
-
   /// グラフ本体。PageView で成長曲線 / SDスコアをスワイプ切り替え
   /// （切り替えはヘッダー右上のトグルとページ状態が連動）。
   /// 右下：修正月齢トグル（フローティング）。
@@ -847,16 +281,16 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
             // SD スコア表示中のみ、系列色の凡例をグラフ上部中央に重ねる
             // （成長曲線側はグラフ内の「身長」「体重」の色文字で判別できる）。
             if (_chartPageIndex == 1)
-              Positioned(
+              const Positioned(
                 top: 4,
                 left: 0,
                 right: 0,
-                child: Center(child: _buildSdFloatingLegend()),
+                child: Center(child: SdChartLegend()),
               ),
             if (_canUseCorrectedAge)
               Positioned(
                 right: 6,
-                bottom: _growthChartBottomAxisReservedSize + 6,
+                bottom: _chartStyle.bottomAxisReservedSize + 6,
                 child: _buildFloatingAgeModeSwitch(),
               ),
             // Stack の末尾 = 最前面。切り替えボタンと重なっても上に出る。
@@ -880,7 +314,7 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
         ),
         child: Row(
           children: [
-            for (final age in _kAgeRangeOptions)
+            for (final age in kGrowthAgeRangeOptions)
               Expanded(
                 child: _buildAgeRangeSegment(scheme: scheme, age: age),
               ),
@@ -1000,63 +434,6 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
     );
   }
 
-  Widget _legendEntry(Color color, String label) => Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Container(
-        width: 18,
-        height: 4,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(2),
-        ),
-      ),
-      const SizedBox(width: 6),
-      Text(
-        label,
-        maxLines: 1,
-        softWrap: false,
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: _seriesAxisLabelColor(color),
-        ),
-      ),
-    ],
-  );
-
-  /// SD スコアグラフ用のフローティング凡例（グラフ上部中央）。
-  /// 成長曲線側はグラフ内の系列名ラベルで判別できるため出さない。
-  Widget _buildSdFloatingLegend() {
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.22)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _legendEntry(_heightSeriesColor, '身長'),
-            const SizedBox(width: 12),
-            _legendEntry(_weightSeriesColor, '体重'),
-            const SizedBox(width: 12),
-            _legendEntry(const Color(0xFF66BB6A), '正常範囲(±2SD)'),
-          ],
-        ),
-      ),
-    );
-  }
-
   /// 測定日からの詳細な年齢（例「3歳2か月9日」）を返す。
   /// 修正月齢表示中は出産予定日、それ以外は生年月日を基準にする（[_ageBaseDate]）。
   String _ageDetailLabel(DateTime date) {
@@ -1141,7 +518,7 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
           style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: isHeight ? _heightSeriesColor : _weightSeriesColor,
+            color: isHeight ? kGrowthHeightSeriesColor : kGrowthWeightSeriesColor,
           ),
         ),
         TextSpan(
@@ -1207,8 +584,8 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
     required double minX,
     required double maxX,
     required double horizontalInterval,
-    required _AxisScale heightScale,
-    required _AxisScale weightScale,
+    required GrowthAxisScale heightScale,
+    required GrowthAxisScale weightScale,
     required List<({DateTime date, double age, double? h, double? w})>
     recordPoints,
   }) {
@@ -1216,7 +593,7 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
         .where((r) => r.age >= minX - 0.01 && r.age <= maxX + 0.01)
         .toList();
 
-    double norm(double v, _AxisScale s) =>
+    double norm(double v, GrowthAxisScale s) =>
         ((v - s.plotMin) / (s.plotMax - s.plotMin)).clamp(0.0, 1.0);
 
     // 未測定（0以下）の値は nullSpot にしてタップ対象から除外する。
@@ -1228,7 +605,7 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
               ? FlSpot(p.age, norm(p.h!, heightScale))
               : FlSpot.nullSpot,
       ],
-      color: _heightSeriesColor,
+      color: kGrowthHeightSeriesColor,
       barWidth: 0,
       dotData: const FlDotData(show: false),
     );
@@ -1239,7 +616,7 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
               ? FlSpot(p.age, norm(p.w!, weightScale))
               : FlSpot.nullSpot,
       ],
-      color: _weightSeriesColor,
+      color: kGrowthWeightSeriesColor,
       barWidth: 0,
       dotData: const FlDotData(show: false),
     );
@@ -1254,8 +631,9 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
           maxY: 1,
           gridData: const FlGridData(show: false),
           borderData: FlBorderData(show: false),
-          titlesData: _growthChartYAxisPlaceholderTitles(
+          titlesData: growthYAxisPlaceholderTitles(
             horizontalInterval: horizontalInterval,
+            reservedSize: _chartStyle.yAxisReservedSize,
           ),
           // 選択中レコードの位置を示す縦線（詳細ボックスとセットで表示）。
           extraLinesData: ExtraLinesData(
@@ -1300,591 +678,66 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
       ),
   ];
 
-  /// 母子手帳スタイルの重ね合わせ。軸ラベルは LineChart 外側の Column/Row で描画し、
-  /// プロット領域には水平グリッドと曲線のみを fl_chart に任せる。
+  /// 母子手帳スタイルの重ね合わせ（描画は共有の [GrowthCurveChart]）。
+  /// タップ検出レイヤーだけをこの画面で組み立てて重ねる。
   Widget _buildOverlayGrowthChart(ColorScheme scheme) {
-    final xRange = _dynamicXRange();
-    final minX = xRange.minX;
-    final maxX = xRange.maxX;
     final recordPoints = _sortedRecordPoints();
-    final isBoy = _viewingChild.gender == Gender.male;
-    final xGrid = _xAxisGridConfigForMode(_selectedAgeRangeYears);
-    final xTickLabels = _xAxisTickLabelsForMode(_selectedAgeRangeYears);
-    final xUnitSuffix = _xAxisUnitSuffixForMode(_selectedAgeRangeYears);
-    final yDivisions = _yAxisDivisionCount(_selectedAgeRangeYears);
-    final weightLabels = _fixedWeightYLabels(_selectedAgeRangeYears);
-    final heightLabels = _fixedHeightYLabels(_selectedAgeRangeYears);
-    assert(
-      weightLabels.length == yDivisions && heightLabels.length == yDivisions,
-      'Y axis label count must match grid division count',
+    final fixedAxes = growthFixedAxisPair(_selectedAgeRangeYears);
+    final yDivisions = growthYAxisDivisionCount(_selectedAgeRangeYears);
+    final horizontalInterval = growthYGridInterval(
+      fixedAxes.height,
+      yDivisions,
     );
-    final fixedAxes = _fixedAxisPair(_selectedAgeRangeYears);
-    final heightScale = fixedAxes.height;
-    final weightScale = fixedAxes.weight;
-    final horizontalInterval = _yGridInterval(heightScale, yDivisions);
 
-    final heightSdCurves = SdCurves.forSeries(isBoy: isBoy, isHeight: true);
-    final weightSdCurves = SdCurves.forSeries(isBoy: isBoy, isHeight: false);
-
-    final heightChart = _buildHeightChart(
-      scheme: scheme,
-      minX: minX,
-      maxX: maxX,
-      yDivisions: yDivisions,
-      xGrid: xGrid,
+    return GrowthCurveChart(
+      isBoy: _viewingChild.gender == Gender.male,
       recordPoints: recordPoints,
-      heightScale: heightScale,
-      weightLabels: weightLabels,
-      heightLabels: heightLabels,
-      horizontalInterval: horizontalInterval,
-      sdCurves: heightSdCurves,
-    );
-    final weightChart = _buildWeightChart(
-      minX: minX,
-      maxX: maxX,
-      recordPoints: recordPoints,
-      weightScale: weightScale,
-      horizontalInterval: horizontalInterval,
-      sdCurves: weightSdCurves,
-    );
-
-    final plotBorder = Border.all(
-      color: scheme.outlineVariant.withValues(alpha: 0.5),
-      width: 0.5,
-    );
-
-    return _buildStaticGrowthChartFrame(
-      scheme: scheme,
-      xTickLabels: xTickLabels,
-      xUnitSuffix: xUnitSuffix,
-      plotArea: LayoutBuilder(
-        builder: (context, constraints) {
-          final yAxisReserved = _growthChartYAxisReservedSize;
-          final plotWidth = constraints.maxWidth - yAxisReserved * 2;
-          final plotSize = Size(plotWidth, constraints.maxHeight);
-
-          Widget sdLabel(SdCurve curve, _AxisScale scale, Color seriesColor) {
-            // どの線の名札か迷わないよう、ラベルは線上（右端）に直接載せる
-            // （半透明の下敷きごしに線が通り抜けて見える）。
-            final endpoint = curve.spots.lastWhere(
-              (s) => s.x <= maxX + 1e-6,
-              orElse: () => curve.spots.last,
-            );
-            final pos = _plotSpotToOffset(
-              endpoint,
-              plotSize,
-              minX: minX,
-              maxX: maxX,
-              minY: scale.plotMin,
-              maxY: scale.plotMax,
-            );
-            final labelMaxWidth = 52.0 * _uiScale;
-            final left =
-                yAxisReserved +
-                (pos.dx - labelMaxWidth + 2).clamp(
-                  2.0,
-                  plotSize.width - labelMaxWidth - 2,
-                );
-            return Positioned(
-              left: left,
-              top: pos.dy - 7,
-              width: labelMaxWidth,
-              child: Align(
-                alignment: Alignment.centerRight,
-                child: _sdInlineLabel(curve.label, seriesColor),
-              ),
-            );
-          }
-
-          // 凡例行の代わりに、系列名をグラフ中央付近へ薄い色文字で直接書く。
-          // 身長は +2.0SD 曲線の少し上、体重は -2.0SD 曲線の少し下に置くと
-          // 帯と重ならず、どの帯がどの系列かも一目でわかる。
-          Widget seriesNameLabel({
-            required List<SdCurve> curves,
-            required _AxisScale scale,
-            required double anchorSd,
-            required bool above,
-            required String text,
-            required Color seriesColor,
-          }) {
-            final curve = curves.firstWhere((c) => c.sd == anchorSd);
-            final midX = (minX + maxX) / 2;
-            final anchor = curve.spots.reduce(
-              (a, b) => (a.x - midX).abs() <= (b.x - midX).abs() ? a : b,
-            );
-            final pos = _plotSpotToOffset(
-              FlSpot(midX, anchor.y),
-              plotSize,
-              minX: minX,
-              maxX: maxX,
-              minY: scale.plotMin,
-              maxY: scale.plotMax,
-            );
-            final fontSize = 14.0 * _uiScale;
-            const labelWidth = 80.0;
-            return Positioned(
-              left: yAxisReserved + pos.dx - labelWidth / 2,
-              top: above ? pos.dy - fontSize - 8 : pos.dy + 6,
-              width: labelWidth,
-              child: IgnorePointer(
-                child: Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  style: TextStyle(
-                    fontSize: fontSize,
-                    fontWeight: FontWeight.w800,
-                    height: 1.0,
-                    letterSpacing: 2,
-                    color: seriesColor.withValues(alpha: 0.42),
-                  ),
-                ),
-              ),
-            );
-          }
-
-          return Stack(
-            clipBehavior: Clip.hardEdge,
-            children: [
-              Positioned(
-                left: yAxisReserved,
-                right: yAxisReserved,
-                top: 0,
-                bottom: 0,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(border: plotBorder),
-                ),
-              ),
-              Positioned.fill(child: heightChart),
-              Positioned.fill(child: weightChart),
-              if (heightSdCurves.isNotEmpty)
-                seriesNameLabel(
-                  curves: heightSdCurves,
-                  scale: heightScale,
-                  anchorSd: 2.0,
-                  above: true,
-                  text: '身長',
-                  seriesColor: _heightSeriesColor,
-                ),
-              if (weightSdCurves.isNotEmpty)
-                seriesNameLabel(
-                  curves: weightSdCurves,
-                  scale: weightScale,
-                  anchorSd: -2.0,
-                  above: false,
-                  text: '体重',
-                  seriesColor: _weightSeriesColor,
-                ),
-              for (final curve in heightSdCurves)
-                if (curve.showLabel && curve.spots.isNotEmpty)
-                  sdLabel(curve, heightScale, _heightSeriesColor),
-              for (final curve in weightSdCurves)
-                if (curve.showLabel && curve.spots.isNotEmpty)
-                  sdLabel(curve, weightScale, _weightSeriesColor),
-              Positioned.fill(
-                child: _buildTouchOverlayChart(
-                  scheme: scheme,
-                  minX: minX,
-                  maxX: maxX,
-                  horizontalInterval: horizontalInterval,
-                  heightScale: heightScale,
-                  weightScale: weightScale,
-                  recordPoints: recordPoints,
-                ),
-              ),
-            ],
-          );
-        },
+      ageRangeYears: _selectedAgeRangeYears,
+      style: _chartStyle,
+      plotForeground: _buildTouchOverlayChart(
+        scheme: scheme,
+        minX: 0,
+        maxX: _selectedAgeRangeYears.toDouble(),
+        horizontalInterval: horizontalInterval,
+        heightScale: fixedAxes.height,
+        weightScale: fixedAxes.weight,
+        recordPoints: recordPoints,
       ),
     );
   }
 
-  /// 下層：身長・基準線・グリッド（横線+縦線）・左右 Y 軸ラベル。
-  Widget _buildHeightChart({
-    required ColorScheme scheme,
-    required double minX,
-    required double maxX,
-    required int yDivisions,
-    required ({double interval, int verticalLineCount}) xGrid,
-    required List<({DateTime date, double age, double? h, double? w})>
-    recordPoints,
-    required _AxisScale heightScale,
-    required List<String> weightLabels,
-    required List<String> heightLabels,
-    required double horizontalInterval,
-    required List<SdCurve> sdCurves,
-  }) {
-    // 0以下は不正値扱い（タップ対象・SD計算と同じ基準でそろえる）。
-    final userHSpots = recordPoints
-        .where(
-          (r) =>
-              r.h != null &&
-              r.h! > 0 &&
-              r.age >= minX - 0.01 &&
-              r.age <= maxX + 0.01,
-        )
-        .map((r) => FlSpot(r.age, r.h!))
-        .toList();
-
-    final sd = _sdBarsAndBands(
-      curves: sdCurves,
-      seriesColor: _heightSeriesColor,
-      userSpots: userHSpots,
-    );
-
-    return LineChart(
-      LineChartData(
-        minX: minX,
-        maxX: maxX,
-        minY: heightScale.plotMin,
-        maxY: heightScale.plotMax,
-        baselineX: minX,
-        baselineY: heightScale.plotMin,
-        clipData: const FlClipData.all(),
-        lineTouchData: const LineTouchData(enabled: false),
-        betweenBarsData: sd.bands,
-        gridData: _buildGrowthGridData(
-          scale: heightScale,
-          yDivisions: yDivisions,
-          minX: minX,
-          verticalInterval: xGrid.interval,
-          verticalLineCount: xGrid.verticalLineCount,
-        ),
-        borderData: FlBorderData(show: false),
-        titlesData: _buildGrowthChartYAxisTitlesData(
-          scheme: scheme,
-          weightLabels: weightLabels,
-          heightLabels: heightLabels,
-          horizontalInterval: horizontalInterval,
-        ),
-        lineBarsData: sd.bars,
-      ),
-      duration: const Duration(milliseconds: 200),
-    );
-  }
-
-  /// 上層（透明）：体重・体重基準線のみ。Y 軸は reservedSize のみ確保。
-  Widget _buildWeightChart({
-    required double minX,
-    required double maxX,
-    required List<({DateTime date, double age, double? h, double? w})>
-    recordPoints,
-    required _AxisScale weightScale,
-    required double horizontalInterval,
-    required List<SdCurve> sdCurves,
-  }) {
-    // 0以下は不正値扱い（タップ対象・SD計算と同じ基準でそろえる）。
-    final userWSpots = recordPoints
-        .where(
-          (r) =>
-              r.w != null &&
-              r.w! > 0 &&
-              r.age >= minX - 0.01 &&
-              r.age <= maxX + 0.01,
-        )
-        .map((r) => FlSpot(r.age, r.w!))
-        .toList();
-
-    final sd = _sdBarsAndBands(
-      curves: sdCurves,
-      seriesColor: _weightSeriesColor,
-      userSpots: userWSpots,
-    );
-
-    return LineChart(
-      LineChartData(
-        minX: minX,
-        maxX: maxX,
-        minY: weightScale.plotMin,
-        maxY: weightScale.plotMax,
-        baselineX: minX,
-        baselineY: weightScale.plotMin,
-        clipData: const FlClipData.all(),
-        lineTouchData: const LineTouchData(enabled: false),
-        betweenBarsData: sd.bands,
-        gridData: const FlGridData(show: false),
-        borderData: FlBorderData(show: false),
-        titlesData: _growthChartYAxisPlaceholderTitles(
-          horizontalInterval: horizontalInterval,
-        ),
-        lineBarsData: sd.bars,
-      ),
-      duration: const Duration(milliseconds: 200),
-    );
-  }
-
-  /// SD バンド（±2SD 等）の基準色。
-  static const Color _sdBandColor = Color(0xFF66BB6A);
-
-  Widget _sdYAxisLabelText(int v, ColorScheme scheme) {
-    // 「+2.0」「-1.0」「0」表記（グラフ内の SD 値と桁を揃える）。
-    final txt = v == 0 ? '0' : '${v > 0 ? '+' : ''}${v.toStringAsFixed(1)}';
-    final Color c;
-    if (v == 0) {
-      c = scheme.onSurface.withValues(alpha: 0.75);
-    } else if (v == 2 || v == -2) {
-      c = _sdBandColor;
-    } else {
-      c = scheme.onSurfaceVariant;
-    }
-    return Text(
-      txt,
-      maxLines: 1,
-      softWrap: false,
-      style: TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        color: c,
-        height: 1.0,
-      ),
-    );
-  }
-
-  /// SD スコアグラフの外付け Y 軸ラベル列（左右共通）。
-  /// 各ラベルはグリッド線の Y 位置に「上下中央」で揃うよう実座標で配置する
-  /// （以前の Expanded 均等割りは行の上端揃えになり線とズレていた）。
-  Widget _buildExternalSdYAxisColumn({
-    required double yLimit,
-    required ColorScheme scheme,
-    required Alignment alignment,
-  }) {
-    final limit = yLimit.round();
-    const labelHeight = 14.0;
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final h = constraints.maxHeight;
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            for (var v = limit; v >= -limit; v--)
-              Positioned(
-                top: (limit - v) / (2 * limit) * h - labelHeight / 2,
-                left: 0,
-                right: 0,
-                height: labelHeight,
-                child: Align(
-                  alignment: alignment,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3),
-                    child: _sdYAxisLabelText(v, scheme),
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// SDスコア専用グラフ。軸ラベルは LineChart 外側で描画。
+  /// SDスコア専用グラフ（描画は共有の [SdScoreChart]）。
+  /// タップ検出・選択中レコードの指示線だけをこの画面で注入する。
   Widget _buildSdScoreChart(ColorScheme scheme) {
-    final xRange = _dynamicXRange();
-    final minX = xRange.minX;
-    final maxX = xRange.maxX;
-    final xGrid = _xAxisGridConfigForMode(_selectedAgeRangeYears);
-    final xTickLabels = _xAxisTickLabelsForMode(_selectedAgeRangeYears);
-    final xUnitSuffix = _xAxisUnitSuffixForMode(_selectedAgeRangeYears);
     final recordPoints = _sortedRecordPoints();
-    final isBoy = _viewingChild.gender == Gender.male;
-    final hData = GrowthLms2000.heightRef(isBoy: isBoy);
-    final wData = GrowthLms2000.weightRef(isBoy: isBoy);
-
-    final hSpots = <FlSpot>[];
-    final wSpots = <FlSpot>[];
+    final maxX = _selectedAgeRangeYears.toDouble();
     // タップ詳細（ツールチップ）で元レコードを引くための範囲内リスト。
-    final inRange = <({DateTime date, double age, double? h, double? w})>[];
-    var maxAbs = 2.0;
-    for (final r in recordPoints) {
-      if (r.age < minX - 0.01 || r.age > maxX + 0.01) continue;
-      inRange.add(r);
-      final months = r.age * 12;
-      final h = r.h;
-      final w = r.w;
-      // 0以下は不正値扱いで点を打たない（zScore が 0 を返し平均線上に
-      // 偽の点が出てしまうため）。
-      if (h != null && h > 0) {
-        final hz = hData.zScore(months, h);
-        hSpots.add(FlSpot(r.age, hz));
-        maxAbs = math.max(maxAbs, hz.abs());
-      }
-      if (w != null && w > 0) {
-        final wz = wData.zScore(months, w);
-        wSpots.add(FlSpot(r.age, wz));
-        maxAbs = math.max(maxAbs, wz.abs());
-      }
-    }
-    // 基本は ±3.0 固定。実測が外れる場合のみ ±4.0 へ拡張して見切れ防止。
-    final yLimit = maxAbs <= 3.0 ? 3.0 : 4.0;
+    final inRange = recordPoints
+        .where((r) => r.age >= -0.01 && r.age <= maxX + 0.01)
+        .toList();
 
-    // ライン上の文字ラベルは付けない（左右の外付け軸ラベルで値を示す）。
-    HorizontalLine sdLine(
-      double y, {
-      required bool dashed,
-      required Color color,
-      double width = 1,
-    }) => HorizontalLine(
-      y: y,
-      color: color,
-      strokeWidth: width,
-      dashArray: dashed ? const [6, 4] : null,
-    );
-
-    final plotBorder = Border.all(
-      color: scheme.outlineVariant.withValues(alpha: 0.5),
-      width: 0.5,
-    );
-
-    final chart = LineChart(
-      LineChartData(
-        minX: minX,
-        maxX: maxX,
-        minY: -yLimit,
-        maxY: yLimit,
-        clipData: const FlClipData.all(),
-        // 成長曲線と同じタップ詳細（自前オーバーレイ）を表示する。
-        // h/w の系列は null を飛ばして作るため spotIndex がレコード位置と
-        // 一致せず、X（年齢）で引き当てる。
-        lineTouchData: LineTouchData(
-          enabled: true,
-          handleBuiltInTouches: false,
-          touchSpotThreshold: 18,
-          touchCallback: (event, response) =>
-              _handleChartTouch(event, response, _sdTouchChartKey, (spot) {
-                for (final r in inRange) {
-                  if ((r.age - spot.x).abs() < 1e-9) return r;
-                }
-                return null;
-              }),
-        ),
-        gridData: FlGridData(
-          show: true,
-          drawVerticalLine: true,
-          drawHorizontalLine: true,
-          verticalInterval: xGrid.interval,
-          // 0.5 刻みで補助線を引く（±0.5・±1.5 なども読み取れるように）。
-          horizontalInterval: 0.5,
-          checkToShowVerticalLine: (x) {
-            final rel = (x - minX) / xGrid.interval;
-            final k = rel.round();
-            return (rel - k).abs() < 0.08 &&
-                k >= 0 &&
-                k <= xGrid.verticalLineCount - 1;
-          },
-          checkToShowHorizontalLine: (v) {
-            final half = v * 2;
-            final isHalfStep = (half - half.roundToDouble()).abs() < 1e-6;
-            final r2 = half.round();
-            // 0 と ±2 は extraLines の専用線（平均・緑破線）に任せる。
-            return isHalfStep && r2 != 0 && r2 != 4 && r2 != -4;
-          },
-          getDrawingVerticalLine: (x) => FlLine(
-            color: scheme.outlineVariant.withValues(alpha: 0.25),
-            strokeWidth: 0.5,
-          ),
-          // 整数線をやや濃く、0.5 刻みの補助線を淡くして読み分けやすくする。
-          getDrawingHorizontalLine: (y) {
-            final isInt = (y - y.roundToDouble()).abs() < 1e-6;
-            return FlLine(
-              color: scheme.outlineVariant.withValues(
-                alpha: isInt ? 0.40 : 0.15,
-              ),
-              strokeWidth: 0.5,
-            );
-          },
-        ),
-        borderData: FlBorderData(show: false),
-        titlesData: _hiddenChartTitles,
-        extraLinesData: ExtraLinesData(
-          horizontalLines: [
-            sdLine(2, dashed: true, color: _sdBandColor),
-            sdLine(-2, dashed: true, color: _sdBandColor),
-            sdLine(
-              0,
-              dashed: false,
-              color: scheme.onSurface.withValues(alpha: 0.55),
-              width: 1.5,
-            ),
-          ],
-          // 選択中レコードの位置を示す縦線（詳細ボックスとセットで表示）。
-          verticalLines: _selectedRecordVerticalLines(scheme),
-        ),
-        // 注意：lineBarsData を空リストにすると fl_chart が基準線
-        // （extraLinesData の ±2SD・平均線）ごと描画をスキップするため、
-        // 表示範囲内に記録が無くても空スポットの系列を常に渡す。
-        lineBarsData: [
-          _userLine(hSpots, _heightSeriesColor),
-          _userLine(wSpots, _weightSeriesColor),
-        ],
+    return SdScoreChart(
+      isBoy: _viewingChild.gender == Gender.male,
+      recordPoints: recordPoints,
+      ageRangeYears: _selectedAgeRangeYears,
+      style: _chartStyle,
+      chartKey: _sdTouchChartKey,
+      verticalLines: _selectedRecordVerticalLines(scheme),
+      // 成長曲線と同じタップ詳細（自前オーバーレイ）を表示する。
+      // h/w の系列は null を飛ばして作るため spotIndex がレコード位置と
+      // 一致せず、X（年齢）で引き当てる。
+      lineTouchData: LineTouchData(
+        enabled: true,
+        handleBuiltInTouches: false,
+        touchSpotThreshold: 18,
+        touchCallback: (event, response) =>
+            _handleChartTouch(event, response, _sdTouchChartKey, (spot) {
+              for (final r in inRange) {
+                if ((r.age - spot.x).abs() < 1e-9) return r;
+              }
+              return null;
+            }),
       ),
-      duration: const Duration(milliseconds: 200),
-    );
-
-    // 軸ラベル列はプロット領域と同じ高さに揃える必要があるため、
-    // X 軸ラベル行（数字＋単位）ぶんの下余白を差し引く。
-    final xAxisLabelsHeight =
-        _growthChartXAxisNumbersHeight + _growthChartXAxisUnitHeight;
-    Widget yAxisColumn(Alignment alignment) => SizedBox(
-      width: _growthChartYAxisReservedSize,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: xAxisLabelsHeight),
-        child: _buildExternalSdYAxisColumn(
-          yLimit: yLimit,
-          scheme: scheme,
-          alignment: alignment,
-        ),
-      ),
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(
-          // 上端のラベル（+3.0 等）は線に上下中央で揃えるため半分だけ
-          // プロットの上へはみ出す。PageView にクリップされて欠けない
-          // よう、プロット全体の上に半ラベルぶんの余白を確保する。
-          child: Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                yAxisColumn(Alignment.centerRight),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        child: Stack(
-                          clipBehavior: Clip.hardEdge,
-                          children: [
-                            Positioned.fill(
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(border: plotBorder),
-                              ),
-                            ),
-                            Positioned.fill(
-                              child: _wrapTouchChart(
-                                key: _sdTouchChartKey,
-                                chart: chart,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      _buildStaticXAxisLabels(
-                        tickLabels: xTickLabels,
-                        unitSuffix: xUnitSuffix,
-                        scheme: scheme,
-                      ),
-                    ],
-                  ),
-                ),
-                // 右側にも左と同じ軸ラベルを外付けで表示する。
-                yAxisColumn(Alignment.centerLeft),
-              ],
-            ),
-          ),
-        ),
-      ],
     );
   }
 

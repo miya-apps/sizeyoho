@@ -14,12 +14,17 @@ import '../monetization/pro_status.dart';
 ///
 /// 保存形式：既存のバックアップJSON（growth_backup.dart と同一形式）を
 /// そのまま文字列チャンクに分割し、Firestore の
-/// `users/{uid}/backup/chunk_N` に保存する。写真（base64）を含んでも
-/// 1ドキュメント1MiBの制限に収まるようチャンクごとに分ける。
+/// `users/{uid}/backup/chunk_N` に保存する。
 /// `users/{uid}` 本体にはメタ情報（チャンク数・日時・お子様名）を置く。
 ///
+/// プライバシー方針：写真（アイコン・お誕生日の思い出）はクラウドへ
+/// 送信せず、端末内にのみ保存する（includePhotos: false でエンコード）。
+/// 子どもの写真をサーバーで預からないことで、漏えいリスクと
+/// ストア申告の負担を減らす。
+///
 /// 復元は全チャンクを連結して decodeBackupJson に渡すだけなので、
-/// 手動バックアップ（ファイル書き出し）と完全に互換。
+/// 手動バックアップ（ファイル書き出し）と互換。復元時の写真の
+/// 引き継ぎは呼び出し側で mergeLocalPhotos を使って行う。
 class CloudBackup {
   CloudBackup._();
 
@@ -135,7 +140,8 @@ class CloudBackup {
     _debounce?.cancel();
     busy.value = true;
     try {
-      final json = encodeBackupJson(children);
+      // 写真は端末のみ保存の方針のため、クラウドへは含めない。
+      final json = encodeBackupJson(children, includePhotos: false);
       final chunks = <String>[
         for (var i = 0; i < json.length; i += _chunkChars)
           json.substring(i, math.min(i + _chunkChars, json.length)),
@@ -148,7 +154,7 @@ class CloudBackup {
       final prev = await userDoc.get();
       final prevCount = (prev.data()?['chunkCount'] as num?)?.toInt() ?? 0;
 
-      // 写真込みで合計が大きくなり得るため、1チャンクずつ書き込む
+      // 記録が多いと合計が大きくなり得るため、1チャンクずつ書き込む
       // （バッチはリクエスト合計サイズの上限に当たりやすい）。
       for (var i = 0; i < chunks.length; i++) {
         await userDoc.collection('backup').doc('chunk_$i').set({

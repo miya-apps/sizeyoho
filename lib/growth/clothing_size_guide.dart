@@ -175,10 +175,22 @@ class ClothingGuideResult {
 }
 
 /// ベースライン SD スコアの表示用文字列（小数第2位、符号付き）。
+/// 画像書き出し用の文言（「直近平均」を明記）。画面上のサマリーカードでは
+/// [formatBaselineSdScoreValue] を使い、意味の説明はヘルプアイコンの
+/// モーダルに譲る（ユーザーフィードバックにより変更）。
 String formatBaselineSdScore(double sd) {
   final s = sd.toStringAsFixed(2);
   final signed = sd >= 0 ? '+$s' : s;
   return '$signed SD (直近平均)';
+}
+
+/// ベースライン SD スコアの表示用文字列（「直近平均」の注記なし）。
+/// 画面上のサマリーカードで、ラベル横のヘルプアイコンから意味を
+/// 説明するのと組み合わせて使う。
+String formatBaselineSdScoreValue(double sd) {
+  final s = sd.toStringAsFixed(2);
+  final signed = sd >= 0 ? '+$s' : s;
+  return '$signed SD';
 }
 
 /// 身長記録（身長データあり）の件数。
@@ -355,22 +367,33 @@ class ShoeSizePurchasePlan {
   /// 現時点の靴サイズの目安（cm）。
   final double currentShoeSizeCm;
 
-  /// サイズがワンサイズ上がるタイミング（直近から最大2件）。
+  /// 今後の買い替えタイミング（直近から最大2件）。
+  /// 「履いている靴のつま先余裕が [shoeReplaceRoomCm] を切る時期」を
+  /// 連鎖的に先読みしたもの。
   final List<ShoePurchaseEntry> upcoming;
 
   /// 最新の購入記録（あれば）。
   final ShoePurchase? lastPurchase;
 
-  /// 次の購入の目安。購入記録があれば「今の靴がきつくなる時期」、
-  /// 無ければ「次にワンサイズ上がる時期」。当面不要なら null。
+  /// 次の購入の目安（＝持っている靴がきつくなる時期。すでにきつい場合は
+  /// いま・おすすめサイズ）。当面不要なら null。
   final ShoePurchaseEntry? nextPurchase;
 
-  /// 購入記録があり、予測上すでに今の靴が小さい可能性が高い場合 true。
+  /// 購入記録があり、予測上つま先余裕が [shoeReplaceRoomCm] を
+  /// 切っている場合 true。
   final bool currentShoeOutgrown;
 }
 
 /// つま先の余裕（cm）。実測足長にこの分を足してから靴サイズに丸める。
+/// 0.5cm刻みへの切り上げと合わせて、買った時点の余裕は 0.7〜1.2cm になる。
 const shoeToeAllowanceCm = 0.7;
+
+/// 買い替えをおすすめする残り余裕（cm）。
+/// 予測足長と靴サイズの差（つま先余裕）がこの値を下回ったら
+/// 「きつくなってきた」とみなす。買うとき（+0.7〜1.2cm）より小さい値に
+/// することでヒステリシスができ、おすすめ通りに買った直後に
+/// 「次の買い替え」が出てしまうことを防ぐ。
+const shoeReplaceRoomCm = 0.5;
 
 /// 買い替えタイミングを先読みする最大月数。
 const shoeForecastMaxMonths = 24;
@@ -387,8 +410,8 @@ double shoeSizeForFootLength(double footLengthCm) =>
 /// 実測時点の推定身長（ベースライン SD で LMS 曲線上の値）に対する
 /// 足長の比率を「この子の足の大きさの個性」として固定し、
 /// 将来の予測身長に同じ比率を掛けて足長を予測する。
-/// そのうえで「靴サイズがワンサイズ上がる月」を探し、
-/// 買い替えおすすめ時期として返す。実測が無い場合は null。
+/// そのうえで「履いている靴のつま先余裕が [shoeReplaceRoomCm] を切る月」を
+/// 探し、買い替えおすすめ時期として返す。実測が無い場合は null。
 ShoeSizePurchasePlan? computeShoeSizePurchasePlan(
   ChildProfile child, {
   DateTime? asOf,
@@ -421,41 +444,39 @@ ShoeSizePurchasePlan? computeShoeSizePurchasePlan(
   final currentShoe = shoeSizeForFootLength(currentFoot);
   final lastPurchase = latestShoePurchase(child);
 
-  // 今後の買い替え候補は「すでに持っている靴のサイズ」を超えるものだけ。
-  // 大きめを先買いしている場合（例：目安14.0で14.5を購入済み）に、
-  // 持っているサイズと同じ候補が並ばないよう繰り上げる。
-  var lastSize = currentShoe;
-  if (lastPurchase != null && lastPurchase.sizeCm > lastSize) {
-    lastSize = lastPurchase.sizeCm;
-  }
+  // 持っている靴がすでにきついか（つま先余裕が shoeReplaceRoomCm 未満）。
+  final outgrown = lastPurchase != null &&
+      currentFoot > lastPurchase.sizeCm - shoeReplaceRoomCm;
+
+  // 今後の買い替えは「履いている靴のつま先余裕が shoeReplaceRoomCm を
+  // 切る時期」を連鎖的に先読みする：きつくなったらその時点のおすすめ
+  // サイズ（+0.7〜1.2cm）に買い替え、その靴がまたきつくなったら次…と辿る。
+  // 起点は持っている靴。記録が無い／すでにきつい場合は
+  // 「いまのおすすめサイズを今買った」と仮定して起点にする。
+  var wornSize = (lastPurchase != null && !outgrown)
+      ? lastPurchase.sizeCm
+      : currentShoe;
   final upcoming = <ShoePurchaseEntry>[];
   for (var m = 1; m <= shoeForecastMaxMonths && upcoming.length < 2; m++) {
-    final size = shoeSizeForFootLength(footAt(m));
-    if (size > lastSize) {
+    if (footAt(m) > wornSize - shoeReplaceRoomCm) {
+      wornSize = shoeSizeForFootLength(footAt(m));
       upcoming.add(
         ShoePurchaseEntry(
-          shoeSizeCm: size,
+          shoeSizeCm: wornSize,
           approxDate: clothingTargetDateFromMonthOffset(reference, m),
         ),
       );
-      lastSize = size;
     }
   }
 
-  // 購入記録があれば「今の靴がきつくなる時期」を次の購入目安にする。
-  ShoePurchaseEntry? nextPurchase;
-  var outgrown = false;
-  if (lastPurchase != null && currentShoe > lastPurchase.sizeCm) {
-    // 予測上、必要サイズが購入済みサイズをすでに超えている。
-    outgrown = true;
-    nextPurchase = ShoePurchaseEntry(
-      shoeSizeCm: currentShoe,
-      approxDate: DateTime(reference.year, reference.month),
-    );
-  } else {
-    // 持っているサイズを超える最初の候補（＝upcoming の先頭）。
-    nextPurchase = upcoming.isNotEmpty ? upcoming.first : null;
-  }
+  // 次の購入目安：すでにきつい場合は「いま・おすすめサイズ」、
+  // それ以外は連鎖の先頭（＝持っている靴がきつくなる時期）。
+  final nextPurchase = outgrown
+      ? ShoePurchaseEntry(
+          shoeSizeCm: currentShoe,
+          approxDate: DateTime(reference.year, reference.month),
+        )
+      : (upcoming.isNotEmpty ? upcoming.first : null);
 
   return ShoeSizePurchasePlan(
     measuredFootLengthCm: measurement.footLengthCm,
