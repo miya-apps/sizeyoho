@@ -361,7 +361,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Color.lerp(scheme.primary, Colors.black, 0.35),
+                    color: Color.lerp(scheme.primary, Colors.black, 0.55),
                   ),
                 ),
               ),

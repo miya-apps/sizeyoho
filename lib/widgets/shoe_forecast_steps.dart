@@ -312,7 +312,8 @@ class ShoeStepRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final labelColor = Color.lerp(accent, Colors.black, 0.35)!;
+    // テーマ色そのままに近いと淡色テーマで読みにくいため、黒に寄せる。
+    final labelColor = Color.lerp(accent, Colors.black, 0.55)!;
     final row = Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
       decoration: BoxDecoration(
@@ -343,17 +344,27 @@ class ShoeStepRow extends StatelessWidget {
               color: _titleColor,
             ),
           ),
-          if (note != null) ...[
-            const Spacer(),
-            Text(
-              note!,
-              style: TextStyle(
-                fontSize: 10.5,
-                fontWeight: FontWeight.w600,
-                color: noteColor ?? Colors.grey[600],
+          if (note != null)
+            // 幅が足りないときは、はみ出さず縮小して右寄せで収める。
+            Expanded(
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text(
+                      note!,
+                      style: TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.w600,
+                        color: noteColor ?? Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
-          ],
         ],
       ),
     );

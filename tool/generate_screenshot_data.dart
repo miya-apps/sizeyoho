@@ -15,7 +15,7 @@ import 'dart:math' as math;
 import 'package:grow_app/growth/growth_lms_2000.dart';
 
 void main() {
-  final children = [_haruto(), _yui()];
+  final children = [_mirai(), _yui()];
   final json = const JsonEncoder.withIndent('  ').convert({
     'app': 'grow_app',
     'format': 1,
@@ -65,14 +65,14 @@ List<Map<String, dynamic>> _records({
   ];
 }
 
-/// 1人目：はると（2歳2ヶ月・男の子）。
-/// おむつガイドON。体重約12.6kgで、3枠が「シリーズ最大」「ゆらぎ（L→XL）」
+/// 1人目：みらい（2歳・男の子）。
+/// おむつガイドON。体重約12.5kgで、3枠が「シリーズ最大」「ゆらぎ（L→XL）」
 /// 「クリーン＋使える見込み」の3パターンに分かれるよう調整してある。
-Map<String, dynamic> _haruto() {
+Map<String, dynamic> _mirai() {
   final birthDate = DateTime(2024, 5, 10);
   return {
-    'id': 'demo_haruto',
-    'name': 'はると',
+    'id': 'demo_mirai',
+    'name': 'みらい',
     'birthDate': birthDate.toIso8601String(),
     'gender': 'male',
     'iconIndex': 0,
@@ -103,7 +103,7 @@ Map<String, dynamic> _haruto() {
     'diaperGuideLastOpenedAt': '2026-07-28T09:00:00.000',
     'diaperGuideHideSuggestedAt': null,
     'growthRecords': _records(
-      idPrefix: 'demo_haruto',
+      idPrefix: 'demo_mirai',
       birthDate: birthDate,
       isBoy: true,
       // 0〜1歳は毎月、その後は2ヶ月ごと（直近は2026年7月10日）。

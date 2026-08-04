@@ -395,11 +395,12 @@ class DiaperTypeBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final color = Color.lerp(scheme.primary, Colors.black, 0.15)!;
+    // 淡色テーマでも読めるよう、テーマ色を黒に大きく寄せる。
+    final color = Color.lerp(scheme.primary, Colors.black, 0.55)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2.5),
       decoration: BoxDecoration(
-        color: scheme.primary.withValues(alpha: 0.10),
+        color: scheme.primary.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
@@ -421,16 +422,16 @@ class DiaperSizeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    // 文字色はテーマの onPrimaryContainer（seedColor を黒に寄せた濃色）を
-    // 使い、薄い背景とのコントラストを確保する。
-    final textColor = scheme.onPrimaryContainer;
+    // 文字色はテーマ色を黒に大きく寄せた濃色にして、薄い背景の上でも
+    // サイズ名（L・XL など）がはっきり読めるコントラストを確保する。
+    final textColor = Color.lerp(scheme.primary, Colors.black, 0.70)!;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: emphasized ? scheme.primary.withValues(alpha: 0.16) : Colors.transparent,
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: emphasized ? textColor.withValues(alpha: 0.55) : scheme.primary.withValues(alpha: 0.25),
+          color: emphasized ? textColor.withValues(alpha: 0.55) : scheme.primary.withValues(alpha: 0.35),
           width: emphasized ? 1.2 : 1,
         ),
       ),
@@ -439,7 +440,7 @@ class DiaperSizeChip extends StatelessWidget {
         style: TextStyle(
           fontSize: 13.5,
           fontWeight: FontWeight.w700,
-          color: emphasized ? textColor : Color.lerp(scheme.primary, Colors.black, 0.25),
+          color: emphasized ? textColor : Color.lerp(scheme.primary, Colors.black, 0.55),
           height: 1.2,
         ),
       ),

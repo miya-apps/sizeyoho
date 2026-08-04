@@ -150,9 +150,11 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
           height: 1.0,
         ),
         backgroundColor: Colors.white.withValues(alpha: 0.6),
-        selectedBackgroundColor: scheme.primary.withValues(alpha: 0.18),
-        selectedForegroundColor: scheme.primary,
-        foregroundColor: Colors.grey[700],
+        // グラフ画面の年齢選択（テーマ色ベタ塗り＋白太字）と同じ見せ方に
+        // 揃え、選択中であることをはっきり伝える。
+        selectedBackgroundColor: scheme.primary,
+        selectedForegroundColor: Colors.white,
+        foregroundColor: Colors.grey[800],
       ),
       segments: [
         if (_showDiaper)

@@ -63,8 +63,10 @@ Future<Uint8List?> captureGuideSquareImage({
     context: context,
     contentWidth: GuideExportCard.designWidth,
     // アプリ画面と同じ「白＋テーマ淡色」の背景（透過PNGにしない）。
+    // 書き出し画像は単体で流れるため、画面よりやや濃くして
+    // 「この子のテーマカラー」が伝わるようにする。
     background: Color.alphaBlend(
-      child.themeColor.withValues(alpha: 0.10),
+      child.themeColor.withValues(alpha: 0.18),
       Colors.white,
     ),
     contentBuilder: (_) => GuideExportCard(
@@ -110,14 +112,36 @@ class GuideExportCard extends StatelessWidget {
         _ => '${sizeExportItemLabel(item)}サイズ予報',
       };
 
-  /// 名前伏せ時に見出しへ添えるアイコン。写真が設定されていても
-  /// 匿名性を守るため、必ず選択中のアイコン絵柄を使う。
-  Widget _anonymousAvatar() {
+  /// 見出し直下の説明文。5枚で同じ位置・同じ大きさに揃うよう、
+  /// 本文（縮小されうる）ではなくカード側の固定領域に置く。
+  String get _leadText => switch (item) {
+        SizeExportItem.growthChart => '標準的な成長曲線（帯）と実測の記録（●）の重ね合わせです',
+        SizeExportItem.sdChart => '0が平均。同じ月齢の標準と比べた位置（SD）の推移です',
+        SizeExportItem.diaper => '体重の記録と各社公表のめやすから計算した目安です',
+        SizeExportItem.clothing => '直近の成長トレンドから予測した目安です',
+        SizeExportItem.shoe => '実測と購入の記録から予測した目安です',
+      };
+
+  /// フッターの注記。予測もの3種はガード文言、グラフ2種は出典・読み方。
+  /// これも5枚で同じ位置・同じ大きさになるようカード側の固定領域に置く。
+  String get _footnote => switch (item) {
+        SizeExportItem.growthChart => '※基準：日本小児内分泌学会 標準成長曲線（2000年度データ）',
+        SizeExportItem.sdChart => '※±2SDの帯（緑の破線の間）がおおよその一般的な範囲の目安です',
+        _ => '※あくまで目安です。成長には個人差があり、'
+            '実際のサイズ感は製品や体型によって異なります。',
+      };
+
+  /// 見出しに添えるお子様のアイコン。写真が設定されていても、共有先での
+  /// 匿名性を守るため（名前伏せ設定に関係なく）必ず選択中のアイコン絵柄を使う。
+  Widget _avatar() {
     final fg = Color.lerp(child.themeColor, Colors.black, 0.55)!;
     return CircleAvatar(
-      radius: 13,
-      backgroundColor: child.themeColor.withValues(alpha: 0.30),
-      child: Icon(child.iconData, size: 15, color: fg),
+      radius: 14,
+      backgroundColor: Color.alphaBlend(
+        child.themeColor.withValues(alpha: 0.45),
+        Colors.white,
+      ),
+      child: Icon(child.iconData, size: 16, color: fg),
     );
   }
 
@@ -125,23 +149,37 @@ class GuideExportCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final now = DateTime.now();
 
+    final body = switch (item) {
+      SizeExportItem.growthChart =>
+        _ChartExportBody(child: child, isSdScore: false),
+      SizeExportItem.sdChart =>
+        _ChartExportBody(child: child, isSdScore: true),
+      SizeExportItem.diaper => _DiaperExportBody(child: child),
+      SizeExportItem.clothing => _ClothingExportBody(child: child),
+      SizeExportItem.shoe => _ShoeExportBody(child: child),
+    };
+
+    // カード自体を正方形の固定サイズにし、ヘッダー（見出し・説明文）と
+    // フッター（注記・クレジット）は5種類とも同じ位置・同じ大きさで描く。
+    // 高さが変わるのは本文だけで、収まらない場合は本文だけを比例縮小する。
+    // （以前はカード全体を縮小していたため、内容の多い種類ほど見出しまで
+    // 小さくなり、5枚並べたときにバランスが揃わなかった。）
     return Material(
       color: Colors.transparent,
       child: Container(
         width: designWidth,
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+        height: designWidth,
+        // 外周はゆったりめに取り、共有先でスタンプや文字を足す余地を残す。
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisSize: MainAxisSize.min,
           children: [
-            // ── ヘッダー ──
+            // ── ヘッダー（アイコン＋見出し＋作成日） ──
             Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                if (maskName) ...[
-                  _anonymousAvatar(),
-                  const SizedBox(width: 8),
-                ],
+                _avatar(),
+                const SizedBox(width: 9),
                 Expanded(
                   child: Text(
                     maskName
@@ -162,38 +200,56 @@ class GuideExportCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            switch (item) {
-              SizeExportItem.growthChart =>
-                _ChartExportBody(child: child, isSdScore: false),
-              SizeExportItem.sdChart =>
-                _ChartExportBody(child: child, isSdScore: true),
-              SizeExportItem.diaper => _DiaperExportBody(child: child),
-              SizeExportItem.clothing => _ClothingExportBody(child: child),
-              SizeExportItem.shoe => _ShoeExportBody(child: child),
-            },
-            const SizedBox(height: 12),
-            // ── フッター（ガード文言＋クレジット） ──
-            // SNS（Instagram）で単体で流れる前提のため、アプリ内の免責事項と
-            // 同じトーンのガード文言と、出どころ（©＋公開サイトURL）を
-            // 画像自体に焼き込む。
-            // ガード文言はサイズを「予測」しているガイド3種だけに出す。
-            // 成長曲線・SDスコアは実測記録と公的基準の重ね合わせで、
-            // 本文側に出典・±2SDの注記があるためここでは重ねない。
-            if (item != SizeExportItem.growthChart &&
-                item != SizeExportItem.sdChart) ...[
-              Text(
-                '※あくまで目安です。成長には個人差があり、'
-                '実際のサイズ感は製品や体型によって異なります。',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 8.5,
-                  color: Colors.grey[500],
-                  height: 1.4,
+            // テーマカラーのアクセントライン（見出しの下線）。
+            Padding(
+              padding: const EdgeInsets.only(top: 7, bottom: 9),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  width: 44,
+                  height: 3.5,
+                  decoration: BoxDecoration(
+                    color: child.themeColor,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
               ),
-              const SizedBox(height: 4),
-            ],
+            ),
+            Text(
+              _leadText,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
+            ),
+            // ── 本文（この領域だけが種類ごとに伸縮・縮小される） ──
+            Expanded(
+              child: Center(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    width: designWidth - 48,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: body,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // ── フッター（注記＋クレジット） ──
+            // SNS（Instagram）で単体で流れる前提のため、アプリ内の免責事項と
+            // 同じトーンの注記と、出どころ（©＋公開サイトURL）を画像自体に
+            // 焼き込む。予測もの3種はガード文言、グラフ2種は出典・読み方。
+            Text(
+              _footnote,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 8.5,
+                color: Colors.grey[500],
+                height: 1.4,
+              ),
+            ),
+            const SizedBox(height: 4),
             Text(
               '© ${now.year} $kAppName　$kWebDisplayUrl',
               textAlign: TextAlign.center,
@@ -275,13 +331,6 @@ class _ChartExportBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          isSdScore
-              ? '0が平均。同じ月齢の標準と比べた位置（SD）の推移です'
-              : '標準的な成長曲線（帯）と実測の記録（●）の重ね合わせです',
-          style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
-        ),
-        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.fromLTRB(6, 10, 6, 8),
           decoration: BoxDecoration(
@@ -325,14 +374,6 @@ class _ChartExportBody extends StatelessWidget {
             ),
           ),
         ],
-        const SizedBox(height: 4),
-        Text(
-          isSdScore
-              ? '※±2SDの帯（緑の破線の間）がおおよその一般的な範囲の目安です'
-              : '※基準：日本小児内分泌学会 標準成長曲線（2000年度データ）',
-          textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 9, color: Colors.grey[500]),
-        ),
       ],
     );
   }
@@ -350,18 +391,7 @@ class _ClothingExportBody extends StatelessWidget {
     if (!guide.hasData) {
       return _EmptyNote(message: guide.message ?? '身長の記録が足りません');
     }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '直近の成長トレンドから予測した目安です',
-          style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
-        ),
-        const SizedBox(height: 10),
-        _SeasonTable(entries: guide.timeline),
-      ],
-    );
+    return _SeasonTable(entries: guide.timeline);
   }
 }
 
@@ -497,30 +527,34 @@ class _SeasonRow extends StatelessWidget {
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.baseline,
-          textBaseline: TextBaseline.alphabetic,
-          children: [
-            Text(
-              '$year年',
-              style: TextStyle(
-                fontSize: 10.5,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+        // セル幅が足りないとき（狭い端末・大きいサイズ表記）は
+        // はみ出さず縮小して1行に収める。
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                '$year年',
+                style: TextStyle(
+                  fontSize: 10.5,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[600],
+                ),
               ),
-            ),
-            const SizedBox(width: 4),
-            Text(
-              '${sizeCm}cm',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w700,
-                color: Colors.black87,
+              const SizedBox(width: 4),
+              Text(
+                '${sizeCm}cm',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black87,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
         Text(
           '推定${estimatedHeightCm.toStringAsFixed(1)}cm',
@@ -569,11 +603,6 @@ class _ShoeExportBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          '実測と購入の記録から予測した目安です',
-          style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
-        ),
-        const SizedBox(height: 12),
         ShoeMetricsCard(plan: plan),
         const SizedBox(height: 16),
         // 警告はステップの上（「いま」行の上）に置き、「いま」行の目安サイズが
@@ -623,11 +652,6 @@ class _DiaperExportBody extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          '体重の記録と各社公表のめやすから計算した目安です',
-          style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
-        ),
-        const SizedBox(height: 10),
         GuideSummaryCard(
           primaryLabel: '現在の体重',
           primaryValue: '${formatWeightKg(latestWeight.weightKg!)} kg',
