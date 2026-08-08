@@ -207,12 +207,7 @@ class DiaperSlotSummaryCard extends StatelessWidget {
               Text(
                 lowerNote,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 13,
-                  height: 1.4,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey[800],
-                ),
+                style: _forecastNoteStyle,
               ),
             ],
             const SizedBox(height: 3),
@@ -284,18 +279,10 @@ class DiaperSlotSummaryCard extends StatelessWidget {
                   children: [
                     TextSpan(
                       text: '（${diaperRangeLabel(band)}）',
-                      style: TextStyle(
-                        fontSize: large ? 13 : 12,
-                        fontWeight: FontWeight.w700,
-                        color: _titleColor,
-                        height: 1.2,
-                      ),
+                      style: _rangeTextStyle,
                     ),
                     if (note != null)
-                      TextSpan(
-                        text: '　$note',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey[700]),
-                      ),
+                      TextSpan(text: '　$note', style: _forecastNoteStyle),
                   ],
                 ),
               ),
@@ -344,10 +331,7 @@ class DiaperSlotSummaryCard extends StatelessWidget {
       children: [
         _buildSizeChip(scheme, band.sizeLabel, emphasized: emphasized),
         const SizedBox(width: 6),
-        Text(
-          '（${diaperRangeLabel(band)}）',
-          style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
-        ),
+        Text('（${diaperRangeLabel(band)}）', style: _rangeTextStyle),
       ],
     );
   }
@@ -361,17 +345,29 @@ class DiaperSlotSummaryCard extends StatelessWidget {
   }) =>
       DiaperSizeChip(label: label, emphasized: emphasized);
 
-  /// 「◯月頃まで使える見込み」などの重要な補足。買い替え判断に直結する
-  /// 情報のため、注記より一段大きく・濃くする（ユーザーフィードバック）。
+  /// 「◯月頃まで使える見込み」「※◯月頃まで」の共通スタイル。
+  /// 買い替え判断に直結する情報のため注記より一段大きく・濃くし、
+  /// どの表示パターンでも同じ見た目にそろえる（ユーザーフィードバック）。
+  static const TextStyle _forecastNoteStyle = TextStyle(
+    fontSize: 14,
+    height: 1.4,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF424242), // grey[800]
+  );
+
+  /// 「（9〜14kg）」の体重範囲の共通スタイル。クリーン時・サイズアップ時
+  /// （移り元・移り先）のどこでも同じ見た目にそろえる。
+  static const TextStyle _rangeTextStyle = TextStyle(
+    fontSize: 12.5,
+    fontWeight: FontWeight.w600,
+    color: Color(0xFF424242), // grey[800]
+    height: 1.2,
+  );
+
   Widget _buildInfoText(String text, {TextAlign textAlign = TextAlign.start}) => Text(
         text,
         textAlign: textAlign,
-        style: TextStyle(
-          fontSize: 14,
-          height: 1.5,
-          fontWeight: FontWeight.w600,
-          color: Colors.grey[800],
-        ),
+        style: _forecastNoteStyle,
       );
 
   static String _formatMonthLabel(DateTime d) => formatDiaperForecastMonth(d);

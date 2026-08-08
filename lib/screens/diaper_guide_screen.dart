@@ -283,7 +283,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
       child: Text(
         '選択中のおむつでは、対応するサイズが見つかりませんでした。'
         '各カードをタップすると選び直せます',
-        style: TextStyle(fontSize: 12, height: 1.5, color: Colors.grey[700]),
+        style: TextStyle(fontSize: 12.5, height: 1.5, color: Colors.grey[700]),
       ),
     );
   }
@@ -594,7 +594,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
       ),
       subtitle: Text(
         enabled ? subtitle : '別の枠で選択済み',
-        style: TextStyle(fontSize: 11, color: Colors.grey[700]),
+        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
       ),
       trailing: needsTypeChoice
           ? const Icon(Icons.chevron_right_rounded, size: 20)
@@ -635,7 +635,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
             : showsProductName
                 ? '商品名：$resolvedName'
                 : ' ',
-        style: TextStyle(fontSize: 11, color: Colors.grey[700]),
+        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
       ),
       onTap: used ? null : () => onConfirm(series, type),
     );
