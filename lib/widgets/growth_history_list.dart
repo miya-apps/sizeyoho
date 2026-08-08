@@ -269,7 +269,7 @@ class _GrowthHistoryListBody extends StatelessWidget {
             const SizedBox(height: 12),
             Text(
               '記録がありません',
-              style: TextStyle(color: Colors.grey[600]),
+              style: TextStyle(color: Colors.grey[700]),
             ),
           ],
         ),
@@ -382,7 +382,7 @@ class _GrowthHistoryFiscalYearCard extends StatelessWidget {
                 text: '（$gradeLabel）',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: Colors.grey[600],
+                  color: Colors.grey[700],
                 ),
               ),
             ],
@@ -529,9 +529,11 @@ class _BirthdayMarkerTile extends StatelessWidget {
                     Text(
                       '思い出を残す',
                       style: TextStyle(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        color: accent.withValues(alpha: 0.9),
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                        // 淡いテーマ色のままでは白背景で読みにくいため、
+                        // 黒に寄せた濃色にする。
+                        color: Color.lerp(accent, Colors.black, 0.35),
                       ),
                     ),
                   Icon(Icons.chevron_right_rounded,

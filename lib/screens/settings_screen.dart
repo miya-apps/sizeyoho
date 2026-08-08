@@ -345,7 +345,7 @@ class SettingsScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
-          color: Colors.grey[600],
+          color: Colors.grey[700],
         ),
       ),
     );
@@ -366,7 +366,7 @@ class SettingsScreen extends StatelessWidget {
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: Colors.grey[600],
+              color: Colors.grey[700],
             ),
           ),
           const SizedBox(width: 2),
@@ -585,7 +585,7 @@ class _ProSection extends StatelessWidget {
                 subtitle: Text(
                   '先読み予報＋画像保存＋オンライン自動バックアップ＋広告非表示\n'
                   '（開発ビルド専用の動作確認スイッチです）',
-                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
                 ),
                 value: isPro,
                 onChanged: (v) => ProStatus.setActive(v),
@@ -602,7 +602,7 @@ class _ProSection extends StatelessWidget {
                 ),
                 subtitle: Text(
                   'サイズの先読み予報＋画像保存＋オンライン自動バックアップ＋広告非表示',
-                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
                 ),
                 trailing: const Icon(Icons.chevron_right, size: 20),
                 onTap: () => showProPaywallSheet(context),
@@ -616,7 +616,7 @@ class _ProSection extends StatelessWidget {
                 ),
                 subtitle: Text(
                   '機種変更後などに、購入済みのPro版を有効にします',
-                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
                 ),
                 onTap: () => _restorePurchase(context),
               ),
@@ -632,7 +632,7 @@ class _ProSection extends StatelessWidget {
                 ),
                 subtitle: Text(
                   '先読み予報・オンライン自動バックアップ・広告非表示が有効です',
-                  style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
                 ),
               ),
             if (isPro) ...[
@@ -653,8 +653,8 @@ class _ProSection extends StatelessWidget {
                       subtitle: Text(
                         'バックアップの保存先になるアカウントです',
                         style: TextStyle(
-                          fontSize: 11.5,
-                          color: Colors.grey[600],
+                          fontSize: 12.5,
+                          color: Colors.grey[700],
                         ),
                       ),
                       trailing: const Icon(Icons.chevron_right, size: 20),
@@ -679,8 +679,8 @@ class _ProSection extends StatelessWidget {
                         subtitle: Text(
                           'タップでサインアウト',
                           style: TextStyle(
-                            fontSize: 11.5,
-                            color: Colors.grey[600],
+                            fontSize: 12.5,
+                            color: Colors.grey[700],
                           ),
                         ),
                         onTap: () => _confirmSignOut(context),
@@ -704,8 +704,8 @@ class _ProSection extends StatelessWidget {
                             '記録を変更するたびに自動でクラウドへ保存します。'
                             '写真はクラウドに送信されず、この端末にのみ保存されます',
                             style: TextStyle(
-                              fontSize: 11.5,
-                              color: Colors.grey[600],
+                              fontSize: 12.5,
+                              color: Colors.grey[700],
                             ),
                           ),
                           value: auto,
@@ -745,8 +745,8 @@ class _ProSection extends StatelessWidget {
                                       : '最終バックアップ：'
                                             '${DateFormat('yyyy/MM/dd HH:mm').format(last)}',
                                   style: TextStyle(
-                                    fontSize: 11.5,
-                                    color: Colors.grey[600],
+                                    fontSize: 12.5,
+                                    color: Colors.grey[700],
                                   ),
                                 ),
                                 onTap: busy ? null : () => _backupNow(context),
@@ -769,8 +769,8 @@ class _ProSection extends StatelessWidget {
                         subtitle: Text(
                           '機種変更後などに、クラウドのバックアップを読み込みます',
                           style: TextStyle(
-                            fontSize: 11.5,
-                            color: Colors.grey[600],
+                            fontSize: 12.5,
+                            color: Colors.grey[700],
                           ),
                         ),
                         onTap: () => _restoreFromCloud(context),

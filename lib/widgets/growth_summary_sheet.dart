@@ -226,7 +226,7 @@ class _GrowthSummaryHeader extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.grey[600],
+              color: Colors.grey[700],
             ),
           ),
         ],
@@ -270,7 +270,7 @@ class _SummaryBlock extends StatelessWidget {
               'データ不足のため計算できません',
               style: TextStyle(
                 fontSize: 13,
-                color: Colors.grey[600],
+                color: Colors.grey[700],
                 height: 1.4,
               ),
             )
@@ -343,7 +343,7 @@ class _SummaryContent extends StatelessWidget {
                   softWrap: false,
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.grey[600],
+                    color: Colors.grey[700],
                     height: 1.1,
                   ),
                 ),
@@ -413,7 +413,7 @@ class _SdTransitionRow extends StatelessWidget {
               softWrap: false,
               style: TextStyle(
                 fontSize: 13,
-                color: Colors.grey[600],
+                color: Colors.grey[700],
                 height: 1.1,
               ),
             ),

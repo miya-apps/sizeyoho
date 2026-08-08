@@ -160,7 +160,7 @@ class _ProPaywallSheetState extends State<_ProPaywallSheet> {
               style: TextStyle(
                 fontSize: 10.5,
                 height: 1.6,
-                color: Colors.grey[600],
+                color: Colors.grey[700],
               ),
             ),
           ],
@@ -198,7 +198,7 @@ class _ProPaywallSheetState extends State<_ProPaywallSheet> {
                   style: TextStyle(
                     fontSize: 11,
                     height: 1.5,
-                    color: Colors.grey[600],
+                    color: Colors.grey[700],
                   ),
                 ),
               ],

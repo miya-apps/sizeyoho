@@ -406,7 +406,7 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
                       maxLines: 1,
                       softWrap: false,
                       style:
-                          TextStyle(fontSize: 10.5, color: Colors.grey[600]),
+                          TextStyle(fontSize: 10.5, color: Colors.grey[700]),
                     ),
                   ),
                 ),

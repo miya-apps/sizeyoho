@@ -244,9 +244,10 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
                           'つま先余裕+${shoeToeAllowanceCm.toStringAsFixed(1)}cm'
                           'を見込んだ目安です',
                 style: TextStyle(
-                  fontSize: 10,
-                  color: isStale ? _staleColor : Colors.grey[500],
-                  fontWeight: isStale ? FontWeight.w600 : FontWeight.w400,
+                  fontSize: 12,
+                  height: 1.4,
+                  color: isStale ? _staleColor : Colors.grey[700],
+                  fontWeight: isStale ? FontWeight.w600 : FontWeight.w500,
                 ),
               ),
             ),
@@ -284,7 +285,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
-                  color: Colors.grey[600],
+                  color: Colors.grey[700],
                 ),
               ),
             ),
@@ -305,7 +306,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
             child: Text(
               hasAnyRecord ? '該当する記録がありません' : 'まだ記録がありません',
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12.5, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
             ),
           )
         else
@@ -376,7 +377,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
       ),
       subtitle: Text(
         '${_formatDate(item.date)}・タップで編集',
-        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
       ),
       trailing: IconButton(
         icon: Icon(Icons.delete_outline, size: 19, color: Colors.grey[500]),
@@ -531,7 +532,7 @@ class _ShoeGuideViewState extends State<ShoeGuideView> {
                 style: TextStyle(
                   fontSize: 12,
                   height: 1.5,
-                  color: Colors.grey[600],
+                  color: Colors.grey[700],
                 ),
               ),
               const SizedBox(height: 12),

@@ -219,7 +219,7 @@ class FaqScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
-          color: Colors.grey[600],
+          color: Colors.grey[700],
         ),
       ),
     );

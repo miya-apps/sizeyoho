@@ -107,7 +107,7 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
             Text(
               subtitle,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 11.5, color: Colors.grey[700]),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -150,10 +150,10 @@ class _ClothingGuideScreenState extends State<ClothingGuideScreen> {
           height: 1.0,
         ),
         backgroundColor: Colors.white.withValues(alpha: 0.6),
-        // グラフ画面の年齢選択（テーマ色ベタ塗り＋白太字）と同じ見せ方に
-        // 揃え、選択中であることをはっきり伝える。
+        // 淡いテーマ色の選択背景に白文字ではコントラスト不足のため、
+        // 文字・アイコンはテーマ色を黒に寄せた濃色にする（年齢タブと同じ）。
         selectedBackgroundColor: scheme.primary,
-        selectedForegroundColor: Colors.white,
+        selectedForegroundColor: Color.lerp(scheme.primary, Colors.black, 0.60),
         foregroundColor: Colors.grey[800],
       ),
       segments: [
@@ -347,11 +347,11 @@ class _SeasonRow extends StatelessWidget {
           ),
           const SizedBox(width: 5),
           SizedBox(
-            width: 44,
+            width: 46,
             child: Text(
               entry.title,
               style: TextStyle(
-                fontSize: 14.5,
+                fontSize: 15,
                 fontWeight: FontWeight.bold,
                 color: titleColor,
               ),
@@ -435,6 +435,9 @@ class _YearSizeCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 「来年（枠あり）」が行の主役なので、今年より一段大きくして
+    // 視線が自然に来年のサイズへ向かうようにする。
+    final isNextYear = highlightAccent != null;
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -446,17 +449,17 @@ class _YearSizeCell extends StatelessWidget {
           children: [
             Text(
               '$year年',
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: Colors.black54,
+              style: TextStyle(
+                fontSize: isNextYear ? 13 : 12,
+                fontWeight: FontWeight.w700,
+                color: Colors.black87,
               ),
             ),
             const SizedBox(width: 4),
             Text(
               '${sizeCm}cm',
-              style: const TextStyle(
-                fontSize: 18,
+              style: TextStyle(
+                fontSize: isNextYear ? 22 : 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.black87,
                 height: 1.1,
@@ -464,13 +467,13 @@ class _YearSizeCell extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 2),
+        const SizedBox(height: 3),
         Text(
           '推定${estimatedHeightCm.toStringAsFixed(1)}cm',
-          style: const TextStyle(
-            fontSize: 11.5,
-            fontWeight: FontWeight.w500,
-            color: Colors.black54,
+          style: TextStyle(
+            fontSize: isNextYear ? 13 : 12,
+            fontWeight: FontWeight.w600,
+            color: const Color(0xFF424242),
             height: 1.1,
           ),
         ),

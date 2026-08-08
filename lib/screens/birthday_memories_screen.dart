@@ -74,7 +74,7 @@ class _BirthdayMemoriesScreenState extends State<BirthdayMemoriesScreen> {
           ),
           subtitle: Text(
             '思い出 ${child.birthdayMemories.length}件',
-            style: TextStyle(fontSize: 11.5, color: Colors.grey[600]),
+            style: TextStyle(fontSize: 11.5, color: Colors.grey[700]),
           ),
           children: [
             _ChildMemoriesSection(
@@ -129,7 +129,7 @@ class _BirthdayMemoriesScreenState extends State<BirthdayMemoriesScreen> {
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.6,
-                    color: Colors.grey[600],
+                    color: Colors.grey[700],
                   ),
                 ),
               ],
@@ -185,7 +185,7 @@ class _ChildMemoriesSection extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
             child: Text(
               'はじめてのお誕生日を迎えたら、ここに毎年1枚ずつ写真を残せます。',
-              style: TextStyle(fontSize: 12.5, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
             ),
           )
         else
@@ -366,7 +366,7 @@ class _MemoryCard extends StatelessWidget {
                       m.note!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                      style: TextStyle(fontSize: 11, color: Colors.grey[700]),
                     ),
                   ],
                 ],

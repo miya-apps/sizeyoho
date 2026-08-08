@@ -157,7 +157,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 12,
                           height: 1.6,
-                          color: Colors.grey[600],
+                          color: Colors.grey[700],
                         ),
                       ),
                     ],

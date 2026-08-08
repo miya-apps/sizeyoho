@@ -192,7 +192,7 @@ Future<void> showBirthdayCelebrationDialog({
                                 '毎年のお誕生日に1つずつ記録できます',
                                 style: TextStyle(
                                   fontSize: 11.5,
-                                  color: Colors.grey[600],
+                                  color: Colors.grey[700],
                                 ),
                               ),
                             ],
@@ -204,7 +204,7 @@ Future<void> showBirthdayCelebrationDialog({
                   Text(
                     '残した思い出は 履歴の「思い出」ボタンからいつでも見返せます',
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                    style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 4),
                   Row(
@@ -218,7 +218,7 @@ Future<void> showBirthdayCelebrationDialog({
                         child: Text(
                           '今後表示しない',
                           style:
-                              TextStyle(fontSize: 12, color: Colors.grey[500]),
+                              TextStyle(fontSize: 12, color: Colors.grey[600]),
                         ),
                       ),
                       const Spacer(),

@@ -116,7 +116,7 @@ class _GuideSummaryMetric extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w500,
-                  color: Colors.grey[600],
+                  color: Colors.grey[700],
                 ),
               ),
               if (onHelpTap != null)

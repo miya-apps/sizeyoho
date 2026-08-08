@@ -207,7 +207,12 @@ class DiaperSlotSummaryCard extends StatelessWidget {
               Text(
                 lowerNote,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 11, height: 1.4, color: Colors.grey[600]),
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.4,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.grey[800],
+                ),
               ),
             ],
             const SizedBox(height: 3),
@@ -221,7 +226,8 @@ class DiaperSlotSummaryCard extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 3),
-            _buildTransitionSizeText(scheme, upper),
+            // 移り先（次のサイズ）が主役なので一段大きく見せる。
+            _buildTransitionSizeText(scheme, upper, large: true),
           ],
         ),
       );
@@ -250,16 +256,19 @@ class DiaperSlotSummaryCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 1),
-        _buildTransitionSizeText(scheme, upper),
+        // 移り先（次のサイズ）が主役なので一段大きく見せる。
+        _buildTransitionSizeText(scheme, upper, large: true),
       ],
     );
   }
 
   /// サイズアップ中のサイズ表示。幅が狭くても中央寄せの1行を保つ。
+  /// [large] は移り先（次のサイズ）用で、チップ・範囲とも一段大きくする。
   Widget _buildTransitionSizeText(
     ColorScheme scheme,
     DiaperSizeBand band, {
     String? note,
+    bool large = false,
   }) =>
       Center(
         child: FittedBox(
@@ -268,15 +277,15 @@ class DiaperSlotSummaryCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              _buildSizeChip(scheme, band.sizeLabel),
+              DiaperSizeChip(label: band.sizeLabel, fontSize: large ? 15.5 : 13.5),
               const SizedBox(width: 6),
               Text.rich(
                 TextSpan(
                   children: [
                     TextSpan(
                       text: '（${diaperRangeLabel(band)}）',
-                      style: const TextStyle(
-                        fontSize: 11.5,
+                      style: TextStyle(
+                        fontSize: large ? 13 : 12,
                         fontWeight: FontWeight.w700,
                         color: _titleColor,
                         height: 1.2,
@@ -285,7 +294,7 @@ class DiaperSlotSummaryCard extends StatelessWidget {
                     if (note != null)
                       TextSpan(
                         text: '　$note',
-                        style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey[600]),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey[700]),
                       ),
                   ],
                 ),
@@ -337,7 +346,7 @@ class DiaperSlotSummaryCard extends StatelessWidget {
         const SizedBox(width: 6),
         Text(
           '（${diaperRangeLabel(band)}）',
-          style: TextStyle(fontSize: 11.5, color: Colors.grey[700]),
+          style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
         ),
       ],
     );
@@ -352,10 +361,17 @@ class DiaperSlotSummaryCard extends StatelessWidget {
   }) =>
       DiaperSizeChip(label: label, emphasized: emphasized);
 
+  /// 「◯月頃まで使える見込み」などの重要な補足。買い替え判断に直結する
+  /// 情報のため、注記より一段大きく・濃くする（ユーザーフィードバック）。
   Widget _buildInfoText(String text, {TextAlign textAlign = TextAlign.start}) => Text(
         text,
         textAlign: textAlign,
-        style: TextStyle(fontSize: 11.5, height: 1.5, color: Colors.grey[700]),
+        style: TextStyle(
+          fontSize: 14,
+          height: 1.5,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey[800],
+        ),
       );
 
   static String _formatMonthLabel(DateTime d) => formatDiaperForecastMonth(d);
@@ -414,10 +430,18 @@ class DiaperTypeBadge extends StatelessWidget {
 /// サイズ名だけを囲う共通のチップ（§11：サイズ名の表記をすべて囲い付きに
 /// 統一）。体重範囲・「※〇〇頃まで」は呼び出し側で囲いの外に置く。
 class DiaperSizeChip extends StatelessWidget {
-  const DiaperSizeChip({super.key, required this.label, this.emphasized = true});
+  const DiaperSizeChip({
+    super.key,
+    required this.label,
+    this.emphasized = true,
+    this.fontSize = 13.5,
+  });
 
   final String label;
   final bool emphasized;
+
+  /// サイズ名の文字サイズ。移り先（次のサイズ）の強調などで大きくできる。
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -438,7 +462,7 @@ class DiaperSizeChip extends StatelessWidget {
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 13.5,
+          fontSize: fontSize,
           fontWeight: FontWeight.w700,
           color: emphasized ? textColor : Color.lerp(scheme.primary, Colors.black, 0.55),
           height: 1.2,

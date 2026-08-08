@@ -371,7 +371,11 @@ class _GrowthHomeScreenState extends State<GrowthHomeScreen> {
                 style: TextStyle(
                   fontSize: 11 * _uiScale,
                   fontWeight: FontWeight.w700,
-                  color: selected ? Colors.white : scheme.onSurfaceVariant,
+                  // 淡いテーマ色の上の白文字はコントラスト不足のため、
+                  // テーマ色を黒に寄せた濃色にする。
+                  color: selected
+                      ? Color.lerp(scheme.primary, Colors.black, 0.60)
+                      : scheme.onSurfaceVariant,
                 ),
               ),
             ),

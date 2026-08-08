@@ -213,7 +213,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
       child: Text(
         '体重 ${formatWeightKg(record.weightKg!)}kg'
         '（${d.year}/${d.month}/${d.day} 記録）をもとに表示しています',
-        style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
+        style: TextStyle(fontSize: 12, color: Colors.grey[700]),
       ),
     );
   }
@@ -409,7 +409,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
         '※体重のめやすは各社が公表している値にもとづく目安です。'
         '実際のフィット感はお子様の体型により異なります。\n'
         '※紙おむつが対象です（布おむつは対象外）。',
-        style: TextStyle(fontSize: 10.5, height: 1.6, color: Colors.grey[600]),
+        style: TextStyle(fontSize: 11, height: 1.6, color: Colors.grey[700]),
       ),
     );
   }
@@ -594,7 +594,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
       ),
       subtitle: Text(
         enabled ? subtitle : '別の枠で選択済み',
-        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+        style: TextStyle(fontSize: 11, color: Colors.grey[700]),
       ),
       trailing: needsTypeChoice
           ? const Icon(Icons.chevron_right_rounded, size: 20)
@@ -635,7 +635,7 @@ class _DiaperGuideViewState extends State<DiaperGuideView> {
             : showsProductName
                 ? '商品名：$resolvedName'
                 : ' ',
-        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+        style: TextStyle(fontSize: 11, color: Colors.grey[700]),
       ),
       onTap: used ? null : () => onConfirm(series, type),
     );

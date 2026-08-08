@@ -400,7 +400,7 @@ class _BirthdayMemoryEditFormState extends State<_BirthdayMemoryEditForm> {
                 _photoAction(
                   icon: Icons.delete_outline,
                   label: '削除',
-                  color: Colors.grey[600]!,
+                  color: Colors.grey[700]!,
                   onTap: () => setState(() => _photo = null),
                 ),
               ],
@@ -617,7 +617,7 @@ class _CropAdjustDialogState extends State<_CropAdjustDialog> {
             const SizedBox(height: 2),
             Text(
               'ピンチで拡大縮小・ドラッグで位置を調整',
-              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+              style: TextStyle(fontSize: 11, color: Colors.grey[700]),
             ),
             const SizedBox(height: 10),
             ClipRRect(
@@ -648,7 +648,7 @@ class _CropAdjustDialogState extends State<_CropAdjustDialog> {
                       setState(() => _ctrl.value = Matrix4.identity()),
                   child: Text(
                     'リセット',
-                    style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                    style: TextStyle(fontSize: 12, color: Colors.grey[700]),
                   ),
                 ),
                 const Spacer(),

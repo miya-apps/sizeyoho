@@ -116,7 +116,7 @@ class ShoeMetricsCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: Colors.grey[700],
               ),
             ),
           ],
@@ -137,7 +137,7 @@ class ShoeMetricsCard extends StatelessWidget {
           child: Text(
             sub,
             maxLines: 1,
-            style: TextStyle(fontSize: 9.5, color: Colors.grey[500], height: 1.2),
+            style: TextStyle(fontSize: 11, color: Colors.grey[700], height: 1.2),
           ),
         ),
       ],
@@ -358,7 +358,7 @@ class ShoeStepRow extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 10.5,
                         fontWeight: FontWeight.w600,
-                        color: noteColor ?? Colors.grey[600],
+                        color: noteColor ?? Colors.grey[700],
                       ),
                     ),
                   ),

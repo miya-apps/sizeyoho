@@ -193,7 +193,7 @@ class AboutAppScreen extends StatelessWidget {
               Center(
                 child: Text(
                   '$kAppName バージョン $kAppVersion',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ),
             ],
@@ -211,7 +211,7 @@ class AboutAppScreen extends StatelessWidget {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
-          color: Colors.grey[600],
+          color: Colors.grey[700],
         ),
       ),
     );
