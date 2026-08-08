@@ -112,23 +112,26 @@ class GrowthPdf {
             ],
           ),
         ),
+        // 記録一覧が2段組みフル（24件）でも必ず A4 1枚に収まるよう、
+        // グラフの高さ・セクション間の余白は詰めてある（変更時は
+        // growth_pdf_test の1ページ検証が落ちないこと）。
         build: (ctx) => [
           _buildHeader(child, name, now, useCorrected),
-          pw.SizedBox(height: 12),
+          pw.SizedBox(height: 10),
           _buildGrowthChart(
             child: child,
             records: records,
             mode: mode,
             useCorrected: useCorrected,
           ),
-          pw.SizedBox(height: 14),
+          pw.SizedBox(height: 10),
           _buildSdScoreChart(
             child: child,
             records: records,
             mode: mode,
             useCorrected: useCorrected,
           ),
-          pw.SizedBox(height: 16),
+          pw.SizedBox(height: 10),
           _buildRecordsTable(child, records, useCorrected),
         ],
       ),
@@ -378,7 +381,7 @@ class GrowthPdf {
     required bool useCorrected,
   }) {
     const totalW = 515.0;
-    const totalH = 250.0;
+    const totalH = 236.0;
     const insetL = 34.0; // 左：身長軸ラベル
     const insetR = 34.0; // 右：体重軸ラベル
     const insetT = 6.0;
@@ -669,7 +672,7 @@ class GrowthPdf {
     required bool useCorrected,
   }) {
     const totalW = 515.0;
-    const totalH = 170.0;
+    const totalH = 150.0;
     const insetL = 34.0;
     const insetR = 34.0;
     const insetT = 6.0;
@@ -964,7 +967,7 @@ class GrowthPdf {
           },
           cellPadding: const pw.EdgeInsets.symmetric(
             horizontal: 4,
-            vertical: 1.8,
+            vertical: 1.5,
           ),
           border: pw.TableBorder.all(color: _gridColor, width: 0.5),
         );

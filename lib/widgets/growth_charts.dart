@@ -480,6 +480,7 @@ class GrowthCurveChart extends StatelessWidget {
     required this.ageRangeYears,
     this.style = const GrowthChartStyle(),
     this.plotForeground,
+    this.raiseUnitLabels = false,
   });
 
   final bool isBoy;
@@ -495,6 +496,11 @@ class GrowthCurveChart extends StatelessWidget {
   /// プロット領域の最前面に重ねる画面専用レイヤー
   /// （グラフ画面のタップ検出チャートなど）。書き出しでは null。
   final Widget? plotForeground;
+
+  /// true なら (kg)/(cm) の単位ラベルを目盛り線の中心に1行で置く
+  /// （書き出し画像用。半行ぶん上がり、すぐ下の目盛り数字と重ならない）。
+  /// false（既定）はアプリ画面の従来表示（改行付きで下寄り）。
+  final bool raiseUnitLabels;
 
   @override
   Widget build(BuildContext context) {
@@ -767,7 +773,10 @@ class GrowthCurveChart extends StatelessWidget {
           labelList: weightLabels,
           seriesColor: kGrowthWeightSeriesColor,
           textAlign: TextAlign.right,
-          unitLabelText: '\n(kg)',
+          // 先頭の改行ありだと2行ぶんの高さで下寄りに描かれる（画面の従来表示）。
+          // 書き出しでは改行なしで目盛り位置の中心に置き、目盛り数字との
+          // 重なりを避ける。
+          unitLabelText: raiseUnitLabels ? '(kg)' : '\n(kg)',
         ),
       ),
       rightTitles: AxisTitles(
@@ -775,7 +784,7 @@ class GrowthCurveChart extends StatelessWidget {
           labelList: heightLabels,
           seriesColor: kGrowthHeightSeriesColor,
           textAlign: TextAlign.left,
-          unitLabelText: '\n(cm)',
+          unitLabelText: raiseUnitLabels ? '(cm)' : '\n(cm)',
         ),
       ),
       topTitles: const AxisTitles(

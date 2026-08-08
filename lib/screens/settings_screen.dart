@@ -15,7 +15,6 @@ import '../models/child_profile.dart';
 import '../monetization/pro_paywall.dart';
 import '../monetization/pro_status.dart';
 import '../monetization/purchase_manager.dart';
-import '../settings/export_privacy.dart';
 import '../widgets/account_sign_in_sheet.dart';
 import '../support/contact_launcher.dart';
 import 'about_app_screen.dart';
@@ -144,35 +143,10 @@ class SettingsScreen extends StatelessWidget {
                   subtitle: '書き出したファイルから復元（現在のデータは置き換え）',
                   onTap: () => _importBackup(context),
                 ),
-                // 書き出し物（受診レポート・サイズガイド画像）にだけ効く
-                // プライバシー設定。アプリ内の表示は実名のまま。
-                ValueListenableBuilder<bool>(
-                  valueListenable: ExportPrivacy.maskNames,
-                  builder: (context, mask, _) => SwitchListTile(
-                    secondary: Icon(
-                      Icons.visibility_off_outlined,
-                      color: scheme.primary,
-                    ),
-                    title: const Text(
-                      '書き出し時に名前を伏せる',
-                      style: TextStyle(
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(
-                      '保存画像は名前の代わりにお子様のアイコンだけを'
-                      '表示します。レポートPDFとファイル名は「第一子」'
-                      '「第二子」…になります（生まれた順・同日生まれは登録順）',
-                      style: TextStyle(
-                        fontSize: 11.5,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                    value: mask,
-                    onChanged: (v) => ExportPrivacy.setEnabled(v),
-                  ),
-                ),
+                // 「書き出し時に名前を伏せる」設定（ExportPrivacy）は、
+                // 画像保存のプレビュー画面にある「名前を表示」トグルに
+                // 一本化した（そちらで切り替えると保存され、PDF・
+                // ファイル名にも反映される）。
               ]),
               const SizedBox(height: 24),
               _sectionHeader('Pro版'),

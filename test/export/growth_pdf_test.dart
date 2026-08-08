@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:grow_app/export/growth_pdf.dart';
 import 'package:grow_app/models/child_profile.dart';
@@ -57,5 +59,35 @@ void main() {
   test('記録ゼロ件でも生成される（基準曲線のみ）', () async {
     final bytes = await GrowthPdf.build(child: makeChild(records: []));
     expect(isPdf(bytes), isTrue);
+  });
+
+  test('記録が多くても（一覧表が2段組みフルでも）A4 1ページに収まる', () async {
+    // ページオブジェクト（/Type /Page）の数＝ページ数。
+    int countPages(List<int> bytes) => RegExp(r'/Type\s*/Page(?![a-zA-Z])')
+        .allMatches(latin1.decode(bytes, allowInvalid: true))
+        .length;
+
+    final birth = DateTime(2024, 5, 10);
+    final many = [
+      for (var m = 0; m < 27; m++)
+        GrowthRecord(
+          id: 'r$m',
+          date: DateTime(birth.year, birth.month + m, birth.day),
+          heightCm: 50 + m * 1.5,
+          weightKg: 3.2 + m * 0.35,
+        ),
+    ];
+    final child = ChildProfile(
+      id: 'many',
+      name: 'みらい',
+      birthDate: birth,
+      gender: Gender.male,
+      fatherHeightCm: 172,
+      motherHeightCm: 158,
+      growthRecords: many,
+    );
+    final bytes = await GrowthPdf.build(child: child);
+    expect(isPdf(bytes), isTrue);
+    expect(countPages(bytes), 1, reason: '受診レポートは必ずA4 1枚に収める設計');
   });
 }

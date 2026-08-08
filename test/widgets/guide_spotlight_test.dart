@@ -21,7 +21,12 @@ void main() {
     await tester.tap(find.text('設定'));
     await tester.pumpAndSettle();
     // 設定項目が増えて画面外に出ることがあるため、スクロールして表示する。
-    await tester.ensureVisible(find.text('チュートリアルを見る'));
+    // （リストは遅延構築のため ensureVisible ではなく scrollUntilVisible を使う）
+    await tester.scrollUntilVisible(
+      find.text('チュートリアルを見る'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pumpAndSettle();
     await tester.tap(find.text('チュートリアルを見る'));
     await tester.pumpAndSettle();

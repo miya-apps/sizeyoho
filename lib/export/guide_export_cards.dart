@@ -57,18 +57,14 @@ Future<Uint8List?> captureGuideSquareImage({
   required ChildProfile child,
   String? displayName,
   bool maskName = false,
+  Color? background,
   double pixelRatio = 3.0,
 }) {
   return captureSquareImage(
     context: context,
     contentWidth: GuideExportCard.designWidth,
-    // アプリ画面と同じ「白＋テーマ淡色」の背景（透過PNGにしない）。
-    // 書き出し画像は単体で流れるため、画面よりやや濃くして
-    // 「この子のテーマカラー」が伝わるようにする。
-    background: Color.alphaBlend(
-      child.themeColor.withValues(alpha: 0.18),
-      Colors.white,
-    ),
+    // 背景は保存・シェア画面で選べる（未指定ならテーマ淡色）。
+    background: background ?? defaultExportBackground(child),
     contentBuilder: (_) => GuideExportCard(
       item: item,
       child: child,
@@ -77,6 +73,15 @@ Future<Uint8List?> captureGuideSquareImage({
     ),
   );
 }
+
+/// 書き出し画像の既定の背景色。
+/// アプリ画面と同じ「白＋テーマ淡色」（透過PNGにしない）。
+/// 書き出し画像は単体で流れるため、画面よりやや濃くして
+/// 「この子のテーマカラー」が伝わるようにする。
+Color defaultExportBackground(ChildProfile child) => Color.alphaBlend(
+      child.themeColor.withValues(alpha: 0.18),
+      Colors.white,
+    );
 
 /// 1枚ぶんの書き出しカード本体（正方形化される前の、固定幅・
 /// 自然な高さのコンテンツ）。[captureGuideSquareImage] が内部で使うほか、
@@ -112,11 +117,16 @@ class GuideExportCard extends StatelessWidget {
         _ => '${sizeExportItemLabel(item)}サイズ予報',
       };
 
-  /// 見出し直下の説明文。5枚で同じ位置・同じ大きさに揃うよう、
-  /// 本文（縮小されうる）ではなくカード側の固定領域に置く。
+  /// グラフ2種かどうか。グラフは説明文を省き、本文を縮小せずに
+  /// 空いた領域いっぱいに描く（描画エリア優先）。
+  bool get _isChart =>
+      item == SizeExportItem.growthChart || item == SizeExportItem.sdChart;
+
+  /// 見出し直下の説明文。ガイド3種のみ（グラフは見れば分かるので省略し、
+  /// そのぶんグラフエリアを広く取る）。
   String get _leadText => switch (item) {
-        SizeExportItem.growthChart => '標準的な成長曲線（帯）と実測の記録（●）の重ね合わせです',
-        SizeExportItem.sdChart => '0が平均。同じ月齢の標準と比べた位置（SD）の推移です',
+        SizeExportItem.growthChart => '',
+        SizeExportItem.sdChart => '',
         SizeExportItem.diaper => '体重の記録と各社公表のめやすから計算した目安です',
         SizeExportItem.clothing => '直近の成長トレンドから予測した目安です',
         SizeExportItem.shoe => '実測と購入の記録から予測した目安です',
@@ -124,11 +134,11 @@ class GuideExportCard extends StatelessWidget {
 
   /// フッターの注記。予測もの3種はガード文言、グラフ2種は出典・読み方。
   /// これも5枚で同じ位置・同じ大きさになるようカード側の固定領域に置く。
+  /// 1行に収まる長さにする（行数が増えるとそのぶん本文が小さくなる）。
   String get _footnote => switch (item) {
         SizeExportItem.growthChart => '※基準：日本小児内分泌学会 標準成長曲線（2000年度データ）',
         SizeExportItem.sdChart => '※±2SDの帯（緑の破線の間）がおおよその一般的な範囲の目安です',
-        _ => '※あくまで目安です。成長には個人差があり、'
-            '実際のサイズ感は製品や体型によって異なります。',
+        _ => '※あくまで目安です。成長には個人差があり、サイズ感は製品や体型で異なります',
       };
 
   /// 見出しに添えるお子様のアイコン。写真が設定されていても、共有先での
@@ -170,7 +180,9 @@ class GuideExportCard extends StatelessWidget {
         width: designWidth,
         height: designWidth,
         // 外周はゆったりめに取り、共有先でスタンプや文字を足す余地を残す。
-        padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+        // 下だけ狭めにして、注記と©クレジットが画像の下端寄りに収まる
+        // ようにする（そのぶん本文の描画エリアが広がる）。
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 9),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -200,53 +212,53 @@ class GuideExportCard extends StatelessWidget {
                 ),
               ],
             ),
-            // テーマカラーのアクセントライン（見出しの下線）。
-            Padding(
-              padding: const EdgeInsets.only(top: 7, bottom: 9),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  width: 44,
-                  height: 3.5,
-                  decoration: BoxDecoration(
-                    color: child.themeColor,
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
+            const SizedBox(height: 8),
+            if (_leadText.isNotEmpty)
+              Text(
+                _leadText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
               ),
-            ),
-            Text(
-              _leadText,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
-            ),
-            // ── 本文（この領域だけが種類ごとに伸縮・縮小される） ──
+            // ── 本文 ──
+            // グラフ：縮小せず、空いた領域の縦横いっぱいに描く。
+            // ガイド：自然な高さで組み、収まらないときだけ比例縮小する。
             Expanded(
-              child: Center(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: SizedBox(
-                    width: designWidth - 48,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
+              child: _isChart
+                  ? Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       child: body,
+                    )
+                  : Center(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: SizedBox(
+                          width: designWidth - 48,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: body,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ),
             // ── フッター（注記＋クレジット） ──
             // SNS（Instagram）で単体で流れる前提のため、アプリ内の免責事項と
             // 同じトーンの注記と、出どころ（©＋公開サイトURL）を画像自体に
             // 焼き込む。予測もの3種はガード文言、グラフ2種は出典・読み方。
-            Text(
-              _footnote,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 8.5,
-                color: Colors.grey[500],
-                height: 1.4,
+            // 幅が足りない場合もわずかに縮小して必ず1行に収める。
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                _footnote,
+                maxLines: 1,
+                softWrap: false,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 8.5,
+                  color: Colors.grey[500],
+                  height: 1.4,
+                ),
               ),
             ),
             const SizedBox(height: 4),
@@ -277,10 +289,6 @@ class _ChartExportBody extends StatelessWidget {
   final ChildProfile child;
   final bool isSdScore;
 
-  /// カード内のグラフ描画高さ（論理px）。ヘッダー・補足・フッターと
-  /// 合わせて正方形にほどよく収まるよう固定する。
-  static const double _chartHeight = 300;
-
   /// 生年月日基準（暦月齢）のプロット点を年齢昇順で返す。
   List<GrowthRecordPoint> _recordPoints() {
     final base = child.birthDate;
@@ -300,81 +308,145 @@ class _ChartExportBody extends StatelessWidget {
     return pts;
   }
 
-  /// 「最新の記録：2026/7/28　身長 87.0cm・体重 12.3kg」の1行。
-  String? _latestRecordLine(List<GrowthRecordPoint> points) {
+  /// 直近の記録（身長・体重のどちらかがある最新の1件）。無ければ null。
+  GrowthRecordPoint? _latestRecord(List<GrowthRecordPoint> points) {
     for (final r in points.reversed) {
-      final hasH = r.h != null && r.h! > 0;
-      final hasW = r.w != null && r.w! > 0;
-      if (!hasH && !hasW) continue;
-      final d = r.date;
-      final values = [
-        if (hasH) '身長 ${r.h!.toStringAsFixed(1)}cm',
-        if (hasW) '体重 ${formatWeightKg(r.w!)}kg',
-      ].join('・');
-      return '最新の記録：${d.year}/${d.month}/${d.day}　$values';
+      if ((r.h != null && r.h! > 0) || (r.w != null && r.w! > 0)) return r;
     }
     return null;
+  }
+
+  /// 直近の記録をグラフ内の左上に重ねる吹き出し。
+  /// 数値は系列と同じ色（身長=青・体重=橙）にして、グラフのどの線の
+  /// 値かがひと目で分かるようにする。
+  Widget _latestBubble(GrowthRecordPoint r) {
+    final d = r.date;
+    final hasH = r.h != null && r.h! > 0;
+    final hasW = r.w != null && r.w! > 0;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(8, 4, 8, 5),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.92),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.30)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '直近の記録 ${d.year}/${d.month}/${d.day}',
+            style: TextStyle(
+              fontSize: 8.5,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 1),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (hasH)
+                Text(
+                  '身長 ${r.h!.toStringAsFixed(1)}cm',
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w700,
+                    color: kGrowthHeightSeriesColor,
+                  ),
+                ),
+              if (hasH && hasW)
+                Text(
+                  '・',
+                  style: TextStyle(fontSize: 10.5, color: Colors.grey[500]),
+                ),
+              if (hasW)
+                Text(
+                  '体重 ${formatWeightKg(r.w!)}kg',
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    fontWeight: FontWeight.w700,
+                    color: kGrowthWeightSeriesColor,
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final points = _recordPoints();
     if (points.isEmpty) {
-      return const _EmptyNote(message: '身長・体重の記録がまだありません');
+      return const Center(
+        child: _EmptyNote(message: '身長・体重の記録がまだありません'),
+      );
     }
 
     final isBoy = child.gender == Gender.male;
     final ageRangeYears = autoGrowthAgeRangeYears(child.birthDate);
-    final latestLine = _latestRecordLine(points);
+    final latest = _latestRecord(points);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(6, 10, 6, 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.grey.withValues(alpha: 0.15)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (isSdScore) ...[
-                const Center(child: SdChartLegend()),
-                const SizedBox(height: 4),
+    // 親（カードの本文領域）から渡された高さをそのまま使い切る。
+    // グラフの描画高さを固定しないことで、正方形カードの空きを最大限
+    // グラフエリアに充てられる。
+    return Container(
+      padding: const EdgeInsets.fromLTRB(6, 10, 6, 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.15)),
+      ),
+      child: Column(
+        children: [
+          if (isSdScore) ...[
+            const Center(child: SdChartLegend()),
+            const SizedBox(height: 4),
+          ],
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: isSdScore
+                      ? SdScoreChart(
+                          isBoy: isBoy,
+                          recordPoints: points,
+                          ageRangeYears: ageRangeYears,
+                        )
+                      : GrowthCurveChart(
+                          isBoy: isBoy,
+                          recordPoints: points,
+                          ageRangeYears: ageRangeYears,
+                          // 画像では (kg)/(cm) を少し上げて目盛り数字との
+                          // 重なりを避ける（アプリ画面は従来のまま）。
+                          raiseUnitLabels: true,
+                        ),
+                ),
+                // 直近の記録の吹き出し。プロット上部は「身長」の系列名
+                // ラベルと重なるため下側に置く。
+                // ・成長曲線：右下（体重の帯より下は空く。左下は0歳側の
+                // 　曲線の始点があるので避ける）
+                // ・SDスコア：左下（右端は±SDの名札が縦に並ぶので避ける）
+                // bottom はグラフ下の X 軸ラベル2行ぶんを避けたオフセット。
+                if (latest != null)
+                  isSdScore
+                      ? Positioned(
+                          left: 48,
+                          bottom: 42,
+                          child: _latestBubble(latest),
+                        )
+                      : Positioned(
+                          right: 48,
+                          bottom: 42,
+                          child: _latestBubble(latest),
+                        ),
               ],
-              SizedBox(
-                height: _chartHeight,
-                child: isSdScore
-                    ? SdScoreChart(
-                        isBoy: isBoy,
-                        recordPoints: points,
-                        ageRangeYears: ageRangeYears,
-                      )
-                    : GrowthCurveChart(
-                        isBoy: isBoy,
-                        recordPoints: points,
-                        ageRangeYears: ageRangeYears,
-                      ),
-              ),
-            ],
-          ),
-        ),
-        if (latestLine != null) ...[
-          const SizedBox(height: 6),
-          Text(
-            latestLine,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 10.5,
-              fontWeight: FontWeight.w600,
-              color: Colors.grey[700],
             ),
           ),
         ],
-      ],
+      ),
     );
   }
 }

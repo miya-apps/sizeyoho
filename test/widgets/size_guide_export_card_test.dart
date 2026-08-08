@@ -209,8 +209,9 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.textContaining('の成長曲線'), findsOneWidget);
-    // 最新記録の1行（身長・体重）と基準の出典が焼き込まれる。
-    expect(find.textContaining('最新の記録'), findsOneWidget);
+    // 直近の記録の吹き出し（グラフ内）と基準の出典が焼き込まれる。
+    expect(find.textContaining('直近の記録'), findsOneWidget);
+    expect(find.textContaining('身長 '), findsOneWidget);
     expect(find.textContaining('日本小児内分泌学会'), findsOneWidget);
     expect(find.textContaining('miya-apps.github.io/sizeyoho'), findsOneWidget);
     // サイズ感のガード文言はサイズを予測するガイド専用（グラフには出さない）。
