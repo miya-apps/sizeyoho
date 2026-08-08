@@ -51,6 +51,8 @@
       --ink: #3D444D;
       --accent: #4CAF87;
       --accent-dark: #38875F;
+      /* ボタン用の濃い緑（白文字とのコントラスト確保） */
+      --btn: #347F59;
       --gold: #B8860B;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -73,32 +75,44 @@
       border-radius: 34px;
       box-shadow: 0 10px 28px rgba(61, 68, 77, 0.18);
     }
-    .hero h1 { font-size: 2.2rem; margin-top: 22px; font-weight: 900; letter-spacing: 0.04em; }
-    .hero p.tagline { font-size: 1.1rem; margin-top: 10px; font-weight: 700; }
+    .hero h1 { font-size: 2.0rem; margin-top: 18px; font-weight: 900; letter-spacing: 0.04em; }
+    .hero p.tagline { font-size: 1.35rem; margin-top: 14px; font-weight: 900; line-height: 1.5; }
     .hero p.sub {
       font-size: 0.95rem;
-      margin-top: 8px;
+      margin-top: 10px;
       color: #55606B;
       max-width: 480px;
       margin-left: auto;
       margin-right: auto;
     }
-    .store-badges {
-      margin-top: 26px;
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .hero-shot {
+      width: min(250px, 64vw);
+      margin: 28px auto 0;
     }
-    .store-badges span {
+    .hero-shot img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 22px;
+      box-shadow: 0 14px 36px rgba(61, 68, 77, 0.22);
+    }
+    .hero a.button-primary {
       display: inline-block;
-      background: rgba(255,255,255,0.85);
-      border: 1.5px dashed var(--accent);
-      color: var(--accent-dark);
-      border-radius: 12px;
-      padding: 10px 22px;
-      font-size: 0.9rem;
+      margin-top: 28px;
+      background: var(--btn);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 15px 36px;
       font-weight: 700;
+      font-size: 1.02rem;
+      box-shadow: 0 6px 18px rgba(52, 127, 89, 0.35);
+    }
+    .hero a.button-primary:hover { opacity: 0.92; }
+    .hero p.store-note {
+      font-size: 0.85rem;
+      color: #55606B;
+      margin-top: 12px;
     }
 
     /* ── 共通 ── */
@@ -107,6 +121,14 @@
       max-width: 960px;
       margin: 0 auto;
       padding: 48px 20px 24px;
+    }
+    /* 長いページの区切り用の帯背景 */
+    .band-white { background: #fff; }
+    .band-pink { background: #FBF2F4; }
+    .band-white .container,
+    .band-pink .container {
+      padding-top: 40px;
+      padding-bottom: 8px;
     }
     section { margin-bottom: 48px; }
     h2 {
@@ -168,14 +190,14 @@
     .screenshot-dots {
       display: flex;
       justify-content: center;
-      gap: 2px;
-      margin-top: 8px;
+      gap: 0;
+      margin-top: 4px;
       padding: 0 20px;
     }
     .screenshot-dots button {
       position: relative;
-      width: 28px;
-      height: 28px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       border: none;
       padding: 0;
@@ -206,45 +228,6 @@
       .screenshot-carousel {
         --slide-w: 240px;
       }
-    }
-
-    /* ── 悩み（吹き出し） ── */
-    .pains {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-width: 620px;
-      margin: 0 auto;
-    }
-    .pain {
-      position: relative;
-      background: #fff;
-      border-radius: 18px;
-      padding: 14px 18px;
-      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.08);
-      font-size: 0.93rem;
-      max-width: 88%;
-      align-self: flex-start;
-    }
-    .pain::before {
-      content: "";
-      position: absolute;
-      top: 16px;
-      left: -9px;
-      border: 9px solid transparent;
-      border-right: 11px solid #fff;
-      border-left: 0;
-      filter: drop-shadow(-2px 1px 1px rgba(61, 68, 77, 0.04));
-    }
-    .pain:nth-child(even) {
-      align-self: flex-end;
-    }
-    .pain:nth-child(even)::before {
-      left: auto;
-      right: -9px;
-      border-right: 0;
-      border-left: 11px solid #fff;
-      filter: drop-shadow(2px 1px 1px rgba(61, 68, 77, 0.04));
     }
 
     /* ── 機能カード ── */
@@ -280,6 +263,14 @@
     }
     .feature h3 { font-size: 1.02rem; margin: 10px 0 4px; color: var(--accent-dark); }
     .feature p { font-size: 0.9rem; color: #55606B; }
+    .feature .pain-quote {
+      font-size: 0.85rem;
+      color: #6E7883;
+      background: var(--mint-light);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin: 12px 0 2px;
+    }
 
     .features-more {
       margin-top: 14px;
@@ -320,6 +311,40 @@
       text-align: center;
       margin-top: 6px;
     }
+
+    /* ── 料金カード ── */
+    .plan-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .plan-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(61, 68, 77, 0.06);
+    }
+    .plan-card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 4px;
+      color: var(--accent-dark);
+    }
+    .plan-card .plan-price {
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin-bottom: 10px;
+      color: #55606B;
+    }
+    .plan-card ul { list-style: none; }
+    .plan-card li { font-size: 0.92rem; margin-bottom: 6px; }
+    .plan-card li::before { content: "✓ "; color: var(--accent-dark); font-weight: 700; }
+    .plan-card.pro {
+      background: linear-gradient(135deg, #FFF9E8 0%, #FFF4D6 100%);
+      border: 1.5px solid #EAD9A6;
+    }
+    .plan-card.pro h3 { color: var(--gold); }
+    .plan-card.pro .plan-price { color: #8A7B55; }
+    .plan-card.pro li::before { content: "✨ "; }
 
     /* ── 比較表 ── */
     .compare-wrap { overflow-x: auto; }
@@ -382,35 +407,7 @@
     }
     .step strong { color: var(--accent-dark); }
 
-    /* ── Pro ── */
-    .pro-card {
-      background: linear-gradient(135deg, #FFF9E8 0%, #FFF4D6 100%);
-      border: 1.5px solid #EAD9A6;
-      border-radius: 16px;
-      padding: 24px 22px;
-    }
-    .pro-card h3 {
-      color: var(--gold);
-      font-size: 1.1rem;
-      margin-bottom: 10px;
-    }
-    .pro-card ul { list-style: none; margin-bottom: 14px; }
-    .pro-card li { font-size: 0.93rem; margin-bottom: 6px; }
-    .pro-card li::before { content: "✨ "; }
-    .pro-price {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .pro-price span {
-      background: #fff;
-      border-radius: 10px;
-      padding: 8px 16px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      box-shadow: 0 1px 4px rgba(61, 68, 77, 0.08);
-    }
-    .pro-note { font-size: 0.8rem; color: #8A7B55; margin-top: 10px; }
+    .pro-note { font-size: 0.8rem; color: #777; margin-top: 14px; }
 
     /* ── FAQ ── */
     .faq details {
@@ -455,13 +452,21 @@
     .cta p { font-weight: 700; margin-bottom: 12px; }
     .cta a.button {
       display: inline-block;
-      background: var(--accent);
+      background: var(--btn);
       color: #fff;
       text-decoration: none;
-      border-radius: 12px;
-      padding: 12px 28px;
+      border-radius: 999px;
+      padding: 13px 32px;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.98rem;
+      box-shadow: 0 4px 14px rgba(52, 127, 89, 0.30);
+    }
+    .cta a.button:hover { opacity: 0.92; }
+    .cta a.cta-sub {
+      display: block;
+      margin-top: 14px;
+      font-size: 0.9rem;
+      color: var(--accent-dark);
     }
 
     footer {
@@ -478,24 +483,38 @@
   <div class="hero">
     <img class="appicon" src="icon.png" alt="サイズ予報のアイコン">
     <h1>サイズ予報</h1>
-    <p class="tagline">成長曲線で、服・靴・おむつのサイズを予報</p>
-    <p class="sub">身長・体重を記録するだけ。次に買う服・靴・おむつのサイズが見えてくる。</p>
-    <div class="store-badges">
-      <span>App Store：準備中</span>
-      <span>Google Play：準備中</span>
+    <p class="tagline">来シーズン、何cmを買えばいい？</p>
+    <p class="sub">身長・体重・足の記録から、服・靴・おむつの「次のサイズ」と買い替え時期の目安がわかる子育てアプリです。</p>
+    <div class="hero-shot">
+      <img src="screenshots/clothing-guide.png" alt="洋服サイズ予報の画面。いまのサイズと来シーズンの目安サイズを表示" width="575" height="1024" loading="eager">
     </div>
-    </div>
+    <a class="button-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform" target="_blank" rel="noopener noreferrer">リリース通知を受け取る</a>
+    <p class="store-note">App Store・Google Play で公開予定／主要機能は無料で使えます</p>
+  </div>
 
   <div class="container">
     <section>
-      <h2>こんな経験ありませんか？</h2>
-      <div class="pains">
-        <div class="pain">セールで買った来年用の服、着せる頃には小さかった…</div>
-        <div class="pain">「足痛い」と言い出して、慌てて靴を買いに走った</div>
-        <div class="pain">母子手帳の成長曲線、最近ぜんぜん書いてない</div>
-        <div class="pain">健診で「最近の身長の伸びは？」と聞かれてパッと答えられない</div>
-        <div class="pain">赤ちゃんの頃に入れた育児アプリ、成長記録のためだけに残してる</div>
-        <div class="pain">アプリでのきょうだいの切り替えが面倒で、下の子の記録はつい後回し</div>
+      <h2>服・靴・おむつ、3つのサイズ予報</h2>
+      <p class="lead">「気づいたら小さくなっていた」を、記録から先回り。主役はこの3つです。</p>
+      <div class="features">
+        <div class="feature">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.2 4 4.5 7.3l2 2.6L8 8.8V20h8V8.8l1.5 1.1 2-2.6L15.8 4c-.9 1.4-2.2 2.1-3.8 2.1S9.1 5.4 8.2 4Z"/></svg></span>
+          <h3>来シーズンの洋服サイズ</h3>
+          <p>いまの成長トレンドから、来シーズンに着るサイズ（80・90・100…）を先読み。セールでの「来年用の買い物」に自信が持てます。</p>
+          <p class="pain-quote">「セールで買った来年用の服、着せる頃には小さかった…」</p>
+        </div>
+        <div class="feature">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17v-4.2c2.8-.2 4.9-1.2 6.4-2.8l1.5 1.5 1.5-1 1.5 1.5 1.6-1c1.9 1.9 3.7 2.5 5.5 2.9V17Z"/><path d="M3 17h18"/></svg></span>
+          <h3>靴の買い替え時期</h3>
+          <p>足長の実測からいまの目安を表示。小さくなる前に買い替えのタイミングがわかります。Pro版なら「次に買うサイズと時期」まで先読みできます。</p>
+          <p class="pain-quote">「『足痛い』と言い出して、慌てて靴を買いに走った」</p>
+        </div>
+        <div class="feature">
+          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8.5h14v3.5a7 7 0 0 1-14 0Z"/><path d="M5 8.5C5 6 6.8 4.5 9 4.5h6c2.2 0 4 1.5 4 4"/><path d="M9.5 15.5c.7.7 1.5 1 2.5 1s1.8-.3 2.5-1"/></svg></span>
+          <h3>おむつのサイズアップ時期</h3>
+          <p>メーカー公表の対応体重とお子様の体重記録から、いまの目安サイズと切り替わりの時期を表示。よく使うブランド・シリーズを登録して使えます。</p>
+          <p class="pain-quote">「おむつのサイズアップって、結局いつすればいいの？」</p>
+        </div>
       </div>
     </section>
   </div>
@@ -534,39 +553,28 @@
     </section>
   </div>
 
+  <div class="band-white">
+    <div class="container">
+      <section>
+        <h2>はじめかた（3ステップ）</h2>
+        <div class="steps">
+          <div class="step"><strong>お子様を登録</strong>：生年月日と性別に加え、アイコンとテーマカラーも選べます。きょうだいの登録もOK。早産児の場合は修正月齢の設定もできます。</div>
+          <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
+          <div class="step"><strong>予報をチェック</strong>：洋服・おむつサイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
+        </div>
+      </section>
+    </div>
+  </div>
+
   <div class="container">
     <section>
-      <h2>はじめかた（3ステップ）</h2>
-      <div class="steps">
-        <div class="step"><strong>お子様を登録</strong>：生年月日と性別に加え、アイコンとテーマカラーも選べます。きょうだいの登録もOK。早産児の場合は修正月齢の設定もできます。</div>
-        <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
-        <div class="step"><strong>予報をチェック</strong>：洋服・おむつサイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
-      </div>
-    </section>
-
-    <section>
-      <h2>記録から、買い替えまで</h2>
-      <p class="lead">成長を記録するだけで、服・靴・おむつの買い替えまでひとつながりでサポートします。</p>
+      <h2>成長の記録も、これひとつで</h2>
+      <p class="lead">予報のもとになる成長記録も、健診や共有でそのまま使える形で残せます。</p>
       <div class="features">
         <div class="feature">
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 17.5 9 12l3.5 3L20 6.5"/><circle cx="9" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12.5" cy="15" r="1.5" fill="currentColor" stroke="none"/><circle cx="20" cy="6.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="17.5" r="1.5" fill="currentColor" stroke="none"/></svg></span>
           <h3>健診でもすぐ説明できる成長記録</h3>
-          <p>厚生労働省・文部科学省の公的データ（2000年度）に基づく成長曲線に、身長・体重をプロット。SDスコア（同年齢の平均からの離れぐあい）の推移もひと目でわかります。</p>
-        </div>
-        <div class="feature">
-          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.2 4 4.5 7.3l2 2.6L8 8.8V20h8V8.8l1.5 1.1 2-2.6L15.8 4c-.9 1.4-2.2 2.1-3.8 2.1S9.1 5.4 8.2 4Z"/></svg></span>
-          <h3>来シーズン、何cm買えばいいか先にわかる</h3>
-          <p>いまの成長トレンドから、来シーズンに着るサイズ（80・90・100…）を先読み。セールでの「来年用の買い物」に自信が持てます。</p>
-        </div>
-        <div class="feature">
-          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17v-4.2c2.8-.2 4.9-1.2 6.4-2.8l1.5 1.5 1.5-1 1.5 1.5 1.6-1c1.9 1.9 3.7 2.5 5.5 2.9V17Z"/><path d="M3 17h18"/></svg></span>
-          <h3>「足痛い」と言われる前に気づける</h3>
-          <p>足長の実測からいまの目安を表示。小さくなる前に買い替えのタイミングがわかります。Pro版なら「次に買うサイズと時期」まで先読みできます（無料版では表示されません）。</p>
-        </div>
-        <div class="feature">
-          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8.5h14v3.5a7 7 0 0 1-14 0Z"/><path d="M5 8.5C5 6 6.8 4.5 9 4.5h6c2.2 0 4 1.5 4 4"/><path d="M9.5 15.5c.7.7 1.5 1 2.5 1s1.8-.3 2.5-1"/></svg></span>
-          <h3>おむつのサイズアップも、体重から先読み</h3>
-          <p>メーカー公表の対応体重とお子様の体重記録から、いまの目安サイズと切り替わりの時期を表示。よく使うブランド・シリーズを登録して使えます。</p>
+          <p>母子手帳と同系統の公的基準に基づく成長曲線に、身長・体重をプロット。SDスコア（同年齢の平均からの離れぐあい）の推移もひと目でわかります。</p>
         </div>
         <div class="feature">
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 15.5 9 11l4 3.5 3-2.5 4 3.5"/><circle cx="9.5" cy="8.5" r="1.4" fill="currentColor" stroke="none"/></svg></span>
@@ -610,7 +618,10 @@
         </div>
       </details>
     </section>
+  </div>
 
+  <div class="band-pink">
+    <div class="container">
     <section>
       <h2>記録が、そのまま共有できる画像に</h2>
       <p class="lead">Pro版の画像保存では、グラフやサイズガイドをこんな正方形の画像で保存できます。家族へのメッセージやSNSにそのまま使えます。</p>
@@ -633,11 +644,39 @@
         </figure>
       </div>
     </section>
+    </div>
+  </div>
 
+  <div class="container">
     <section>
-      <h2>料金と機能の違い</h2>
-      <p class="lead">主要機能は無料。靴の先読み予報・広告非表示などは Pro でご利用いただけます。</p>
-      <div class="compare-wrap">
+      <h2>料金</h2>
+      <p class="lead">主要機能は無料。靴の先読み予報・画像保存・自動バックアップなどは Pro でご利用いただけます。</p>
+      <div class="plan-cards">
+        <div class="plan-card">
+          <h3>無料版</h3>
+          <p class="plan-price">¥0</p>
+          <ul>
+            <li>成長曲線・SDスコアの記録</li>
+            <li>洋服・おむつサイズの目安</li>
+            <li>靴のいまの目安</li>
+            <li>受診レポート（PDF）</li>
+            <li>お誕生日アルバム・手動バックアップ</li>
+          </ul>
+        </div>
+        <div class="plan-card pro">
+          <h3>サイズ予報 Pro</h3>
+          <p class="plan-price">月額 ¥100／年額 ¥980（月あたり約¥82）</p>
+          <ul>
+            <li>靴の次の購入サイズと時期の予報</li>
+            <li>グラフ・ガイドの画像保存（共有しやすい正方形）</li>
+            <li>オンライン自動バックアップ</li>
+            <li>広告非表示</li>
+          </ul>
+        </div>
+      </div>
+      <details class="features-more">
+        <summary>全機能の比較表を見る</summary>
+      <div class="compare-wrap" style="margin-top: 14px;">
         <table class="compare">
           <thead>
             <tr>
@@ -715,23 +754,30 @@
           </tbody>
         </table>
       </div>
-      <div class="pro-card" style="margin-top: 20px;">
-        <h3>サイズ予報 Pro</h3>
-        <ul>
-          <li>靴の次の購入サイズと時期の予報（その先まで）</li>
-          <li>グラフ・サイズガイドの画像保存（共有しやすい正方形）</li>
-          <li>オンライン自動バックアップ（機種変更・故障に備えて自動保存）</li>
-          <li>広告非表示</li>
-        </ul>
-        <div class="pro-price">
-          <span>月額 ¥100</span>
-          <span>年額 ¥980（月あたり約¥82）</span>
-        </div>
-        <p class="pro-note">
-          価格は消費税込み。お支払いは App Store / Google Play のアカウントに請求されます。<br>
-          サブスクリプションは自動更新されます。更新日の24時間前までに、各ストアの
-          アカウント設定から解約しない限り、同じ期間・同じ価格で更新されます。
-          解約手続きは App Store または Google Play の「定期購入」設定から行えます。
+      </details>
+      <p class="pro-note">
+        価格は消費税込み。お支払いは App Store / Google Play のアカウントに請求されます。
+        サブスクリプションは自動更新されます。更新日の24時間前までに、各ストアの
+        アカウント設定から解約しない限り、同じ期間・同じ価格で更新されます。
+        解約手続きは App Store または Google Play の「定期購入」設定から行えます。
+      </p>
+    </section>
+
+    <section>
+      <div class="cta">
+        <p>App Store / Google Play で公開準備中です</p>
+        <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform" target="_blank" rel="noopener noreferrer">リリース通知を受け取る</a>
+      </div>
+    </section>
+
+    <section>
+      <h2>作った人より</h2>
+      <div class="about-card">
+        <p><strong>MIYA APPS</strong>（個人事業主）が開発・運営しています。</p>
+        <p>子育て中の保護者目線で、「服・靴・おむつの買い替えタイミングがわからない」という日常の悩みを、成長記録アプリで解決したいと考えて作りました。</p>
+        <p>
+          お問い合わせ：<a href="contact.html">お問い合わせページ</a><br>
+          プライバシー：<a href="privacy.html">プライバシーポリシー</a>
         </p>
       </div>
     </section>
@@ -751,8 +797,8 @@
         <p>公的な成長曲線とお子様ご自身の記録をもとにした統計的な目安です。成長には個人差がありますので、あくまで買い物の参考としてご活用ください。</p>
       </details>
       <details>
-        <summary>なぜ2000年度のデータを使うのですか？</summary>
-        <p>2000年度の乳幼児身体発育調査（厚生労働省）・学校保健統計（文部科学省）に基づく成長曲線は、現在も小児医療の現場で標準的な基準として広く用いられているためです。母子手帳の成長曲線とも同じ系統の基準です。</p>
+        <summary>成長曲線はどんな基準に基づいていますか？</summary>
+        <p>2000年度の乳幼児身体発育調査（厚生労働省）・学校保健統計（文部科学省）に基づく成長曲線を使用しています。この基準は現在も小児医療の現場で標準的に用いられており、母子手帳の成長曲線とも同じ系統です。</p>
       </details>
       <details>
         <summary>別のアプリや母子手帳の記録を引き継げますか？</summary>
@@ -777,22 +823,10 @@
     </section>
 
     <section>
-      <h2>作った人より</h2>
-      <div class="about-card">
-        <p><strong>MIYA APPS</strong>（個人事業主）が開発・運営しています。</p>
-        <p>子育て中の保護者目線で、「服・靴・おむつの買い替えタイミングがわからない」という日常の悩みを、成長記録アプリで解決したいと考えて作りました。</p>
-        <p>
-          お問い合わせ：<a href="contact.html">お問い合わせページ</a><br>
-          プライバシー：<a href="privacy.html">プライバシーポリシー</a>
-        </p>
-      </div>
-    </section>
-
-    <section>
       <div class="cta">
-        <p>App Store / Google Play、公開準備中です</p>
-        <p style="font-size: 0.9rem; font-weight: 400; color: #55606B; margin-bottom: 14px;">「リリースしたら知らせてほしい」も大歓迎です。<br>ご質問・ご要望とあわせて、お気軽にどうぞ。</p>
-        <a class="button" href="contact.html">リリース通知を希望する・お問い合わせ</a>
+        <p>公開したら、いちばんにお知らせします</p>
+        <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform" target="_blank" rel="noopener noreferrer">リリース通知を受け取る</a>
+        <a class="cta-sub" href="contact.html">質問・要望を送る</a>
       </div>
     </section>
   </div>
