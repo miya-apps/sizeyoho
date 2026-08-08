@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1024">
+  <title>Playフィーチャーグラフィック（1024×500）</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      width: 1024px;
+      height: 500px;
+      overflow: hidden;
+      font-family: 'Zen Maru Gothic', sans-serif;
+      background: linear-gradient(135deg, #EAF8F0 0%, #D3F0E2 60%, #C8EDDB 100%);
+      color: #3D444D;
+      position: relative;
+    }
+    .circle { position: absolute; border-radius: 50%; }
+    .c1 { width: 260px; height: 260px; top: -100px; right: -60px; background: rgba(255, 255, 255, 0.5); }
+    .c2 { width: 200px; height: 200px; bottom: -80px; right: 120px; background: rgba(76, 175, 135, 0.10); }
+    .c3 { width: 80px; height: 80px; top: 50px; left: 70px; border: 3px solid rgba(76, 175, 135, 0.22); background: transparent; }
+    .c4 { width: 130px; height: 130px; bottom: 30px; left: -40px; background: rgba(255, 255, 255, 0.4); }
+    .content {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 56px;
+      /* Play側でトリミングされても要素が欠けないよう中央寄せ・余白広め */
+      padding: 0 80px;
+    }
+    .icon {
+      width: 190px;
+      height: 190px;
+      border-radius: 44px;
+      box-shadow: 0 18px 36px rgba(61, 68, 77, 0.22);
+      flex-shrink: 0;
+    }
+    .text { text-align: left; }
+    .app { font-size: 40px; font-weight: 900; color: #2E7D5B; letter-spacing: 0.08em; }
+    .line { width: 64px; height: 6px; background: #4CAF87; border-radius: 3px; margin: 16px 0 22px; }
+    h1 { font-size: 52px; font-weight: 900; line-height: 1.3; letter-spacing: 0.01em; }
+    .sub { margin-top: 16px; font-size: 24px; color: #55606B; }
+  </style>
+</head>
+<body>
+  <div class="circle c1"></div>
+  <div class="circle c2"></div>
+  <div class="circle c3"></div>
+  <div class="circle c4"></div>
+  <div class="content">
+    <img class="icon" src="../icon.png" alt="サイズ予報のアイコン">
+    <div class="text">
+      <div class="app">サイズ予報</div>
+      <div class="line"></div>
+      <h1>成長曲線で、服・靴・<br>おむつのサイズを予報</h1>
+      <p class="sub">身長・体重を記録するだけで、買い替え時期が見える</p>
+    </div>
+  </div>
+</body>
+</html>

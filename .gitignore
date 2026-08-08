@@ -50,3 +50,6 @@ node_modules/
 
 # デザイン素材の控え（アイコンの元画像など。公開サイトには載せない）
 /design/
+
+# ストア提出用の原寸画像（store-assets のHTMLから再生成できる）
+/store-submission/
