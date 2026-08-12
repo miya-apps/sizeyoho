@@ -54,6 +54,11 @@ android {
             } else {
                 signingConfigs.getByName("debug")
             }
+            // R8 による WorkManager 削除で起動クラッシュするのを防ぐ keep ルール。
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro",
+            )
         }
     }
 }
