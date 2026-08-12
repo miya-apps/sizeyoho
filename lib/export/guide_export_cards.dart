@@ -316,61 +316,54 @@ class _ChartExportBody extends StatelessWidget {
     return null;
   }
 
-  /// 直近の記録をグラフ内の左上に重ねる吹き出し。
+  /// 直近の記録の1行表示（グラフの下に置く）。
+  /// 以前はグラフ内に吹き出しで重ねていたが、データや表示範囲によって
+  /// 系列名ラベル（体重など）と重なるため、グラフの外に出した。
   /// 数値は系列と同じ色（身長=青・体重=橙）にして、グラフのどの線の
   /// 値かがひと目で分かるようにする。
-  Widget _latestBubble(GrowthRecordPoint r) {
+  Widget _latestRecordLine(GrowthRecordPoint r) {
     final d = r.date;
     final hasH = r.h != null && r.h! > 0;
     final hasW = r.w != null && r.w! > 0;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(8, 4, 8, 5),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.30)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.baseline,
+        textBaseline: TextBaseline.alphabetic,
         children: [
           Text(
             '直近の記録 ${d.year}/${d.month}/${d.day}',
             style: TextStyle(
-              fontSize: 8.5,
+              fontSize: 9.5,
               fontWeight: FontWeight.w600,
               color: Colors.grey[600],
             ),
           ),
-          const SizedBox(height: 1),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (hasH)
-                Text(
-                  '身長 ${r.h!.toStringAsFixed(1)}cm',
-                  style: const TextStyle(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w700,
-                    color: kGrowthHeightSeriesColor,
-                  ),
-                ),
-              if (hasH && hasW)
-                Text(
-                  '・',
-                  style: TextStyle(fontSize: 10.5, color: Colors.grey[500]),
-                ),
-              if (hasW)
-                Text(
-                  '体重 ${formatWeightKg(r.w!)}kg',
-                  style: const TextStyle(
-                    fontSize: 10.5,
-                    fontWeight: FontWeight.w700,
-                    color: kGrowthWeightSeriesColor,
-                  ),
-                ),
-            ],
-          ),
+          const SizedBox(width: 8),
+          if (hasH)
+            Text(
+              '身長 ${r.h!.toStringAsFixed(1)}cm',
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: kGrowthHeightSeriesColor,
+              ),
+            ),
+          if (hasH && hasW)
+            Text(
+              '・',
+              style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+            ),
+          if (hasW)
+            Text(
+              '体重 ${formatWeightKg(r.w!)}kg',
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: kGrowthWeightSeriesColor,
+              ),
+            ),
         ],
       ),
     );
@@ -406,45 +399,30 @@ class _ChartExportBody extends StatelessWidget {
             const SizedBox(height: 4),
           ],
           Expanded(
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: isSdScore
-                      ? SdScoreChart(
-                          isBoy: isBoy,
-                          recordPoints: points,
-                          ageRangeYears: ageRangeYears,
-                        )
-                      : GrowthCurveChart(
-                          isBoy: isBoy,
-                          recordPoints: points,
-                          ageRangeYears: ageRangeYears,
-                          // 画像では (kg)/(cm) を少し上げて目盛り数字との
-                          // 重なりを避ける（アプリ画面は従来のまま）。
-                          raiseUnitLabels: true,
-                        ),
-                ),
-                // 直近の記録の吹き出し。プロット上部は「身長」の系列名
-                // ラベルと重なるため下側に置く。
-                // ・成長曲線：右下（体重の帯より下は空く。左下は0歳側の
-                // 　曲線の始点があるので避ける）
-                // ・SDスコア：左下（右端は±SDの名札が縦に並ぶので避ける）
-                // bottom はグラフ下の X 軸ラベル2行ぶんを避けたオフセット。
-                if (latest != null)
-                  isSdScore
-                      ? Positioned(
-                          left: 48,
-                          bottom: 42,
-                          child: _latestBubble(latest),
-                        )
-                      : Positioned(
-                          right: 48,
-                          bottom: 42,
-                          child: _latestBubble(latest),
-                        ),
-              ],
-            ),
+            child: isSdScore
+                ? SdScoreChart(
+                    isBoy: isBoy,
+                    recordPoints: points,
+                    ageRangeYears: ageRangeYears,
+                  )
+                : GrowthCurveChart(
+                    isBoy: isBoy,
+                    recordPoints: points,
+                    ageRangeYears: ageRangeYears,
+                    // 画像では (kg)/(cm) を少し上げて目盛り数字との
+                    // 重なりを避ける（アプリ画面は従来のまま）。
+                    raiseUnitLabels: true,
+                    // 画像は描画エリアが低く目盛り数値が詰まりすぎるため、
+                    // 1目盛りおき（40,50,60…）に間引く。
+                    sparseYAxisLabels: true,
+                  ),
           ),
+          // 直近の記録はグラフに重ねず、下に1行で置く（系列名ラベルとの
+          // 重なりをデータに依らず確実に避ける）。
+          if (latest != null) ...[
+            const SizedBox(height: 5),
+            _latestRecordLine(latest),
+          ],
         ],
       ),
     );

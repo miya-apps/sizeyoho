@@ -481,6 +481,7 @@ class GrowthCurveChart extends StatelessWidget {
     this.style = const GrowthChartStyle(),
     this.plotForeground,
     this.raiseUnitLabels = false,
+    this.sparseYAxisLabels = false,
   });
 
   final bool isBoy;
@@ -502,6 +503,27 @@ class GrowthCurveChart extends StatelessWidget {
   /// false（既定）はアプリ画面の従来表示（改行付きで下寄り）。
   final bool raiseUnitLabels;
 
+  /// true なら Y 軸の目盛り数値を1目盛りおき（キリのいい値のみ）にする。
+  /// 書き出し画像はグラフ描画エリアが画面より低く、全目盛りに数値を
+  /// 置くと詰まりすぎるため（グリッド線自体は全目盛りに引いたまま）。
+  final bool sparseYAxisLabels;
+
+  /// 数値ラベル列を1目盛りおきに間引く。目盛り刻み（隣接差分）の2倍の
+  /// 倍数だけを残すので、5刻みなら 40,50,60…、2刻みなら 4,8,12… が残る。
+  static List<String> _thinLabels(List<String> labels) {
+    final values = [
+      for (final t in labels)
+        if (t.isNotEmpty) int.parse(t),
+    ];
+    if (values.length < 2) return labels;
+    final keepStep = (values[0] - values[1]).abs() * 2;
+    if (keepStep == 0) return labels;
+    return [
+      for (final t in labels)
+        (t.isEmpty || int.parse(t) % keepStep == 0) ? t : '',
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -511,12 +533,16 @@ class GrowthCurveChart extends StatelessWidget {
     final xTickLabels = growthXAxisTickLabelsForMode(ageRangeYears);
     final xUnitSuffix = growthXAxisUnitSuffixForMode(ageRangeYears);
     final yDivisions = growthYAxisDivisionCount(ageRangeYears);
-    final weightLabels = GraphLayoutConstants.weightLabelsForMode(
+    var weightLabels = GraphLayoutConstants.weightLabelsForMode(
       ageRangeYears,
     );
-    final heightLabels = GraphLayoutConstants.heightLabelsForMode(
+    var heightLabels = GraphLayoutConstants.heightLabelsForMode(
       ageRangeYears,
     );
+    if (sparseYAxisLabels) {
+      weightLabels = _thinLabels(weightLabels);
+      heightLabels = _thinLabels(heightLabels);
+    }
     assert(
       weightLabels.length == yDivisions && heightLabels.length == yDivisions,
       'Y axis label count must match grid division count',
