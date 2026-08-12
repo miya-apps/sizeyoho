@@ -302,7 +302,11 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
             child: ClipRRect(
               // 角丸は画面上の見栄えだけ。保存されるPNGは四隅まで背景色。
               borderRadius: BorderRadius.circular(14),
+              // expand で子に正方形いっぱいの制約を渡す。loose のままだと
+              // FittedBox が拡大方向に働かず、designWidth より大きい画面
+              // （タブレット等）でカードが左上に小さく置かれてしまう。
               child: Stack(
+                fit: StackFit.expand,
                 children: [
                   Container(
                     color: _background,

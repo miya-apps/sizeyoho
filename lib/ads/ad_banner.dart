@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
@@ -35,6 +36,13 @@ class _AdBannerState extends State<AdBanner> {
   BannerAd? _ad;
   bool _loaded = false;
 
+  /// 読み込み失敗時の再試行。本番の広告ユニットは在庫状況（no fill）で
+  /// 普通に失敗するため、起動時の1回だけだとそのセッション中ずっと
+  /// 広告が出ないままになる。間隔を広げながら数回だけ再試行する。
+  Timer? _retryTimer;
+  int _retryCount = 0;
+  static const int _maxRetries = 5;
+
   @override
   void initState() {
     super.initState();
@@ -48,14 +56,27 @@ class _AdBannerState extends State<AdBanner> {
   void _onProChanged() {
     if (!mounted) return;
     if (ProStatus.isPro.value) {
+      _retryTimer?.cancel();
       _ad?.dispose();
       setState(() {
         _ad = null;
         _loaded = false;
       });
     } else if (AdBanner._supported && _ad == null) {
+      _retryCount = 0;
       _load();
     }
+  }
+
+  /// 失敗回数に応じて間隔を広げつつ再読み込みを予約する（30秒→60秒→…）。
+  void _scheduleRetry() {
+    if (_retryCount >= _maxRetries) return;
+    final delay = Duration(seconds: 30 * (1 << _retryCount.clamp(0, 3)));
+    _retryCount++;
+    _retryTimer?.cancel();
+    _retryTimer = Timer(delay, () {
+      if (mounted && !ProStatus.isPro.value && _ad == null) _load();
+    });
   }
 
   void _load() {
@@ -68,15 +89,20 @@ class _AdBannerState extends State<AdBanner> {
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (_) {
-          if (mounted) setState(() => _loaded = true);
+          if (mounted) {
+            _retryCount = 0;
+            setState(() => _loaded = true);
+          }
         },
         onAdFailedToLoad: (ad, error) {
+          debugPrint('AdBanner failed to load: $error');
           ad.dispose();
           if (mounted) {
             setState(() {
               _ad = null;
               _loaded = false;
             });
+            _scheduleRetry();
           }
         },
       ),
@@ -88,6 +114,7 @@ class _AdBannerState extends State<AdBanner> {
   @override
   void dispose() {
     ProStatus.isPro.removeListener(_onProChanged);
+    _retryTimer?.cancel();
     _ad?.dispose();
     super.dispose();
   }
