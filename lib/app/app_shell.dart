@@ -1067,6 +1067,12 @@ class _AppShellState extends State<AppShell> {
               ),
             ),
           ),
+          // ── 広告バナー（無料版のみ・Android/iOSのみ） ──
+          // Pro版・Web・読み込み前は AdBanner 側で高さ0になる。
+          // 下部だと中央の＋ボタンのすぐ近くになり誤タップを誘う見た目に
+          // なるため（ユーザーフィードバック・AdMobポリシー配慮）、
+          // 操作ボタンから遠いヘッダー直下に置く。
+          const AdBanner(),
           // 誕生月の間だけ、グラフタブ上部に「お祝いを見る」バナーを出す。
           // 自動ポップアップは1回だが、写真の追加・見返しはここから月内いつでも。
           if (!_isSettings && _tabIndex == 0 && _birthdayMonthAge != null)
@@ -1118,9 +1124,6 @@ class _AppShellState extends State<AppShell> {
               ],
             ),
           ),
-          // ── 広告バナー（無料版のみ・Android/iOSのみ） ──
-          // Pro版・Web・読み込み前は AdBanner 側で高さ0になる。
-          const AdBanner(),
         ],
             ),
           ),
