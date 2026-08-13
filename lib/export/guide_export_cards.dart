@@ -208,7 +208,7 @@ class GuideExportCard extends StatelessWidget {
                 ),
                 Text(
                   '${now.year}/${now.month}/${now.day} 作成',
-                  style: TextStyle(fontSize: 10, color: Colors.grey[600]),
+                  style: TextStyle(fontSize: 10, color: Colors.grey[700]),
                 ),
               ],
             ),
@@ -218,7 +218,7 @@ class GuideExportCard extends StatelessWidget {
                 _leadText,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: 10.5, color: Colors.grey[600]),
+                style: TextStyle(fontSize: 10.5, color: Colors.grey[700]),
               ),
             // ── 本文 ──
             // グラフ：縮小せず、空いた領域の縦横いっぱいに描く。
@@ -256,7 +256,7 @@ class GuideExportCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 8.5,
-                  color: Colors.grey[500],
+                  color: Colors.grey[700],
                   height: 1.4,
                 ),
               ),
@@ -268,7 +268,7 @@ class GuideExportCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: Colors.grey[700],
               ),
             ),
           ],
@@ -337,7 +337,7 @@ class _ChartExportBody extends StatelessWidget {
             style: TextStyle(
               fontSize: 9.5,
               fontWeight: FontWeight.w600,
-              color: Colors.grey[600],
+              color: Colors.grey[700],
             ),
           ),
           const SizedBox(width: 8),
@@ -353,7 +353,7 @@ class _ChartExportBody extends StatelessWidget {
           if (hasH && hasW)
             Text(
               '・',
-              style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+              style: TextStyle(fontSize: 11, color: Colors.grey[600]),
             ),
           if (hasW)
             Text(
@@ -588,10 +588,11 @@ class _SeasonRow extends StatelessWidget {
             children: [
               Text(
                 '$year年',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 10.5,
                   fontWeight: FontWeight.w600,
-                  color: Colors.grey[600],
+                  // アプリ本体の洋服ガイド（_YearSizeCell）と同じ濃色。
+                  color: Colors.black87,
                 ),
               ),
               const SizedBox(width: 4),
@@ -608,7 +609,12 @@ class _SeasonRow extends StatelessWidget {
         ),
         Text(
           '推定${estimatedHeightCm.toStringAsFixed(1)}cm',
-          style: TextStyle(fontSize: 10, color: Colors.grey[600], height: 1.2),
+          // アプリ本体の洋服ガイドの推定表記と同じ濃色（grey[800]相当）。
+          style: const TextStyle(
+            fontSize: 10,
+            color: Color(0xFF424242),
+            height: 1.2,
+          ),
         ),
       ],
     );
@@ -667,7 +673,11 @@ class _ShoeExportBody extends StatelessWidget {
         Text(
           '※実測した日からの成長ぶんと、つま先余裕'
           '（+${shoeToeAllowanceCm.toStringAsFixed(1)}cm）を見込んだ目安です',
-          style: TextStyle(fontSize: 9.5, color: Colors.grey[500]),
+          style: TextStyle(
+            fontSize: 9.5,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey[700],
+          ),
         ),
       ],
     );
@@ -828,7 +838,7 @@ class _DiaperExportSlotCard extends StatelessWidget {
         return Text(
           '体重がこのシリーズの対象より軽いです',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+          style: TextStyle(fontSize: 11, color: Colors.grey[700]),
         );
       case DiaperFitStatus.aboveRange:
         return null;
@@ -908,15 +918,27 @@ class _DiaperExportSlotCard extends StatelessWidget {
         ),
       );
 
+  // アプリ本体のおむつカード（_rangeTextStyle / _forecastNoteStyle）と同じ
+  // 濃色（grey[800]相当）・太さに揃える（サイズは書き出しカードに合わせて小さめ）。
   Widget _rangeText(DiaperSizeBand band) => Text(
         '（${diaperRangeLabel(band)}）',
-        style: TextStyle(fontSize: 11.5, color: Colors.grey[700], height: 1.2),
+        style: const TextStyle(
+          fontSize: 11.5,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF424242),
+          height: 1.2,
+        ),
       );
 
   Widget _noteText(String text) => Text(
         text,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 10.5, color: Colors.grey[600], height: 1.3),
+        style: const TextStyle(
+          fontSize: 10.5,
+          fontWeight: FontWeight.w600,
+          color: Color(0xFF424242),
+          height: 1.3,
+        ),
       );
 }
 
@@ -938,7 +960,7 @@ class _EmptyNote extends StatelessWidget {
       child: Text(
         message,
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 12, color: Colors.grey[600], height: 1.5),
+        style: TextStyle(fontSize: 12, color: Colors.grey[700], height: 1.5),
       ),
     );
   }
