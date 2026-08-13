@@ -415,6 +415,9 @@ class _ChartExportBody extends StatelessWidget {
                     // 画像は描画エリアが低く目盛り数値が詰まりすぎるため、
                     // 1目盛りおき（40,50,60…）に間引く。
                     sparseYAxisLabels: true,
+                    // 右端の SD 名札も画像では重なるため ±1.0SD を省く
+                    // （+2.0SD・平均・-2.0SD のみ）。
+                    hideUnitSdLabels: true,
                   ),
           ),
           // 直近の記録はグラフに重ねず、下に1行で置く（系列名ラベルとの

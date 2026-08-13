@@ -1028,12 +1028,16 @@ class _AppShellState extends State<AppShell> {
     final screenBg = _selectedChild.themeColor.withValues(
       alpha: _screenBackgroundAlpha,
     );
+    // Scaffold の背景は必ず不透明にする。半透明のまま渡すと、FAB ノッチの
+    // 切り欠きなど body が覆わない隙間でウィンドウの黒が透けてしまう
+    // （＋ボタンの周りが黒く見える不具合の原因）。
+    final opaqueScreenBg = Color.alphaBlend(screenBg, Colors.white);
     // 大画面では下部メニューを比例拡大する（最大1.3倍）。
     final uiScale = uiScaleForWidth(MediaQuery.sizeOf(context).width);
 
     final scaffold = Scaffold(
       // 設定画面では特定の子のテーマ色を使わず、ニュートラルな背景にする。
-      backgroundColor: _isSettings ? _settingsBackground : screenBg,
+      backgroundColor: _isSettings ? _settingsBackground : opaqueScreenBg,
       // スクショ・共有用に body 全体を RepaintBoundary で包む。
       // Scaffold の背景色は boundary の外なので、白＋テーマ淡色を内側でも
       // 重ねて、書き出した画像が透過にならないようにする。
@@ -1193,18 +1197,23 @@ class _AppShellState extends State<AppShell> {
             // 中央：FAB のためのノッチ用スペース。沈み込んだ＋ボタンの
             // すぐ下に「何の入力か」を示すラベルを置く（靴ガイドなどで
             // ＋＝身長・体重入力だと分かりにくい、というフィードバック対応）。
+            // ラベルは両隣のタブ（グラフ・履歴など）と同じ構成
+            // （アイコン枠ぶんの空き＋同じ書式の文字）で組み、
+            // 文字の大きさ・縦位置がタブの文字とそろうようにする。
             SizedBox(
-              width: 56,
+              width: 68 * uiScale,
               height: double.infinity,
               child: _isSettings
                   ? null
-                  : Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 5),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
+                  : Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // タブのアイコンピル（縦padding 2×2＋アイコン）と
+                          // 同じ高さの空き。この位置にはFABが重なっている。
+                          SizedBox(height: 24 * uiScale + 4),
+                          const SizedBox(height: 2),
+                          Text(
                             '身長・体重',
                             maxLines: 1,
                             softWrap: false,
@@ -1214,7 +1223,7 @@ class _AppShellState extends State<AppShell> {
                               color: scheme.onSurfaceVariant,
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
             ),

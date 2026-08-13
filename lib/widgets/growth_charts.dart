@@ -482,6 +482,7 @@ class GrowthCurveChart extends StatelessWidget {
     this.plotForeground,
     this.raiseUnitLabels = false,
     this.sparseYAxisLabels = false,
+    this.hideUnitSdLabels = false,
   });
 
   final bool isBoy;
@@ -507,6 +508,11 @@ class GrowthCurveChart extends StatelessWidget {
   /// 書き出し画像はグラフ描画エリアが画面より低く、全目盛りに数値を
   /// 置くと詰まりすぎるため（グリッド線自体は全目盛りに引いたまま）。
   final bool sparseYAxisLabels;
+
+  /// true なら ±1.0SD の名札を出さない（+2.0SD・平均・-2.0SD のみ残す。
+  /// 曲線自体は描いたまま）。書き出し画像は縦が低く、右端に縦に並ぶ
+  /// 名札5枚×2系列がどうしても重なるため。
+  final bool hideUnitSdLabels;
 
   /// 数値ラベル列を1目盛りおきに間引く。目盛り刻み（隣接差分）の2倍の
   /// 倍数だけを残すので、5刻みなら 40,50,60…、2刻みなら 4,8,12… が残る。
@@ -713,10 +719,14 @@ class GrowthCurveChart extends StatelessWidget {
                             seriesColor: kGrowthWeightSeriesColor,
                           ),
                         for (final curve in heightSdCurves)
-                          if (curve.showLabel && curve.spots.isNotEmpty)
+                          if (curve.showLabel &&
+                              curve.spots.isNotEmpty &&
+                              !(hideUnitSdLabels && curve.sd.abs() == 1.0))
                             sdLabel(curve, heightScale, kGrowthHeightSeriesColor),
                         for (final curve in weightSdCurves)
-                          if (curve.showLabel && curve.spots.isNotEmpty)
+                          if (curve.showLabel &&
+                              curve.spots.isNotEmpty &&
+                              !(hideUnitSdLabels && curve.sd.abs() == 1.0))
                             sdLabel(curve, weightScale, kGrowthWeightSeriesColor),
                         if (plotForeground != null)
                           Positioned.fill(child: plotForeground!),
