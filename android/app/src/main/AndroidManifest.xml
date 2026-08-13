@@ -1,6 +1,14 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- クラウドバックアップ（Firebase）と広告（AdMob）の通信に必要 -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 画像のギャラリー保存（gal）。API 30以降は MediaStore 経由のため不要。
+         file_saver も同じ権限を maxSdkVersion=28 で宣言しているため、
+         gal の要件（〜29）に合わせて tools:replace で上書きする。 -->
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="29"
+        tools:replace="android:maxSdkVersion"/>
     <application
         android:label="サイズ予報"
         android:name="${applicationName}"

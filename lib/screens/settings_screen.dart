@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 
 import '../app/adaptive_layout.dart';
 import '../backup/growth_backup.dart';
+import '../export/save_to_device.dart';
 import '../cloud/cloud_backup.dart';
 import '../models/child_profile.dart';
 import '../monetization/pro_paywall.dart';
@@ -245,12 +246,14 @@ class SettingsScreen extends StatelessWidget {
       final stamp =
           '${now.year}${now.month.toString().padLeft(2, '0')}${now.day.toString().padLeft(2, '0')}'
           '_${now.hour.toString().padLeft(2, '0')}${now.minute.toString().padLeft(2, '0')}';
-      await FileSaver.instance.saveFile(
+      final saved = await saveBytesToDevice(
         name: '成長記録バックアップ_$stamp',
         bytes: Uint8List.fromList(utf8.encode(encodeBackupJson(children))),
         fileExtension: 'json',
         mimeType: MimeType.json,
       );
+      // Androidの保存先選択ダイアログでキャンセルした場合は何も出さない。
+      if (!saved) return;
       messenger.showSnackBar(
         const SnackBar(
           content: Text('バックアップを保存しました。機種変更時はこのファイルを新しい端末に移して読み込んでください'),

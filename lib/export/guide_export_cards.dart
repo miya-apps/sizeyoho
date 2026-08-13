@@ -113,7 +113,9 @@ class GuideExportCard extends StatelessWidget {
   /// グラフ名をそのまま使う。
   String get _itemTitle => switch (item) {
         SizeExportItem.growthChart => '成長曲線',
-        SizeExportItem.sdChart => '成長グラフ（SDスコア）',
+        // 「成長グラフ（SDスコア）」だと名前と作成日を並べたときに
+        // 収まらず文字が切れるため短くする。
+        SizeExportItem.sdChart => 'SDスコア',
         _ => '${sizeExportItemLabel(item)}サイズ予報',
       };
 

@@ -238,6 +238,8 @@
 	<string>お子様のプロフィール写真やお誕生日の思い出の写真を撮影するために使用します。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>お子様のプロフィール写真やお誕生日の思い出の写真を選択するために使用します。</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>作成した成長グラフやサイズ予報の画像を写真に保存するために使用します。</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

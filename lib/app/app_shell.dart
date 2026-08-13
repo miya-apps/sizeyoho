@@ -8,6 +8,7 @@ import '../ads/ad_banner.dart';
 import '../cloud/cloud_backup.dart';
 import '../export/growth_pdf.dart';
 import '../export/guide_export_cards.dart';
+import '../export/save_to_device.dart';
 import '../export/screen_capture.dart';
 import '../models/child_profile.dart';
 
@@ -680,13 +681,14 @@ class _AppShellState extends State<AppShell> {
         displayName: _exportDisplayName,
       );
       if (!mounted) return;
-      await FileSaver.instance.saveFile(
+      final saved = await saveBytesToDevice(
         name: _exportBaseName(),
         bytes: bytes,
         fileExtension: 'pdf',
         mimeType: MimeType.pdf,
       );
-      if (mounted) _showSnack('PDFを保存しました');
+      // キャンセル時（Androidの保存先選択ダイアログを閉じた等）は何も出さない。
+      if (mounted && saved) _showSnack('PDFを保存しました');
     } on Exception catch (e) {
       // 原因（フォント読込失敗など）を調査できるようログには残す。
       debugPrint('PDF export failed: $e');

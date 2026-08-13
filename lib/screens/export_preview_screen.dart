@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:file_saver/file_saver.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:gal/gal.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../export/guide_export_cards.dart';
@@ -126,6 +128,17 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
 
   Future<void> _save(List<SizeExportItem> items) async {
     if (!_ensureProAndIdle()) return;
+    // モバイルでは端末のフォトギャラリーに保存する。以前の FileSaver は
+    // Android だとアプリ専用フォルダ（Android/data/…）に書いてしまい、
+    // ユーザーから見えず「保存したのにどこにも無い」状態だった。
+    // SNS投稿用の画像なのでギャラリーが自然な保存先。
+    if (!kIsWeb && !await Gal.hasAccess()) {
+      final granted = await Gal.requestAccess();
+      if (!granted) {
+        if (mounted) _showSnack('写真へのアクセスが許可されていないため保存できません');
+        return;
+      }
+    }
     setState(() => _busy = true);
     var saved = 0;
     try {
@@ -139,12 +152,17 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
           continue;
         }
         try {
-          await FileSaver.instance.saveFile(
-            name: widget.fileNameFor(item),
-            bytes: bytes,
-            fileExtension: 'png',
-            mimeType: MimeType.png,
-          );
+          if (kIsWeb) {
+            // Web はブラウザのダウンロードとして保存する。
+            await FileSaver.instance.saveFile(
+              name: widget.fileNameFor(item),
+              bytes: bytes,
+              fileExtension: 'png',
+              mimeType: MimeType.png,
+            );
+          } else {
+            await Gal.putImageBytes(bytes, name: widget.fileNameFor(item));
+          }
           saved++;
         } on Exception {
           if (mounted) {
@@ -156,7 +174,8 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
       if (mounted) setState(() => _busy = false);
     }
     if (mounted && saved > 0) {
-      _showSnack(saved == 1 ? '画像を保存しました' : '$saved枚の画像を保存しました');
+      final where = kIsWeb ? '' : 'フォトギャラリーに';
+      _showSnack(saved == 1 ? '画像を$where保存しました' : '$saved枚の画像を$where保存しました');
     }
   }
 
