@@ -1,0 +1,22 @@
+{
+  "name": "サイズ予報",
+  "short_name": "サイズ予報",
+  "description": "子どもの成長記録から、服・靴・おむつのサイズと買い替え時期を予報",
+  "start_url": "/sizeyoho/",
+  "scope": "/sizeyoho/",
+  "display": "browser",
+  "background_color": "#EAF8F0",
+  "theme_color": "#C8EDDB",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
