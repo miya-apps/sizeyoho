@@ -198,7 +198,11 @@ class _ExportPreviewScreenState extends State<ExportPreviewScreen> {
           fileNameOverrides: [name],
         ),
       );
-    } on Exception {
+      // 共有シートが使えない環境（http配信のWeb等）では share_plus が
+      // Exception ではなく UnimplementedError（Error系）を投げるため、
+      // on Exception だと素通りして「押しても無反応」に見えてしまう。
+      // ここは種類を問わず受けて、保存への案内に切り替える。
+    } catch (_) {
       if (mounted) {
         _showSnack('この環境ではシェアを開けませんでした。保存してから共有アプリで送ってください');
       }
