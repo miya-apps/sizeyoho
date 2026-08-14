@@ -326,14 +326,24 @@
       }
     }
 
-    /* ── 共有用画像のサンプル ── */
+    /* ── 共有用画像のサンプル ──
+       5枚を縦に積むと長くなりすぎるため、スクショカルーセルと同じ
+       「横並び＋スワイプスクロール」で見せる。 */
     .share-samples {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      --sample-w: min(240px, 62vw);
+      display: flex;
       gap: 14px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px 4px 12px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) transparent;
     }
     .share-samples figure {
+      flex: 0 0 var(--sample-w);
       margin: 0;
+      scroll-snap-align: center;
     }
     .share-samples img {
       width: 100%;
