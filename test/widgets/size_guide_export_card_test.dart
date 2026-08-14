@@ -66,7 +66,7 @@ void main() {
     expect(find.text('冬服'), findsOneWidget);
     // SNS向けのガード文言とクレジット（©＋URL）が焼き込まれている。
     expect(find.textContaining('※あくまで目安です'), findsOneWidget);
-    expect(find.textContaining('miya-apps.github.io/sizeyoho'), findsOneWidget);
+    expect(find.textContaining('miyaapps.com/sizeyoho'), findsOneWidget);
     // オーバーフローがあれば pump 中に FlutterError で失敗する。
     expect(tester.takeException(), isNull);
   });
@@ -213,7 +213,7 @@ void main() {
     expect(find.textContaining('直近の記録'), findsOneWidget);
     expect(find.textContaining('身長 '), findsOneWidget);
     expect(find.textContaining('日本小児内分泌学会'), findsOneWidget);
-    expect(find.textContaining('miya-apps.github.io/sizeyoho'), findsOneWidget);
+    expect(find.textContaining('miyaapps.com/sizeyoho'), findsOneWidget);
     // サイズ感のガード文言はサイズを予測するガイド専用（グラフには出さない）。
     expect(find.textContaining('※あくまで目安です'), findsNothing);
     expect(tester.takeException(), isNull);
