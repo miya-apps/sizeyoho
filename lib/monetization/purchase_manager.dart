@@ -6,9 +6,16 @@ import 'package:in_app_purchase/in_app_purchase.dart';
 
 import 'pro_status.dart';
 
-/// ストア商品ID（App Store Connect / Google Play Console に同じIDで登録する）。
-const String kProMonthlyProductId = 'sizeyoho_pro_monthly';
-const String kProYearlyProductId = 'sizeyoho_pro_yearly';
+/// ストア商品ID。
+/// Google Play のサブスクリプションIDは「数字・小文字・ハイフン」のみで
+/// アンダースコアが使えず、逆に App Store は「英数字・アンダースコア・
+/// ピリオド」のみでハイフンが使えないため、プラットフォーム別のIDにする。
+final String kProMonthlyProductId = !kIsWeb && Platform.isIOS
+    ? 'sizeyoho_pro_monthly'
+    : 'sizeyoho-pro-monthly';
+final String kProYearlyProductId = !kIsWeb && Platform.isIOS
+    ? 'sizeyoho_pro_yearly'
+    : 'sizeyoho-pro-yearly';
 
 /// Pro版サブスクリプションの購入・復元。
 ///
@@ -20,7 +27,7 @@ class PurchaseManager {
 
   static final PurchaseManager instance = PurchaseManager._();
 
-  static const Set<String> _productIds = {
+  static final Set<String> _productIds = {
     kProMonthlyProductId,
     kProYearlyProductId,
   };
