@@ -13,7 +13,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
   static const Color _background = Color(0xFFF6F6F8);
   static const String _establishedAt = '2026年7月7日';
-  static const String _revisedAt = '2026年8月1日';
+  static const String _revisedAt = '2026年8月14日';
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +89,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       ),
                       _sub('（4）購入情報'),
                       Text(
-                        'Pro版の購入手続きは App Store / Google Play が'
+                        'Pro版の購入手続きは App Store・Google Play が'
                         '処理します。開発者がクレジットカード番号などの'
                         '決済情報を取得することはありません。',
                         style: _bodyStyle,

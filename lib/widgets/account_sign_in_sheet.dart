@@ -40,7 +40,7 @@ class _AccountSignInSheet extends StatelessWidget {
             Text(
               '機種変更や端末の故障に備えて、記録をクラウドに'
               '保存するためのアカウントです。\n'
-              'Pro版のお支払いは App Store / Google Play で'
+              'Pro版のお支払いは App Store・Google Play で'
               '行い、ここでのサインインは不要です。',
               textAlign: TextAlign.center,
               style: TextStyle(

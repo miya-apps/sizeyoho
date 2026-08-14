@@ -102,7 +102,7 @@ class _ProPaywallSheetState extends State<_ProPaywallSheet> {
               icon: Icons.cloud_done_outlined,
               scheme: scheme,
               title: 'オンライン自動バックアップ',
-              body: '機種変更や故障に備えて記録を自動でクラウドに保存',
+              body: '機種変更や故障に備えて記録を自動でクラウドに保存（写真を除く）',
             ),
             _feature(
               icon: Icons.block_flipped,
@@ -154,8 +154,9 @@ class _ProPaywallSheetState extends State<_ProPaywallSheet> {
             ),
             const SizedBox(height: 2),
             Text(
-              '価格はすべて消費税込みです。\n'
-              'お支払いは App Store / Google Play のアカウントに請求されます。',
+              '料金は税込です。定期購入は自動更新され、各ストアのアカウントに'
+              '請求されます。\n'
+              '解約は App Store・Google Play の定期購入設定から行えます。',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 10.5,

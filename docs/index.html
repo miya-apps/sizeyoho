@@ -381,6 +381,17 @@
     .plan-card.pro h3 { color: var(--gold); }
     .plan-card.pro .plan-price { color: #8A7B55; }
     .plan-card.pro li::before { content: "✨ "; }
+    .plan-card .plan-lead {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #55606B;
+      margin-bottom: 8px;
+    }
+    .plan-card .plan-note {
+      font-size: 0.8rem;
+      color: #777;
+      margin-top: 10px;
+    }
 
     /* ── 比較表 ── */
     .compare-wrap { overflow-x: auto; }
@@ -531,7 +542,7 @@
   <div class="container">
     <section>
       <h2>服・靴・おむつ、3つのサイズ予報</h2>
-      <p class="lead">「気づいたら小さくなっていた」を、記録から先回り。主役はこの3つです。</p>
+      <p class="lead">「気づいたら小さくなっていた」を、成長の記録から先回りします。</p>
       <div class="features">
         <div class="feature">
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8.2 4 4.5 7.3l2 2.6L8 8.8V20h8V8.8l1.5 1.1 2-2.6L15.8 4c-.9 1.4-2.2 2.1-3.8 2.1S9.1 5.4 8.2 4Z"/></svg></span>
@@ -557,13 +568,13 @@
 
   <div class="container-wide">
     <section class="screenshots-section">
-      <h2>こんなアプリです</h2>
+      <h2>画面で見る、サイズ予報</h2>
       <div class="screenshot-carousel" id="screenshot-carousel" tabindex="0" role="group" aria-roledescription="カルーセル" aria-label="アプリのスクリーンショット">
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-05-overview.png" alt="成長曲線で、服・靴・おむつのサイズを予報" width="472" height="1024" loading="eager">
+          <img src="store-assets/slide-05-overview.png" alt="服・靴・おむつのサイズを、まとめて予報" width="472" height="1024" loading="eager">
         </figure>
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-01-growth-curve.png" alt="母子手帳の成長曲線、アプリでかんたん記録" width="472" height="1024" loading="lazy">
+          <img src="store-assets/slide-01-growth-curve.png" alt="母子手帳の成長記録を、アプリでも" width="472" height="1024" loading="lazy">
         </figure>
         <figure class="screenshot-slide">
           <img src="store-assets/slide-02-sd-score.png" alt="健診の準備に、成長の記録を" width="472" height="1024" loading="lazy">
@@ -595,7 +606,7 @@
         <h2>はじめかた（3ステップ）</h2>
         <div class="steps">
           <div class="step"><strong>お子様を登録</strong>：生年月日と性別に加え、アイコンとテーマカラーも選べます。きょうだいの登録もOK。早産児の場合は修正月齢の設定もできます。</div>
-          <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。数回の記録から傾向をつかみます。</div>
+          <div class="step"><strong>身長・体重・足長を記録</strong>：健診や身体測定のタイミングでOK。まず1件の記録から使えます。</div>
           <div class="step"><strong>予報をチェック</strong>：洋服・おむつサイズの目安を確認。靴の次の購入予報はPro版で表示されます。</div>
         </div>
       </section>
@@ -609,13 +620,8 @@
       <div class="features">
         <div class="feature">
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 17.5 9 12l3.5 3L20 6.5"/><circle cx="9" cy="12" r="1.5" fill="currentColor" stroke="none"/><circle cx="12.5" cy="15" r="1.5" fill="currentColor" stroke="none"/><circle cx="20" cy="6.5" r="1.5" fill="currentColor" stroke="none"/><circle cx="4" cy="17.5" r="1.5" fill="currentColor" stroke="none"/></svg></span>
-          <h3>健診でもすぐ説明できる成長記録</h3>
-          <p>母子手帳と同系統の公的基準に基づく成長曲線に、身長・体重をプロット。SDスコア（同年齢の平均からの離れぐあい）の推移もひと目でわかります。</p>
-        </div>
-        <div class="feature">
-          <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M4 15.5 9 11l4 3.5 3-2.5 4 3.5"/><circle cx="9.5" cy="8.5" r="1.4" fill="currentColor" stroke="none"/></svg></span>
-          <h3>グラフもガイドも、そのまま画像で残せる</h3>
-          <p>成長曲線・SDスコア・サイズガイドを、共有しやすい正方形の画像で保存（Pro版）。家族への共有や成長の記念に。</p>
+          <h3>健診で見せやすい成長記録</h3>
+          <p>日本小児内分泌学会が公開する標準値に基づく成長曲線に、身長・体重をプロット。SDスコア（同年齢の平均からの離れぐあい）の推移もひと目でわかります。</p>
         </div>
         <div class="feature">
           <span class="icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="2.5" width="6" height="3.5" rx="1.2"/><path d="M8 11h8M8 14.5h8M8 18h5"/></svg></span>
@@ -698,11 +704,11 @@
   <div class="container">
     <section>
       <h2>料金</h2>
-      <p class="lead">主要機能は無料。靴の先読み予報・画像保存・自動バックアップなどは Pro でご利用いただけます。</p>
+      <p class="lead">主要機能は無料。靴の先読み予報・画像保存・自動バックアップなどはPro版でご利用いただけます。</p>
       <div class="plan-cards">
         <div class="plan-card">
           <h3>無料版</h3>
-          <p class="plan-price">¥0</p>
+          <p class="plan-price">0円</p>
           <ul>
             <li>成長曲線・SDスコアの記録</li>
             <li>洋服・おむつサイズの目安</li>
@@ -710,14 +716,16 @@
             <li>受診レポート（PDF）</li>
             <li>お誕生日アルバム・手動バックアップ</li>
           </ul>
+          <p class="plan-note">※広告が表示されます</p>
         </div>
         <div class="plan-card pro">
-          <h3>サイズ予報 Pro</h3>
-          <p class="plan-price">月額 ¥100／年額 ¥980（月あたり約¥82）</p>
+          <h3>Pro版</h3>
+          <p class="plan-price">月額100円／年額980円（月あたり約82円）</p>
+          <p class="plan-lead">無料版の全機能に加えて</p>
           <ul>
             <li>靴の次の購入サイズと時期の予報</li>
             <li>グラフ・ガイドの画像保存（共有しやすい正方形）</li>
-            <li>オンライン自動バックアップ</li>
+            <li>オンライン自動バックアップ（写真を除く）</li>
             <li>広告非表示</li>
           </ul>
         </div>
@@ -780,7 +788,7 @@
               <td class="yes">○</td>
             </tr>
             <tr>
-              <td>オンライン自動バックアップ</td>
+              <td>オンライン自動バックアップ（写真を除く）</td>
               <td class="no">—</td>
               <td class="yes">○</td>
             </tr>
@@ -804,29 +812,23 @@
       </div>
       </details>
       <p class="pro-note">
-        価格は消費税込み。お支払いは App Store / Google Play のアカウントに請求されます。
-        サブスクリプションは自動更新されます。更新日の24時間前までに、各ストアの
-        アカウント設定から解約しない限り、同じ期間・同じ価格で更新されます。
-        解約手続きは App Store または Google Play の「定期購入」設定から行えます。
+        料金は税込です。定期購入は自動更新され、各ストアのアカウントに請求されます。
+        解約は App Store または Google Play の定期購入設定から行えます。
       </p>
     </section>
 
     <section>
       <div class="cta">
-        <p>App Store / Google Play で公開準備中です</p>
+        <p>App Store・Google Play で公開準備中です</p>
         <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform" target="_blank" rel="noopener noreferrer">リリース通知を受け取る</a>
       </div>
     </section>
 
     <section>
-      <h2>作った人より</h2>
+      <h2>サイズ予報を作った理由</h2>
       <div class="about-card">
-        <p><strong>MIYA APPS</strong>（個人事業主）が開発・運営しています。</p>
-        <p>子育て中の保護者目線で、「服・靴・おむつの買い替えタイミングがわからない」という日常の悩みを、成長記録アプリで解決したいと考えて作りました。</p>
-        <p>
-          お問い合わせ：<a href="contact.html">お問い合わせページ</a><br>
-          プライバシー：<a href="privacy.html">プライバシーポリシー</a>
-        </p>
+        <p>子どもの服を買うたびに、「来シーズンは何cmだろう」と迷ったことが、開発のきっかけです。成長の記録を残すだけでなく、毎日の買い物にも役立てられるアプリを目指しています。</p>
+        <p>開発・運営：MIYA APPS</p>
       </div>
     </section>
 
@@ -837,16 +839,20 @@
         <p>成長曲線の記録・洋服やおむつサイズの目安・受診レポート（PDF）・お誕生日アルバムなど、主要な機能は無料でお使いいただけます。靴の次の購入予報・画像保存・オンライン自動バックアップはPro版の機能です。</p>
       </details>
       <details>
-        <summary>おむつのサイズも見られますか？</summary>
-        <p>見られます。お子様ごとに「おむつガイド」をONにすると、各メーカーが公表している対応体重と体重の記録から、いまの目安サイズとサイズが切り替わる時期を表示します。よく使うブランド・シリーズ・タイプ（テープ／パンツ）を登録して使えます。</p>
+        <summary>記録が1件でも使えますか？</summary>
+        <p>使えます。身長・体重・足長それぞれ1件の記録から目安を表示します。記録が増えるほどお子様ご自身の成長トレンドが反映され、予報が安定します。</p>
       </details>
       <details>
-        <summary>予測はどのくらい当たりますか？</summary>
-        <p>公的な成長曲線とお子様ご自身の記録をもとにした統計的な目安です。成長には個人差がありますので、あくまで買い物の参考としてご活用ください。</p>
+        <summary>何歳まで使えますか？</summary>
+        <p>成長曲線・SDスコアは0歳から18歳まで記録できます。洋服サイズ予報は身長50〜160cmのJISサイズ帯に対応し、おむつ・靴の予報は乳幼児期を中心にお使いいただけます。</p>
+      </details>
+      <details>
+        <summary>表示されるサイズは確定ですか？</summary>
+        <p>いいえ。直近の記録と標準値から算出した目安です。成長には個人差があり、衣類・靴・おむつは商品によって着用感も異なります。購入時は実寸や試着結果もあわせてご確認ください。</p>
       </details>
       <details>
         <summary>成長曲線はどんな基準に基づいていますか？</summary>
-        <p>2000年度の乳幼児身体発育調査（厚生労働省）・学校保健統計（文部科学省）に基づく成長曲線を使用しています。この基準は現在も小児医療の現場で標準的に用いられており、母子手帳の成長曲線とも同じ系統です。</p>
+        <p>日本小児内分泌学会が公開している、2000年の乳幼児身体発育調査（厚生労働省）と学校保健統計（文部科学省）をもとにLMS法で作成された標準値を使用しています。</p>
       </details>
       <details>
         <summary>別のアプリや母子手帳の記録を引き継げますか？</summary>

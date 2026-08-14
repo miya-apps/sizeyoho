@@ -58,7 +58,7 @@ class PurchaseManager {
   /// 開始できなかった場合のみ利用者向けメッセージを返す。
   Future<String?> buy(String productId) async {
     if (!_supported || !storeAvailable.value) {
-      return 'この環境では購入できません。アプリ版（App Store / Google Play）をご利用ください';
+      return 'この環境では購入できません。アプリ版（App Store・Google Play）をご利用ください';
     }
     busy.value = true;
     try {
