@@ -9,10 +9,10 @@
 library;
 
 /// 月額プランの価格（円・税込）。
-const int kProMonthlyPriceYen = 100;
+const int kProMonthlyPriceYen = 300;
 
 /// 年額プランの価格（円・税込）。
-const int kProYearlyPriceYen = 980;
+const int kProYearlyPriceYen = 2800;
 
 /// 「¥980」のような3桁区切りの表示文字列にする。
 String _yen(int amount) {
