@@ -294,7 +294,18 @@ class SettingsScreen extends StatelessWidget {
 
     final List<ChildProfile> restored;
     try {
-      restored = decodeBackupJson(await file.readAsString());
+      // XFile.readAsString はデータ由来の XFile だと encoding 指定を無視して
+      // 1バイト=1文字で復元するため、日本語の名前が文字化けする。
+      // 必ずバイトで読んで UTF-8 としてデコードする。
+      restored = decodeBackupJson(utf8.decode(await file.readAsBytes()));
+    } on FormatException {
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('ファイルを読み取れませんでした（文字コードが不正です）'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
     } on BackupDecodeException catch (e) {
       messenger.showSnackBar(
         SnackBar(content: Text(e.message), behavior: SnackBarBehavior.floating),

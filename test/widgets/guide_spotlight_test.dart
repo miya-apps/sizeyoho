@@ -17,6 +17,12 @@ void main() {
     await tester.pumpWidget(const MaterialApp(home: AppShell()));
     await tester.pumpAndSettle();
 
+    // 初回起動（保存データなし）ではお子様の登録シートが自動で開くため、
+    // 閉じてから操作する（このテストの対象はチュートリアルの再生）。
+    expect(find.textContaining('お子様を追加'), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+
     // 設定 → チュートリアルを見る で再生
     await tester.tap(find.text('設定'));
     await tester.pumpAndSettle();

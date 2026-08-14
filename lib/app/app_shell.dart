@@ -14,7 +14,6 @@ import '../models/child_profile.dart';
 
 import '../models/gender.dart';
 import '../monetization/pro_status.dart';
-import '../models/growth_record.dart';
 import '../settings/export_privacy.dart';
 
 import '../repositories/child_repository.dart';
@@ -192,79 +191,33 @@ class _AppShellState extends State<AppShell> {
   ];
 
   // 初回フレームから「最終UIと完全に同一の構造」を同期的に構築するため、
-  // 子供リストはデモ値で同期初期化しておく（ローディング用の別ツリーを挟まない）。
-  // 永続データがあれば _loadInitialData が読込後に「データだけ」差し替える。
-  // これにより初回起動時のツリー構造スワップ（ヘッダー/bottomNav/FAB の後付けに
-  // よるレイアウトのガタつき）が一切発生しなくなる。
-  List<ChildProfile> _children = _demoChildren();
+  // 子供リストは仮プロフィール1名で同期初期化しておく（ローディング用の
+  // 別ツリーを挟まない）。永続データがあれば _loadInitialData が読込後に
+  // 「データだけ」差し替える。これにより初回起動時のツリー構造スワップ
+  // （ヘッダー/bottomNav/FAB の後付けによるレイアウトのガタつき）が
+  // 一切発生しなくなる。
+  List<ChildProfile> _children = _placeholderChildren();
 
   ChildProfile get _selectedChild => _children[_selectedChildIndex];
 
-  static List<ChildProfile> _demoChildren() => [
-    ChildProfile(
-      id: 'child_1',
-
-      name: '怜久',
-
-      birthDate: DateTime(2022, 8, 15),
-
-      gender: Gender.male,
-
-      iconIndex: 0,
-
-      themeColor: const Color(0xFF7FA6D6),
-
-      growthRecords: [
-        GrowthRecord(
-          id: 'child1_rec1',
-          date: DateTime(2024, 8, 15),
-          heightCm: 82.5,
-          weightKg: 10.8,
-        ),
-        GrowthRecord(
-          id: 'child1_rec2',
-          date: DateTime(2025, 8, 15),
-          heightCm: 88.2,
-          weightKg: 12.1,
-        ),
-        GrowthRecord(
-          id: 'child1_rec3',
-          date: DateTime(2026, 3, 1),
-          heightCm: 91.0,
-          weightKg: 12.8,
-        ),
-      ],
-    ),
-
-    ChildProfile(
-      id: 'child_2',
-
-      name: 'さくら',
-
-      birthDate: DateTime(2025, 1, 10),
-
-      gender: Gender.female,
-
-      iconIndex: 2,
-
-      themeColor: const Color(0xFFDDA0AA),
-
-      growthRecords: [
-        GrowthRecord(
-          id: 'child2_rec1',
-          date: DateTime(2025, 7, 10),
-          heightCm: 68.0,
-          weightKg: 8.2,
-        ),
-        GrowthRecord(
-          id: 'child2_rec2',
-          date: DateTime(2026, 1, 10),
-          heightCm: 72.5,
-          weightKg: 9.0,
-        ),
-      ],
-    ),
-  ];
+  /// 初回起動時の仮プロフィール。アプリ全体が「常に1名以上」を前提に
+  /// 作られているため、登録完了までの間もこの1名で画面を構成する。
+  /// 記録は空。初回起動では直後に登録シートを開き、登録されたら
+  /// この仮プロフィールごと置き換える（サンプルデータは同梱しない）。
+  static List<ChildProfile> _placeholderChildren() {
+    final now = DateTime.now();
+    return [
+      ChildProfile(
+        id: 'placeholder_child',
+        name: 'お子様',
+        birthDate: DateTime(now.year, now.month, now.day),
+        gender: Gender.male,
+        iconIndex: 0,
+        themeColor: const Color(0xFF7FA6D6),
+        growthRecords: const [],
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -290,10 +243,16 @@ class _AppShellState extends State<AppShell> {
 
     if (!mounted) return;
 
-    // 永続データが無い初回起動：表示中のデモをそのまま永続化する。
-    // 画面はすでにデモを描画済みなので、ツリー構造・データとも変化しない。
+    // 永続データが無い初回起動：仮プロフィールは保存せず、登録シートを開く。
+    // 登録が完了したら _registerFirstChild が仮プロフィールごと置き換えて
+    // 保存する（登録するまで端末には何も書き込まない）。
     if (loaded.isEmpty) {
-      await _persistChildren();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _promptFirstChildSetup();
+      });
+      // 読込完了時点で描画が落ち着いているとフレームが来ず、上の
+      // コールバックが呼ばれないことがあるため明示的に要求する。
+      WidgetsBinding.instance.scheduleFrame();
       return;
     }
 
@@ -453,6 +412,29 @@ class _AppShellState extends State<AppShell> {
   Future<void> _persistChildren() async {
     await _repository.saveChildren(_children);
     CloudBackup.instance.onDataChanged(_children);
+  }
+
+  /// 初回起動時に、お子様の登録シートを開く（永続データが無いときだけ）。
+  /// キャンセルした場合は仮プロフィールのまま使い始められる（記録などで
+  /// データが保存されるまでは、次回起動時にもこのシートを再表示する）。
+  void _promptFirstChildSetup() {
+    if (!mounted) return;
+    showChildProfileModal(
+      context,
+      children: const [],
+      onAddChild: _registerFirstChild,
+    );
+  }
+
+  /// 初回登録：仮プロフィールを登録された1人目で置き換えて保存する。
+  Future<void> _registerFirstChild(ChildProfile child) async {
+    setState(() {
+      _children = [child];
+      _selectedChildIndex = 0;
+    });
+    appThemeNotifier.value = createChildTheme(child.themeColor);
+    await _persistChildren();
+    await _maybeStartGuide();
   }
 
   Future<void> _addChild(ChildProfile child) async {
