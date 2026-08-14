@@ -129,9 +129,10 @@
     }
     /* 長いページの区切り用の帯背景 */
     .band-white { background: #fff; }
-    .band-pink { background: #FBF2F4; }
+    /* 共有画像（ピンク系の作例）と同化しないよう、帯は薄い緑にする */
+    .band-mint { background: #DFF3E8; }
     .band-white .container,
-    .band-pink .container {
+    .band-mint .container {
       padding-top: 40px;
       padding-bottom: 8px;
     }
@@ -341,7 +342,8 @@
       overflow-x: auto;
       scroll-snap-type: x mandatory;
       -webkit-overflow-scrolling: touch;
-      padding: 4px 4px 12px;
+      /* 中央スナップ用の端あそび（スクショカルーセルと同じ考え方） */
+      padding: 4px max(20px, calc((100% - var(--sample-w)) / 2)) 12px;
       scrollbar-width: thin;
       scrollbar-color: var(--accent) transparent;
     }
@@ -677,7 +679,7 @@
     </section>
   </div>
 
-  <div class="band-pink">
+  <div class="band-mint">
     <div class="container">
     <section>
       <h2>記録が、そのまま共有できる画像に</h2>
@@ -690,7 +692,7 @@
           <p>「シェア」からはLINEなどの共有アプリへ直接送れるので、撮って・選んで・送るまでがこの画面ひとつで完結します。</p>
         </div>
       </div>
-      <div class="share-samples">
+      <div class="share-samples" id="share-samples" tabindex="0" role="group" aria-roledescription="カルーセル" aria-label="保存画像のサンプル">
         <figure>
           <img src="screenshots/share-growth-curve.png" alt="成長曲線の保存画像サンプル" width="512" height="512" loading="lazy">
           <figcaption>成長曲線</figcaption>
@@ -908,11 +910,15 @@
     &copy; 2026 MIYA APPS
   </footer>
   <script>
-    (function () {
-      const carousel = document.getElementById('screenshot-carousel');
+    // 中央スナップ＋無限ループのカルーセル。スクショと共有画像サンプルの
+    // 2か所で使うため、対象要素と（あれば）ドットを渡す共通関数にしている。
+    function setupLoopCarousel(carouselId, slideSelector, dotsId) {
+      const carousel = document.getElementById(carouselId);
       if (!carousel) return;
-      const dots = document.querySelectorAll('#screenshot-dots button');
-      const originals = Array.from(carousel.querySelectorAll('.screenshot-slide'));
+      const dots = dotsId
+        ? document.querySelectorAll('#' + dotsId + ' button')
+        : [];
+      const originals = Array.from(carousel.querySelectorAll(slideSelector));
       if (!originals.length) return;
 
       const realCount = originals.length;
@@ -925,7 +931,7 @@
       carousel.insertBefore(lastClone, originals[0]);
       carousel.appendChild(firstClone);
 
-      const slides = carousel.querySelectorAll('.screenshot-slide');
+      const slides = carousel.querySelectorAll(slideSelector);
       let looping = false;
 
       function scrollLeftForDom(domIndex) {
@@ -1020,7 +1026,10 @@
 
       scrollToReal(0, 'auto');
       updateDots();
-    })();
+    }
+
+    setupLoopCarousel('screenshot-carousel', '.screenshot-slide', 'screenshot-dots');
+    setupLoopCarousel('share-samples', 'figure');
   </script>
 </body>
 </html>
