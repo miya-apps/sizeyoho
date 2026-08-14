@@ -1,17 +1,1 @@
-{
-  "firestore": {
-    "rules": "firestore.rules"
-  },
-  "flutter": {
-    "platforms": {
-      "dart": {
-        "lib/firebase_options.dart": {
-          "projectId": "sizeyoho",
-          "configurations": {
-            "web": "1:643895439317:web:71742486288f8ecb2dd75c"
-          }
-        }
-      }
-    }
-  }
-}
+{"firestore":{"rules":"firestore.rules"},"flutter":{"platforms":{"dart":{"lib/firebase_options.dart":{"projectId":"sizeyoho","configurations":{"android":"1:643895439317:android:3cbf0675dd19735d2dd75c","web":"1:643895439317:web:71742486288f8ecb2dd75c"}}},"android":{"default":{"projectId":"sizeyoho","appId":"1:643895439317:android:3cbf0675dd19735d2dd75c","fileOutput":"android/app/google-services.json"}}}}}

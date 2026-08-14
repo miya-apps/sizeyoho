@@ -21,10 +21,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for ios - '
@@ -58,6 +55,14 @@ class DefaultFirebaseOptions {
     messagingSenderId: '643895439317',
     projectId: 'sizeyoho',
     authDomain: 'sizeyoho.firebaseapp.com',
+    storageBucket: 'sizeyoho.firebasestorage.app',
+  );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyCrT0ITU2etOAxIjbISah851SUJQ33G76c',
+    appId: '1:643895439317:android:3cbf0675dd19735d2dd75c',
+    messagingSenderId: '643895439317',
+    projectId: 'sizeyoho',
     storageBucket: 'sizeyoho.firebasestorage.app',
   );
 }
