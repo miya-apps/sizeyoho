@@ -105,6 +105,8 @@ class CloudBackup {
           e.code == 'canceled') {
         return null;
       }
+      // 障害調査用：unknown 等の詳細メッセージはログにだけ出す。
+      debugPrint('signInWithProvider failed: code=${e.code} message=${e.message}');
       return 'サインインに失敗しました（${e.code}）';
     }
   }
