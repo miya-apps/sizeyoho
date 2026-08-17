@@ -130,7 +130,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                       _section('6. お問い合わせ'),
                       Text(
                         'ご意見・不具合のご報告・データ削除のご依頼などは、'
-                        '下のボタンからお問い合わせフォームを開いて'
+                        '下のボタンからお問い合わせページを開いて'
                         'ご連絡ください。',
                         style: _bodyStyle,
                       ),
@@ -140,7 +140,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                         child: FilledButton.icon(
                           onPressed: () => openContactForm(context),
                           icon: const Icon(Icons.open_in_new_rounded, size: 18),
-                          label: const Text('お問い合わせフォームを開く'),
+                          label: const Text('お問い合わせページを開く'),
                           style: FilledButton.styleFrom(
                             padding: const EdgeInsets.symmetric(vertical: 14),
                             shape: RoundedRectangleBorder(
