@@ -26,9 +26,6 @@
   <meta name="theme-color" content="#C8EDDB">
   <link rel="canonical" href="https://miyaapps.com/sizeyoho/">
   <link rel="sitemap" type="application/xml" href="sitemap.xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -63,7 +60,7 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Zen Maru Gothic', sans-serif;
+      font-family: ui-rounded, "Hiragino Maru Gothic ProN", "Hiragino Sans", "Yu Gothic", Meiryo, sans-serif;
       color: var(--ink);
       background: var(--mint-light);
       line-height: 1.8;
@@ -634,12 +631,12 @@
 </head>
 <body>
   <div class="hero">
-    <img class="appicon" src="icon.png" alt="サイズ予報のアイコン">
+    <img class="appicon" src="icon.webp" alt="サイズ予報のアイコン" width="148" height="148" decoding="async">
     <h1>サイズ予報</h1>
     <p class="tagline">来シーズン、何cmを買えばいい？</p>
     <p class="sub">身長・体重・足の記録から、服・靴・おむつの「次のサイズ」と買い替え時期の目安がわかる子育てアプリです。</p>
     <div class="hero-shot">
-      <img src="screenshots/clothing-guide.png" alt="洋服サイズ予報の画面。いまのサイズと来シーズンの目安サイズを表示" width="575" height="1024" loading="eager">
+      <img src="screenshots/clothing-guide.webp" alt="洋服サイズ予報の画面。いまのサイズと来シーズンの目安サイズを表示" width="500" height="890" loading="eager" fetchpriority="high">
     </div>
     <a class="button-primary" href="contact.html#release-notice">リリース通知を受け取る</a>
     <p class="store-note">App Store・Google Play で公開予定／主要機能は無料で使えます</p>
@@ -677,22 +674,22 @@
       <h2>画面で見る、サイズ予報</h2>
       <div class="screenshot-carousel" id="screenshot-carousel" tabindex="0" role="group" aria-roledescription="カルーセル" aria-label="アプリのスクリーンショット">
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-05-overview.png" alt="服・靴・おむつのサイズを、まとめて予報" width="472" height="1024" loading="eager">
+          <img src="store-assets/slide-05-overview.webp" alt="服・靴・おむつのサイズを、まとめて予報" width="472" height="1024" loading="lazy" fetchpriority="low" decoding="async">
         </figure>
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-01-growth-curve.png" alt="母子手帳の成長記録を、アプリでも" width="472" height="1024" loading="lazy">
+          <img src="store-assets/slide-01-growth-curve.webp" alt="母子手帳の成長記録を、アプリでも" width="472" height="1024" loading="lazy" fetchpriority="low" decoding="async">
         </figure>
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-02-sd-score.png" alt="健診の準備に、成長の記録を" width="472" height="1024" loading="lazy">
+          <img src="store-assets/slide-02-sd-score.webp" alt="健診の準備に、成長の記録を" width="472" height="1024" loading="lazy" fetchpriority="low" decoding="async">
         </figure>
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-03-clothing-guide.png" alt="来シーズン、何cmを買えばいい？" width="472" height="1024" loading="lazy">
+          <img src="store-assets/slide-03-clothing-guide.webp" alt="来シーズン、何cmを買えばいい？" width="472" height="1024" loading="lazy" fetchpriority="low" decoding="async">
         </figure>
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-04-shoe-guide.png" alt="「足痛い」の前に、気づける" width="472" height="1024" loading="lazy">
+          <img src="store-assets/slide-04-shoe-guide.webp" alt="「足痛い」の前に、気づける" width="472" height="1024" loading="lazy" fetchpriority="low" decoding="async">
         </figure>
         <figure class="screenshot-slide">
-          <img src="store-assets/slide-06-diaper-guide.png" alt="おむつのサイズアップ、いつ？に答える" width="472" height="1024" loading="lazy">
+          <img src="store-assets/slide-06-diaper-guide.webp" alt="おむつのサイズアップ、いつ？に答える" width="472" height="1024" loading="lazy" fetchpriority="low" decoding="async">
         </figure>
       </div>
       <div class="screenshot-dots" id="screenshot-dots" aria-label="スクリーンショットの切り替え">
@@ -774,7 +771,7 @@
       <h2>記録が、そのまま共有できる画像に</h2>
       <p class="lead">Pro版の画像保存では、グラフやサイズガイドをこんな正方形の画像で保存できます。家族へのメッセージやSNSにそのまま使えます。</p>
       <div class="share-flow">
-        <img src="screenshots/export-preview.png" alt="画像の保存・シェア画面。成長曲線のプレビューと、背景カラー・名前表示の切り替え、保存・シェアのボタン" width="575" height="960" loading="lazy">
+        <img src="screenshots/export-preview.webp" alt="画像の保存・シェア画面。成長曲線のプレビューと、背景カラー・名前表示の切り替え、保存・シェアのボタン" width="500" height="834" loading="lazy" fetchpriority="low" decoding="async">
         <div>
           <h3>できあがりを見ながら、ボタンひとつで</h3>
           <p>成長曲線・SDスコア・おむつ・洋服・靴の5種類を切り替えて、保存前に完成イメージをそのまま確認。背景カラーやお名前の表示もその場で選べます。</p>
@@ -783,23 +780,23 @@
       </div>
       <div class="share-samples" id="share-samples" tabindex="0" role="group" aria-roledescription="カルーセル" aria-label="保存画像のサンプル">
         <figure>
-          <img src="screenshots/share-growth-curve.png" alt="成長曲線の保存画像サンプル" width="512" height="512" loading="lazy">
+          <img src="screenshots/share-growth-curve.webp" alt="成長曲線の保存画像サンプル" width="512" height="512" loading="lazy" fetchpriority="low" decoding="async">
           <figcaption>成長曲線</figcaption>
         </figure>
         <figure>
-          <img src="screenshots/share-sd-score.png" alt="SDスコアの保存画像サンプル" width="512" height="512" loading="lazy">
+          <img src="screenshots/share-sd-score.webp" alt="SDスコアの保存画像サンプル" width="512" height="512" loading="lazy" fetchpriority="low" decoding="async">
           <figcaption>SDスコア</figcaption>
         </figure>
         <figure>
-          <img src="screenshots/share-clothing.png" alt="洋服サイズ予報の保存画像サンプル" width="512" height="512" loading="lazy">
+          <img src="screenshots/share-clothing.webp" alt="洋服サイズ予報の保存画像サンプル" width="512" height="512" loading="lazy" fetchpriority="low" decoding="async">
           <figcaption>洋服サイズ予報</figcaption>
         </figure>
         <figure>
-          <img src="screenshots/share-diaper.png" alt="おむつサイズ予報の保存画像サンプル" width="512" height="512" loading="lazy">
+          <img src="screenshots/share-diaper.webp" alt="おむつサイズ予報の保存画像サンプル" width="512" height="512" loading="lazy" fetchpriority="low" decoding="async">
           <figcaption>おむつサイズ予報</figcaption>
         </figure>
         <figure>
-          <img src="screenshots/share-shoe.png" alt="靴サイズ予報の保存画像サンプル" width="512" height="512" loading="lazy">
+          <img src="screenshots/share-shoe.webp" alt="靴サイズ予報の保存画像サンプル" width="512" height="512" loading="lazy" fetchpriority="low" decoding="async">
           <figcaption>靴サイズ予報</figcaption>
         </figure>
       </div>
