@@ -25,6 +25,7 @@
   <meta name="apple-mobile-web-app-title" content="サイズ予報">
   <meta name="theme-color" content="#C8EDDB">
   <link rel="canonical" href="https://miyaapps.com/sizeyoho/">
+  <link rel="sitemap" type="application/xml" href="sitemap.xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
@@ -507,6 +508,58 @@
     }
     .about-card p { margin-bottom: 8px; }
 
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .guide-card {
+      display: block;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid rgba(61, 68, 77, 0.08);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 4px 16px rgba(61, 68, 77, 0.07);
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .guide-card:hover {
+      color: var(--ink);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(61, 68, 77, 0.12);
+    }
+    .guide-card:focus-visible {
+      outline: 3px solid rgba(76, 175, 135, 0.45);
+      outline-offset: 3px;
+    }
+    .guide-card .label {
+      display: inline-block;
+      margin-bottom: 10px;
+      color: var(--accent-dark);
+      background: var(--mint-light);
+      border-radius: 999px;
+      padding: 4px 11px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .guide-card h3 {
+      margin-bottom: 8px;
+      font-size: 1.06rem;
+      line-height: 1.55;
+    }
+    .guide-card p {
+      color: #5b6660;
+      font-size: 0.9rem;
+    }
+    .guide-card .read-more {
+      display: block;
+      margin-top: 12px;
+      color: var(--accent-dark);
+      font-size: 0.87rem;
+      font-weight: 700;
+    }
+
     .cta {
       text-align: center;
       background: var(--mint);
@@ -552,7 +605,7 @@
     <div class="hero-shot">
       <img src="screenshots/clothing-guide.png" alt="洋服サイズ予報の画面。いまのサイズと来シーズンの目安サイズを表示" width="575" height="1024" loading="eager">
     </div>
-    <a class="button-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform" target="_blank" rel="noopener noreferrer">リリース通知を受け取る</a>
+    <a class="button-primary" href="contact.html#release-notice">リリース通知を受け取る</a>
     <p class="store-note">App Store・Google Play で公開予定／主要機能は無料で使えます</p>
   </div>
 
@@ -837,7 +890,20 @@
     <section>
       <div class="cta">
         <p>App Store・Google Play で公開準備中です</p>
-        <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform" target="_blank" rel="noopener noreferrer">リリース通知を受け取る</a>
+        <a class="button" href="contact.html#release-notice">リリース通知を受け取る</a>
+      </div>
+    </section>
+
+    <section id="guide">
+      <h2>子どものサイズ選びガイド</h2>
+      <p class="lead">服や靴のサイズで迷ったときに役立つ、保護者向けの記事をまとめていきます。</p>
+      <div class="guide-grid">
+        <a class="guide-card" href="guide/kodomo-fuku-rainen-size/">
+          <span class="label">子ども服</span>
+          <h3>来年の子ども服は何サイズ？先買いで迷ったときの選び方</h3>
+          <p>今の身長・服のゆとり・着るまでの期間・これまでの成長から、来年用のサイズを考える方法を解説します。</p>
+          <span class="read-more">記事を読む →</span>
+        </a>
       </div>
     </section>
 
@@ -896,7 +962,7 @@
     <section>
       <div class="cta">
         <p>公開したら、いちばんにお知らせします</p>
-        <a class="button" href="https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform" target="_blank" rel="noopener noreferrer">リリース通知を受け取る</a>
+        <a class="button" href="contact.html#release-notice">リリース通知を受け取る</a>
         <a class="cta-sub" href="contact.html">質問・要望を送る</a>
       </div>
     </section>
@@ -904,6 +970,7 @@
 
   <footer>
     <nav>
+      <a href="guide/">サイズ選びガイド</a>
       <a href="contact.html">お問い合わせ</a>
       <a href="privacy.html">プライバシーポリシー</a>
     </nav>
