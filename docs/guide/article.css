@@ -2797,6 +2797,10 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   margin-top: 22px;
 }
 
+.size-100-page .size-comparison-table {
+  min-width: 0;
+}
+
 .size-comparison-table tbody tr.is-primary {
   background: #edf8f2;
   box-shadow: inset 5px 0 0 var(--coral);
