@@ -570,10 +570,18 @@
       text-align: center;
     }
     .guide-tags b {
-      display: block;
-      font-size: 1.25rem;
+      display: grid;
+      width: 30px;
+      height: 30px;
+      place-items: center;
       line-height: 1;
     }
+    .guide-tags b img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+    .guide-tags b img.shoe-icon { transform: scale(1.08); }
     @media (max-width: 560px) {
       .guide-entry {
         grid-template-columns: 1fr;
@@ -932,10 +940,10 @@
           <span class="read-more">サイズ選びガイドを見る →</span>
         </div>
         <span class="guide-tags" aria-hidden="true">
-          <span><b>👕</b>子ども服</span>
-          <span><b>👟</b>靴</span>
-          <span><b>🧷</b>おむつ</span>
-          <span><b>📈</b>身長・成長</span>
+          <span><b><img src="guide/category-icons/clothes.svg" width="28" height="28" alt=""></b>子ども服</span>
+          <span><b><img class="shoe-icon" src="guide/category-icons/shoes.svg" width="28" height="28" alt=""></b>靴</span>
+          <span><b><img src="guide/category-icons/diapers.svg" width="28" height="28" alt=""></b>おむつ</span>
+          <span><b><img src="guide/category-icons/growth.svg" width="28" height="28" alt=""></b>身長・成長</span>
         </span>
       </a>
     </section>
