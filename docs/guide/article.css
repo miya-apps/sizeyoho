@@ -591,6 +591,73 @@ tr:last-child td {
   font-weight: 700;
 }
 
+
+/* アフィリエイトリンクを掲載する記事だけ、本文冒頭で使用する広告表示 */
+.affiliate-disclosure {
+  margin: 0 0 28px;
+  padding: 17px 18px;
+  color: #5c504c;
+  background: #fff7f4;
+  border: 1px solid #efd7cf;
+  border-left: 5px solid var(--coral);
+  border-radius: 14px;
+  font-size: 0.84rem;
+  line-height: 1.8;
+}
+
+.affiliate-disclosure strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #4d4542;
+  font-size: 0.88rem;
+}
+
+.affiliate-disclosure p {
+  margin: 0;
+}
+
+.affiliate-products {
+  margin: 26px 0;
+  padding: 20px;
+  background: #f7fbf8;
+  border: 1px solid var(--line);
+  border-radius: 17px;
+}
+
+.affiliate-products-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #685d58;
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+
+.affiliate-product-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.affiliate-product-link {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 10px 18px;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  background: var(--accent-deep);
+  border-radius: 999px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.affiliate-product-link:hover {
+  color: #fff;
+  background: #245c40;
+}
+
 .site-footer {
   padding: 30px 16px 44px;
   color: #6c7771;
