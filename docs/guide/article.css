@@ -5688,6 +5688,10 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     text-align: right;
   }
 
+  .age-size-table tbody tr:nth-child(even) td:first-of-type {
+    background: #fff;
+  }
+
   .age-size-table tbody td:last-child {
     display: grid;
     grid-column: 1 / -1;
