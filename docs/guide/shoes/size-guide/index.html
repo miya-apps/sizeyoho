@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../article.css?v=20260818-shoe-size-guide">
+  <link rel="stylesheet" href="../../article.css?v=20260818-shoe-size-guide-layout-2">
 
   <meta property="og:title" content="子どもの靴サイズは何cm？年齢別の目安と足に合う靴の選び方">
   <meta property="og:description" content="1歳〜7歳以降の公式商品カテゴリー例と、足長・足囲・足幅を測って靴を選ぶ方法を解説します。">
@@ -142,9 +142,21 @@
         </p>
       </div>
       <div class="size-guide-hero-visual" aria-hidden="true">
-        <div class="hero-size-card hero-size-card-one"><span>1〜3歳向け</span><strong>13.0〜16.0</strong><small>cm</small></div>
-        <div class="hero-size-card hero-size-card-two"><span>3〜7歳向け</span><strong>16.0〜22.0</strong><small>cm</small></div>
-        <div class="hero-foot-mark"><span>実測を優先</span></div>
+        <div class="hero-size-summary">
+          <div class="hero-size-summary-heading">
+            <span>SHOE SIZE GUIDE</span>
+            <strong>靴サイズの目安</strong>
+          </div>
+          <div class="hero-size-summary-row">
+            <span>1〜3歳向け</span>
+            <strong>13.0〜16.0<small>cm</small></strong>
+          </div>
+          <div class="hero-size-summary-row">
+            <span>3〜7歳向け</span>
+            <strong>16.0〜22.0<small>cm</small></strong>
+          </div>
+          <p><span aria-hidden="true">✓</span> 年齢は目安。購入前に両足を実測</p>
+        </div>
       </div>
     </div>
   </header>
@@ -158,9 +170,13 @@
           <span>SIZE GUIDE</span>
           <strong class="panel-title" id="age-size-title">子どもの靴サイズ｜年齢別の目安</strong>
         </div>
-        <p class="table-scroll-hint" id="age-table-hint">表は横にスクロールできます</p>
-        <div class="age-size-table-wrap" role="region" aria-describedby="age-table-hint" tabindex="0">
+        <div class="age-size-table-wrap">
           <table class="age-size-table">
+            <colgroup>
+              <col class="age-size-col-age">
+              <col class="age-size-col-category">
+              <col class="age-size-col-point">
+            </colgroup>
             <thead>
               <tr>
                 <th scope="col">年齢・時期</th>
@@ -171,43 +187,49 @@
             <tbody>
               <tr>
                 <th scope="row">歩き始めごろ</th>
-                <td><strong>FIRST</strong><br>11.5〜13.5cm</td>
-                <td>年齢より、歩行状況と実測を優先</td>
+                <td><span class="category-size-line"><strong>FIRST</strong><span>11.5〜13.5cm</span></span></td>
+                <td data-label="選ぶとき">年齢より、歩行状況と実測を優先</td>
               </tr>
               <tr>
                 <th scope="row">1歳</th>
-                <td><strong>BABY（約1〜3歳）</strong><br>13.0〜16.0cm</td>
-                <td>FIRSTの範囲と重なる子もいる。個人差が大きい</td>
+                <td><span class="category-size-line"><strong>BABY（約1〜3歳）</strong><span>13.0〜16.0cm</span></span></td>
+                <td data-label="選ぶとき">FIRSTの範囲と重なる子もいる。個人差が大きい</td>
               </tr>
               <tr>
                 <th scope="row">2歳</th>
-                <td><strong>BABY（約1〜3歳）</strong><br>13.0〜16.0cm</td>
-                <td>「2歳だから○cm」と決めずに測る</td>
+                <td><span class="category-size-line"><strong>BABY（約1〜3歳）</strong><span>13.0〜16.0cm</span></span></td>
+                <td data-label="選ぶとき">「2歳だから○cm」と決めずに測る</td>
               </tr>
               <tr>
                 <th scope="row">3歳</th>
-                <td><strong>BABY</strong> 13.0〜16.0cm<br><strong>PRESCHOOL（約3〜7歳）</strong> 16.0〜22.0cm</td>
-                <td>商品カテゴリーの境目。年齢だけで決めない</td>
+                <td>
+                  <span class="category-size-line"><strong>BABY</strong><span>13.0〜16.0cm</span></span>
+                  <span class="category-size-line"><strong>PRESCHOOL（約3〜7歳）</strong><span>16.0〜22.0cm</span></span>
+                </td>
+                <td data-label="選ぶとき">商品カテゴリーの境目。年齢だけで決めない</td>
               </tr>
               <tr>
                 <th scope="row">4歳</th>
-                <td><strong>PRESCHOOL（約3〜7歳）</strong><br>16.0〜22.0cm</td>
-                <td>足長に加え、幅・甲も確認</td>
+                <td><span class="category-size-line"><strong>PRESCHOOL（約3〜7歳）</strong><span>16.0〜22.0cm</span></span></td>
+                <td data-label="選ぶとき">足長に加え、幅・甲も確認</td>
               </tr>
               <tr>
                 <th scope="row">5歳</th>
-                <td><strong>PRESCHOOL（約3〜7歳）</strong><br>16.0〜22.0cm</td>
-                <td>同じ表示サイズでも商品ごとに試す</td>
+                <td><span class="category-size-line"><strong>PRESCHOOL（約3〜7歳）</strong><span>16.0〜22.0cm</span></span></td>
+                <td data-label="選ぶとき">同じ表示サイズでも商品ごとに試す</td>
               </tr>
               <tr>
                 <th scope="row">6歳</th>
-                <td><strong>PRESCHOOL（約3〜7歳）</strong><br>16.0〜22.0cm</td>
-                <td>両足を測り、大きい側も確認</td>
+                <td><span class="category-size-line"><strong>PRESCHOOL（約3〜7歳）</strong><span>16.0〜22.0cm</span></span></td>
+                <td data-label="選ぶとき">両足を測り、大きい側も確認</td>
               </tr>
               <tr>
                 <th scope="row">7歳以降</th>
-                <td><strong>PRESCHOOL</strong> 16.0〜22.0cm<br><strong>JUNIOR（約7歳〜）</strong> 22.0〜25.0cm</td>
-                <td>境目では特に実測と試し履きを優先</td>
+                <td>
+                  <span class="category-size-line"><strong>PRESCHOOL</strong><span>16.0〜22.0cm</span></span>
+                  <span class="category-size-line"><strong>JUNIOR（約7歳〜）</strong><span>22.0〜25.0cm</span></span>
+                </td>
+                <td data-label="選ぶとき">境目では特に実測と試し履きを優先</td>
               </tr>
             </tbody>
           </table>
