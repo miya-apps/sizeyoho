@@ -75,5 +75,14 @@ globalThis.SIZEYOHO_GUIDE_ARTICLES = Object.freeze([
     label: "サイズアップ",
     featured: false,
     order: 20
+  },
+  {
+    title: "子どもの靴は大きめでいい？0.5cm・1cmで迷うときの選び方",
+    url: "https://miyaapps.com/sizeyoho/guide/shoes/too-big/",
+    description: "足長へ一律に数字を足さず、メーカーごとの捨て寸、つま先・幅・甲・かかとのフィットから選ぶ方法を解説します。",
+    category: "shoes",
+    label: "0.5cm？1cm？",
+    featured: false,
+    order: 30
   }
 ]);

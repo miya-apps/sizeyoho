@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">子どもの靴は何cm大きめ？</title>
+  <desc id="desc">0.5cmと1cmの二択ではなく、メーカーと商品の設計を確認する靴サイズガイド</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c8eddb"/>
+      <stop offset="0.68" stop-color="#e7f6ee"/>
+      <stop offset="1" stop-color="#f8dfd8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#315f49" flood-opacity=".16"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="72" cy="92" r="150" fill="#fff" opacity=".28"/>
+  <circle cx="1128" cy="38" r="178" fill="#fff" opacity=".25"/>
+  <circle cx="1090" cy="598" r="128" fill="none" stroke="#4caf87" stroke-width="3" opacity=".15"/>
+  <g transform="translate(70 66)">
+    <rect width="270" height="48" rx="24" fill="#fff" fill-opacity=".78" stroke="#8bc8aa"/>
+    <circle cx="26" cy="24" r="13" fill="#4caf87"/>
+    <path d="M20 24l4 4 8-9" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="48" y="31" fill="#256846" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="21" font-weight="700">サイズ予報ガイド</text>
+  </g>
+  <text x="70" y="190" fill="#3f4743" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="57" font-weight="900">子どもの靴は</text>
+  <text x="70" y="267" fill="#256846" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="68" font-weight="900">何cm大きめ？</text>
+  <text x="72" y="326" fill="#53635b" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="29" font-weight="700">0.5cm・1cmで迷ったときの選び方</text>
+  <g transform="translate(72 382)">
+    <rect width="545" height="142" rx="28" fill="#fff" fill-opacity=".8" stroke="#b8dec9" stroke-width="2"/>
+    <text x="30" y="46" fill="#347f59" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="18" font-weight="900" letter-spacing="2">POINT</text>
+    <text x="30" y="84" fill="#3f4c45" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="28" font-weight="900">全メーカー共通の足し算はありません</text>
+    <text x="30" y="116" fill="#68766f" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="20" font-weight="600">メーカー設計と、今の足・履いた状態を確認</text>
+  </g>
+  <g transform="translate(700 92)" filter="url(#shadow)">
+    <g transform="rotate(-5 105 105)">
+      <rect x="0" y="0" width="210" height="210" rx="48" fill="#fff" stroke="#c8e5d6" stroke-width="2"/>
+      <text x="105" y="70" text-anchor="middle" fill="#7b8881" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="23" font-weight="900">＋</text>
+      <text x="105" y="145" text-anchor="middle" fill="#256846" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="66" font-weight="900">0.5</text>
+      <text x="105" y="177" text-anchor="middle" fill="#68766f" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="22" font-weight="900">cm?</text>
+    </g>
+    <g transform="translate(226 6) rotate(5 105 105)">
+      <rect x="0" y="0" width="210" height="210" rx="48" fill="#fff8f4" stroke="#efcfc5" stroke-width="2"/>
+      <text x="105" y="70" text-anchor="middle" fill="#9b7772" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="23" font-weight="900">＋</text>
+      <text x="105" y="145" text-anchor="middle" fill="#c66059" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="66" font-weight="900">1.0</text>
+      <text x="105" y="177" text-anchor="middle" fill="#806d69" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="22" font-weight="900">cm?</text>
+    </g>
+    <g transform="translate(42 250)">
+      <rect width="360" height="174" rx="34" fill="#256846" stroke="#fff" stroke-width="9"/>
+      <text x="180" y="48" text-anchor="middle" fill="#bfe7d3" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="18" font-weight="900" letter-spacing="4">ANSWER</text>
+      <text x="180" y="98" text-anchor="middle" fill="#fff" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="34" font-weight="900">商品ごとに確認</text>
+      <text x="180" y="136" text-anchor="middle" fill="#e2f3eb" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="21" font-weight="600">サイズ設計 ＋ 今の足</text>
+    </g>
+  </g>
+  <text x="1130" y="590" text-anchor="end" fill="#347f59" font-family="'Noto Sans CJK JP','Noto Sans JP',sans-serif" font-size="20" font-weight="900">MIYA APPS</text>
+</svg>
