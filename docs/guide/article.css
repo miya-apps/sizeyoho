@@ -2197,22 +2197,6 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-size: 0.78rem;
 }
 
-.length-figure {
-  margin: 26px 0 12px;
-  padding: 18px;
-  background: #f8fcfa;
-  border: 1px solid var(--line);
-  border-radius: 22px;
-}
-
-.length-figure svg {
-  display: block;
-  width: min(680px, 100%);
-  height: auto;
-  margin: 0 auto;
-}
-
-.length-figure figcaption,
 .width-figure figcaption {
   margin-top: 8px;
   color: #68756f;
@@ -2748,10 +2732,6 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   .numbers-warning {
     align-items: flex-start;
     flex-direction: column;
-  }
-
-  .length-figure {
-    padding: 8px;
   }
 
   .size-choice-grid > section {
