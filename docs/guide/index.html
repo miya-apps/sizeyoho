@@ -346,7 +346,7 @@
     .hero-visual::before { inset: 20px; }
     .hero-visual::after { inset: 48px; }
 
-    .hero-visual img {
+    .hero-visual > img {
       position: relative;
       z-index: 2;
       width: 92px;
@@ -359,20 +359,25 @@
       position: absolute;
       z-index: 3;
       display: grid;
-      min-width: 58px;
-      height: 44px;
-      padding: 0 10px;
+      width: 58px;
+      height: 58px;
+      padding: 6px;
       place-items: center;
       background: rgba(255, 255, 255, 0.95);
-      border-radius: 14px;
+      border-radius: 16px;
       box-shadow: 0 8px 20px rgba(61, 68, 77, 0.14);
-      font-size: 1.15rem;
     }
 
-    .visual-badge:nth-of-type(1) { top: 10px; left: 5px; background: #eff8fb; }
-    .visual-badge:nth-of-type(2) { top: 24px; right: -8px; background: #fff8ee; }
-    .visual-badge:nth-of-type(3) { right: 12px; bottom: 0; background: #fceff2; }
-    .visual-badge:nth-of-type(4) { bottom: 12px; left: 2px; background: #f2f3fb; }
+    .visual-badge img {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+    }
+
+    .visual-badge:nth-of-type(1) { top: 8px; left: 0; background: #eff8fb; }
+    .visual-badge:nth-of-type(2) { top: 24px; right: -7px; background: #fff8ee; }
+    .visual-badge:nth-of-type(3) { right: 10px; bottom: 0; background: #fceff2; }
+    .visual-badge:nth-of-type(4) { bottom: 10px; left: 0; background: #f2f3fb; }
 
     main {
       width: min(1080px, calc(100% - 32px));
@@ -441,6 +446,14 @@
       box-shadow: 0 5px 14px rgba(61, 68, 77, 0.08);
       font-size: 1.55rem;
     }
+
+    .category-icon img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    img.shoe-icon { transform: scale(1.08); }
 
     .category-card h3 {
       margin: 0 0 7px;
@@ -713,7 +726,9 @@
     @media (max-width: 720px) {
       .hero-inner { grid-template-columns: 1fr 190px; gap: 24px; }
       .hero-visual { width: 180px; height: 180px; }
-      .hero-visual img { width: 76px; height: 76px; border-radius: 19px; }
+      .hero-visual > img { width: 76px; height: 76px; border-radius: 19px; }
+      .visual-badge { width: 50px; height: 50px; padding: 5px; border-radius: 14px; }
+      .visual-badge img { width: 40px; height: 40px; }
       .featured-grid,
       .article-grid { grid-template-columns: 1fr; }
       .article-card { min-height: 0; }
@@ -744,7 +759,11 @@
         gap: 0 14px;
         padding: 17px;
       }
-      .category-icon { grid-column: 1; grid-row: 1 / span 3; margin: 0; }
+      .category-card > .category-icon {
+        grid-column: 1;
+        grid-row: 1 / span 3;
+        margin: 0;
+      }
       .category-card h3,
       .category-card p,
       .category-link { grid-column: 2; }
@@ -805,10 +824,10 @@
       </div>
       <div class="hero-visual" aria-hidden="true">
         <img src="../icon.png" width="92" height="92" alt="">
-        <span class="visual-badge">👕</span>
-        <span class="visual-badge">👟</span>
-        <span class="visual-badge">🧷</span>
-        <span class="visual-badge">📈</span>
+        <span class="visual-badge"><img src="category-icons/clothes.svg" width="46" height="46" alt=""></span>
+        <span class="visual-badge"><img class="shoe-icon" src="category-icons/shoes.svg" width="46" height="46" alt=""></span>
+        <span class="visual-badge"><img src="category-icons/diapers.svg" width="46" height="46" alt=""></span>
+        <span class="visual-badge"><img src="category-icons/growth.svg" width="46" height="46" alt=""></span>
       </div>
     </div>
   </header>
@@ -822,25 +841,25 @@
 
       <div class="category-grid">
         <a class="category-card" href="#clothes">
-          <span class="category-icon" aria-hidden="true">👕</span>
+          <span class="category-icon" aria-hidden="true"><img src="category-icons/clothes.svg" width="40" height="40" alt=""></span>
           <h3>子ども服</h3>
           <p>サイズ表・年齢別サイズ・大きめ・来年用・先買いなど</p>
           <span class="category-link">子ども服のガイドへ ↓</span>
         </a>
         <a class="category-card" href="#shoes">
-          <span class="category-icon" aria-hidden="true">👟</span>
+          <span class="category-icon" aria-hidden="true"><img class="shoe-icon" src="category-icons/shoes.svg" width="40" height="40" alt=""></span>
           <h3>靴</h3>
           <p>年齢別サイズ・測り方・足幅・サイズアップ・買い替えなど</p>
           <span class="category-link">靴のガイドへ ↓</span>
         </a>
         <a class="category-card" href="#diapers">
-          <span class="category-icon" aria-hidden="true">🧷</span>
+          <span class="category-icon" aria-hidden="true"><img src="category-icons/diapers.svg" width="40" height="40" alt=""></span>
           <h3>おむつ</h3>
           <p>サイズアップ・体重目安・漏れや跡・メーカー比較など</p>
           <span class="category-link">今後のテーマを見る ↓</span>
         </a>
         <a class="category-card" href="#growth">
-          <span class="category-icon" aria-hidden="true">📈</span>
+          <span class="category-icon" aria-hidden="true"><img src="category-icons/growth.svg" width="40" height="40" alt=""></span>
           <h3>身長・成長</h3>
           <p>平均身長・成長曲線・SDスコア・成長記録など</p>
           <span class="category-link">今後のテーマを見る ↓</span>
@@ -869,7 +888,7 @@
     <section id="clothes" class="category-section" aria-labelledby="clothes-title">
       <div class="section-heading">
         <div class="category-title">
-          <span class="category-icon" aria-hidden="true">👕</span>
+          <span class="category-icon" aria-hidden="true"><img src="category-icons/clothes.svg" width="40" height="40" alt=""></span>
           <div>
             <h2 id="clothes-title">子ども服</h2>
             <p>サイズ早見表から、90・100・110サイズ、大きめ・ジャスト、来年用の選び方まで。</p>
@@ -883,7 +902,7 @@
     <section id="shoes" class="category-section" aria-labelledby="shoes-title">
       <div class="section-heading">
         <div class="category-title">
-          <span class="category-icon" aria-hidden="true">👟</span>
+          <span class="category-icon" aria-hidden="true"><img class="shoe-icon" src="category-icons/shoes.svg" width="40" height="40" alt=""></span>
           <div>
             <h2 id="shoes-title">靴</h2>
             <p>年齢別サイズや測り方から、サイズアップの時期と買い替えサインまで。</p>
@@ -897,7 +916,7 @@
     <div class="future-grid">
       <section id="diapers" class="future-card" aria-labelledby="diapers-title">
         <div class="category-title">
-          <span class="category-icon" aria-hidden="true">🧷</span>
+          <span class="category-icon" aria-hidden="true"><img src="category-icons/diapers.svg" width="40" height="40" alt=""></span>
           <h2 id="diapers-title">おむつ</h2>
         </div>
         <p>公開済みの記事が増えた段階で、ここにカテゴリ別に整理します。記事の代わりになるダミーカードは置いていません。</p>
@@ -911,7 +930,7 @@
 
       <section id="growth" class="future-card" aria-labelledby="growth-title">
         <div class="category-title">
-          <span class="category-icon" aria-hidden="true">📈</span>
+          <span class="category-icon" aria-hidden="true"><img src="category-icons/growth.svg" width="40" height="40" alt=""></span>
           <h2 id="growth-title">身長・成長</h2>
         </div>
         <p>公開済みの記事が増えた段階で、ここにカテゴリ別に整理します。今は今後扱うテーマだけを示しています。</p>
@@ -1010,4 +1029,3 @@
   </script>
 </body>
 </html>
-
