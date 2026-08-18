@@ -3117,106 +3117,23 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .oversize-hero-visual {
-  position: relative;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: end;
-  gap: 12px;
+  place-items: center;
+  overflow: hidden;
   min-height: 245px;
-  padding: 58px 22px 28px;
+  padding: 16px 8px 8px;
   background: rgba(255, 255, 255, 0.4);
   border: 2px solid rgba(255, 255, 255, 0.62);
   border-radius: 34px;
   box-shadow: 0 18px 44px rgba(61, 68, 77, 0.1);
 }
 
-.oversize-hero-visual::before {
-  position: absolute;
-  inset: 12px;
-  border: 1px dashed rgba(52, 127, 89, 0.22);
-  border-radius: 25px;
-  content: "";
-}
-
-.shirt-card {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  align-content: center;
-  aspect-ratio: 1 / 1.05;
-  padding: 12px;
-  color: #4d5a54;
-  background: rgba(255, 255, 255, 0.93);
-  border: 1px solid rgba(52, 127, 89, 0.12);
-  border-radius: 30% 30% 22% 22%;
-  box-shadow: 0 11px 24px rgba(61, 68, 77, 0.12);
-}
-
-.shirt-card::before,
-.shirt-card::after {
-  position: absolute;
-  z-index: -1;
-  top: 12px;
-  width: 36px;
-  height: 58px;
-  background: inherit;
-  border: inherit;
-  border-radius: 14px;
-  content: "";
-}
-
-.shirt-card::before {
-  left: -16px;
-  transform: rotate(28deg);
-}
-
-.shirt-card::after {
-  right: -16px;
-  transform: rotate(-28deg);
-}
-
-.shirt-card b {
-  color: var(--accent-deep);
-  font-size: 0.82rem;
-  letter-spacing: 0.08em;
-}
-
-.shirt-card small {
-  margin-top: 4px;
-  color: #6d7972;
-  font-size: 0.62rem;
-  font-weight: 700;
-}
-
-.shirt-card-room {
-  aspect-ratio: 1 / 1.15;
-  background: #fff4ef;
-  transform: scale(1.08) rotate(2deg);
-}
-
-.fit-label,
-.future-label {
-  position: absolute;
-  z-index: 3;
-  padding: 7px 12px;
-  color: var(--accent-deep);
-  background: rgba(255, 255, 255, 0.94);
-  border-radius: 999px;
-  box-shadow: 0 7px 18px rgba(61, 68, 77, 0.11);
-  font-size: 0.7rem;
-  font-weight: 900;
-}
-
-.fit-label {
-  top: 18px;
-  left: 22px;
-}
-
-.future-label {
-  right: 20px;
-  bottom: 15px;
-  background: #f0faf5;
+.oversize-hero-visual img {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  filter: drop-shadow(0 12px 18px rgba(61, 68, 77, 0.08));
 }
 
 .oversize-answer {
@@ -3802,7 +3719,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
   .oversize-hero-visual {
     min-height: 205px;
-    padding-inline: 19px;
+    padding: 12px 4px 4px;
   }
 
   .answer-checks,
@@ -3916,10 +3833,5 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 @media (max-width: 420px) {
   .oversize-answer .answer-heading {
     align-items: flex-start;
-  }
-
-  .shirt-card::before,
-  .shirt-card::after {
-    width: 30px;
   }
 }
