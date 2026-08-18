@@ -10,7 +10,7 @@
 
 ## 3. 推奨URL
 
-`https://miyaapps.com/sizeyoho/guide/110-size-nansai/`
+`https://miyaapps.com/sizeyoho/guide/clothes/110-size-age/`
 
 ## 4. H1
 

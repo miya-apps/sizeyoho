@@ -10,7 +10,7 @@
 
 ## 3. 推奨URL
 
-`https://miyaapps.com/sizeyoho/guide/kodomo-fuku-size/`
+`https://miyaapps.com/sizeyoho/guide/clothes/size-chart/`
 
 ## 4. H1
 

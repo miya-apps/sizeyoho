@@ -10,7 +10,7 @@
 
 ## 3. 推奨URL
 
-https://miyaapps.com/sizeyoho/guide/90-size-nansai/
+https://miyaapps.com/sizeyoho/guide/clothes/90-size-age/
 
 ## 4. H1
 
