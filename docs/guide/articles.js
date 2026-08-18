@@ -68,6 +68,15 @@ globalThis.SIZEYOHO_GUIDE_ARTICLES = Object.freeze([
     order: 10
   },
   {
+    title: "子どもの足サイズの測り方｜自宅で正しく測る方法",
+    url: "https://miyaapps.com/sizeyoho/guide/shoes/how-to-measure/",
+    description: "紙・定規・メジャーやフットメジャーを使い、足長・足幅・足囲を自宅で測る方法を5STEPで解説します。",
+    category: "shoes",
+    label: "自宅で測る",
+    featured: false,
+    order: 15
+  },
+  {
     title: "子どもの靴はいつサイズアップ？買い替え時期と見分け方",
     url: "https://miyaapps.com/sizeyoho/guide/shoes/size-up/",
     description: "足を測る頻度、つま先の余裕、買い替えサイン、0.5cm・1cmで迷うときの考え方を解説します。",
