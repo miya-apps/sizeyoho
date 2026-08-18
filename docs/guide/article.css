@@ -2552,7 +2552,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 /* ── 個別サイズ記事：即答・比較ツール型ページ ── */
-:is(.size-100-page, .size-110-page) .article-hero {
+:is(.size-90-page, .size-100-page, .size-110-page) .article-hero {
   padding-block: 42px 48px;
   background:
     radial-gradient(circle at 13% 16%, rgba(255, 255, 255, 0.72) 0 78px, transparent 80px),
@@ -2560,20 +2560,20 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     linear-gradient(145deg, var(--mint) 0%, #ddf3e7 62%, #f8e4df 135%);
 }
 
-:is(.size-100-page, .size-110-page) .article-hero-inner {
+:is(.size-90-page, .size-100-page, .size-110-page) .article-hero-inner {
   grid-template-columns: minmax(0, 1fr) 310px;
 }
 
-:is(.size-100-page, .size-110-page) .article-hero h1 {
+:is(.size-90-page, .size-100-page, .size-110-page) .article-hero h1 {
   max-width: 760px;
   font-size: clamp(1.9rem, 4vw, 3rem);
 }
 
-:is(.size-100-page, .size-110-page) .hero-lead {
+:is(.size-90-page, .size-100-page, .size-110-page) .hero-lead {
   max-width: 720px;
 }
 
-:is(.size-100-page, .size-110-page) .page-shell {
+:is(.size-90-page, .size-100-page, .size-110-page) .page-shell {
   margin-top: 30px;
 }
 
@@ -2691,6 +2691,10 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   border-bottom: 1px solid rgba(52, 127, 89, 0.14);
 }
 
+.answer-stats.answer-stats-four {
+  grid-template-columns: 0.85fr 1.05fr 0.85fr 1.35fr;
+}
+
 .answer-stats > div {
   display: grid;
   min-height: 116px;
@@ -2797,8 +2801,8 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   margin-top: 22px;
 }
 
-:is(.size-100-page, .size-110-page) .size-comparison-table,
-.size-110-page .brand-comparison-table {
+:is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table,
+:is(.size-90-page, .size-110-page) .brand-comparison-table {
   min-width: 0;
 }
 
@@ -2976,7 +2980,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 @media (max-width: 900px) {
-  :is(.size-100-page, .size-110-page) .article-hero-inner {
+  :is(.size-90-page, .size-100-page, .size-110-page) .article-hero-inner {
     grid-template-columns: minmax(0, 1fr) 280px;
   }
 
@@ -2994,11 +2998,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 @media (max-width: 760px) {
-  :is(.size-100-page, .size-110-page) .article-hero {
+  :is(.size-90-page, .size-100-page, .size-110-page) .article-hero {
     padding: 34px 18px 40px;
   }
 
-  :is(.size-100-page, .size-110-page) .article-hero-inner {
+  :is(.size-90-page, .size-100-page, .size-110-page) .article-hero-inner {
     grid-template-columns: 1fr;
     gap: 24px;
   }
@@ -3025,6 +3029,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   .answer-stats > div:last-child {
     grid-column: 1 / -1;
     min-height: 96px;
+  }
+
+  .answer-stats.answer-stats-four > div:last-child {
+    grid-column: auto;
+    min-height: 116px;
   }
 
   .height-boundary-grid,
@@ -3062,6 +3071,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
   .answer-stats > div,
   .answer-stats > div:last-child {
+    grid-column: 1;
+    min-height: 88px;
+  }
+
+  .answer-stats.answer-stats-four > div:last-child {
     grid-column: 1;
     min-height: 88px;
   }
