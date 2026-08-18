@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 430" role="img" aria-labelledby="title desc">
+  <title id="title">一般的なスライダー式フットメジャーの使い方</title>
+  <desc id="desc">かかと受けへかかとを合わせ、最も長い指へスライダーを合わせる位置を示す抽象図です。</desc>
+  <defs>
+    <linearGradient id="board" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#dff3e8"/><stop offset="1" stop-color="#c9ead9"/></linearGradient>
+    <path id="foot" d="M58 8c18 0 31 17 36 37l5 25c5-22 16-37 32-37 19 0 30 18 31 42l1 16c8-18 20-28 35-26 18 3 26 21 23 44l-2 13c11-12 25-16 37-9 16 9 18 31 8 50l-6 10c12-5 25-1 33 10 11 15 5 38-9 55-8 10-9 26-8 46 3 41-8 89-38 126-25 31-61 47-101 44-46-4-84-37-96-83-10-37-5-74-1-107 3-27 0-50-7-72C18 153 9 119 12 83 15 43 31 9 58 8Z"/>
+    <style>text { font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif; }</style>
+  </defs>
+  <rect x="8" y="8" width="704" height="414" rx="32" fill="#fff8f4" stroke="#efdfd7" stroke-width="2"/>
+  <rect x="188" y="28" width="260" height="372" rx="44" fill="url(#board)" stroke="#8fc8a8" stroke-width="4"/>
+  <rect x="219" y="341" width="198" height="45" rx="22" fill="#347f59"/>
+  <text x="318" y="370" text-anchor="middle" fill="#fff" font-size="17" font-weight="900">かかと受け</text>
+  <g transform="translate(243 48) scale(.55)" fill="#f7c7ba" stroke="#e7a796" stroke-width="3">
+    <use href="#foot"/>
+  </g>
+  <line x1="213" y1="76" x2="213" y2="326" stroke="#559674" stroke-width="3"/>
+  <g fill="#347f59" font-size="12" font-weight="800">
+    <text x="222" y="100">20</text><text x="222" y="154">18</text><text x="222" y="208">16</text><text x="222" y="262">14</text><text x="222" y="316">12</text>
+  </g>
+  <g stroke="#559674" stroke-width="2">
+    <line x1="205" y1="96" x2="219" y2="96"/><line x1="205" y1="150" x2="219" y2="150"/><line x1="205" y1="204" x2="219" y2="204"/><line x1="205" y1="258" x2="219" y2="258"/><line x1="205" y1="312" x2="219" y2="312"/>
+  </g>
+  <rect x="180" y="67" width="276" height="36" rx="18" fill="#8173b7"/>
+  <rect x="295" y="54" width="46" height="62" rx="10" fill="#fff" stroke="#8173b7" stroke-width="5"/>
+  <path d="M456 85h64" stroke="#8173b7" stroke-width="3"/>
+  <rect x="518" y="54" width="166" height="62" rx="16" fill="#f0ecfb" stroke="#d9d2ee" stroke-width="2"/>
+  <text x="601" y="80" text-anchor="middle" fill="#65599e" font-size="16" font-weight="900">スライダー</text>
+  <text x="601" y="101" text-anchor="middle" fill="#6b6388" font-size="13" font-weight="700">最も長い指へ</text>
+  <path d="M188 363h-66" stroke="#347f59" stroke-width="3"/>
+  <rect x="35" y="331" width="137" height="64" rx="16" fill="#e4f4eb" stroke="#b9ddc9" stroke-width="2"/>
+  <text x="104" y="358" text-anchor="middle" fill="#256846" font-size="16" font-weight="900">かかとを合わせる</text>
+  <text x="104" y="379" text-anchor="middle" fill="#4d755f" font-size="13" font-weight="700">浮かせない</text>
+  <text x="562" y="223" text-anchor="middle" fill="#435149" font-size="17" font-weight="900">平らな床で</text>
+  <text x="562" y="249" text-anchor="middle" fill="#435149" font-size="17" font-weight="900">両足に体重</text>
+  <text x="562" y="284" text-anchor="middle" fill="#6a766f" font-size="13" font-weight="700">製品の説明書を優先</text>
+</svg>

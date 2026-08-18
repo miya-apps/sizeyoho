@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 480" role="img" aria-labelledby="title desc">
+  <title id="title">足長・足幅・足囲を測る位置</title>
+  <desc id="desc">かかとから最も長い指先までの足長、親指と小指の付け根を結ぶ足幅、その部分を一周する足囲を示す図です。</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f4fbf7"/>
+      <stop offset="1" stop-color="#fff8f4"/>
+    </linearGradient>
+    <path id="foot" d="M58 8c18 0 31 17 36 37l5 25c5-22 16-37 32-37 19 0 30 18 31 42l1 16c8-18 20-28 35-26 18 3 26 21 23 44l-2 13c11-12 25-16 37-9 16 9 18 31 8 50l-6 10c12-5 25-1 33 10 11 15 5 38-9 55-8 10-9 26-8 46 3 41-8 89-38 126-25 31-61 47-101 44-46-4-84-37-96-83-10-37-5-74-1-107 3-27 0-50-7-72C18 153 9 119 12 83 15 43 31 9 58 8Z"/>
+    <style>
+      text { font-family: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif; }
+      .label { font-size: 22px; font-weight: 900; }
+      .note { fill: #5c6b63; font-size: 16px; font-weight: 700; }
+    </style>
+  </defs>
+  <rect x="8" y="8" width="704" height="464" rx="32" fill="url(#paper)" stroke="#dce9e1" stroke-width="2"/>
+  <rect x="30" y="28" width="128" height="34" rx="17" fill="#dff3e8"/>
+  <text x="94" y="51" text-anchor="middle" fill="#256846" font-size="16" font-weight="900">測る3つ</text>
+
+  <g transform="translate(220 26) scale(.92)" fill="#f7c7ba" stroke="#e7a796" stroke-width="2">
+    <use href="#foot"/>
+  </g>
+
+  <line x1="191" y1="40" x2="191" y2="437" stroke="#fff" stroke-width="11"/>
+  <line x1="191" y1="40" x2="191" y2="437" stroke="#2f7c57" stroke-width="5"/>
+  <path d="M191 29l-8 15h16Z" fill="#2f7c57"/>
+  <path d="M191 448l-8-15h16Z" fill="#2f7c57"/>
+  <line x1="204" y1="36" x2="271" y2="36" stroke="#91c7a8" stroke-width="2" stroke-dasharray="6 5"/>
+  <line x1="204" y1="442" x2="271" y2="442" stroke="#91c7a8" stroke-width="2" stroke-dasharray="6 5"/>
+  <rect x="55" y="220" width="105" height="48" rx="24" fill="#fff" stroke="#b9ddc9" stroke-width="2"/>
+  <text class="label" x="108" y="252" text-anchor="middle" fill="#256846">足長</text>
+
+  <line x1="267" y1="163" x2="398" y2="163" stroke="#fff" stroke-width="11"/>
+  <line x1="267" y1="163" x2="398" y2="163" stroke="#d96862" stroke-width="5"/>
+  <path d="M256 163l15-8v16Z" fill="#d96862"/>
+  <path d="M409 163l-15-8v16Z" fill="#d96862"/>
+  <rect x="430" y="139" width="104" height="48" rx="24" fill="#fff" stroke="#f0cbc5" stroke-width="2"/>
+  <text class="label" x="482" y="171" text-anchor="middle" fill="#b7524d">足幅</text>
+
+  <path d="M257 164c31-29 112-29 151 0" fill="none" stroke="#8173b7" stroke-width="4" stroke-dasharray="8 7" stroke-linecap="round"/>
+  <path d="M257 164c31 39 112 39 151 0" fill="none" stroke="#8173b7" stroke-width="7" stroke-linecap="round"/>
+  <rect x="407" y="152" width="23" height="25" rx="5" fill="#fff" stroke="#8173b7" stroke-width="3"/>
+  <rect x="430" y="206" width="104" height="48" rx="24" fill="#fff" stroke="#d9d2ee" stroke-width="2"/>
+  <text class="label" x="482" y="238" text-anchor="middle" fill="#65599e">足囲</text>
+
+  <circle cx="507" cy="302" r="8" fill="#dff3e8"/>
+  <path d="M503 302l3 4 6-8" fill="none" stroke="#347f59" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="note" x="525" y="308">立った状態で測る</text>
+  <circle cx="507" cy="344" r="8" fill="#fff0ec"/>
+  <path d="M503 344l3 4 6-8" fill="none" stroke="#d96862" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="note" x="525" y="350">左右両方を測る</text>
+  <circle cx="507" cy="386" r="8" fill="#f0ecfb"/>
+  <path d="M503 386l3 4 6-8" fill="none" stroke="#7164a7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text class="note" x="525" y="392">一番長い指まで</text>
+</svg>
