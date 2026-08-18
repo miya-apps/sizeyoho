@@ -3952,7 +3952,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   position: relative;
   z-index: 1;
   display: block;
-  width: min(228px, 100%);
+  width: 100%;
   height: auto;
   max-height: 285px;
   object-fit: contain;
@@ -4750,7 +4750,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 
   .shoe-hero-visual img {
-    width: min(204px, 100%);
+    width: 100%;
     max-height: 255px;
   }
 
@@ -4811,7 +4811,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 
   .shoe-hero-visual img {
-    width: min(228px, 100%);
+    width: 100%;
     max-height: 285px;
   }
 
