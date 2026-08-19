@@ -2718,6 +2718,346 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 }
 
+/* 測り方記事：自宅での基本手順を主役にする最終調整 */
+.foot-measure-guide-page .measure-conclusion {
+  display: block;
+  margin: 0 0 30px;
+  padding: 20px 22px;
+  background: #f5faf7;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--accent);
+  border-radius: 17px;
+}
+
+.foot-measure-guide-page .measure-conclusion strong {
+  margin: 0 0 10px;
+  color: var(--accent-deep);
+  font-size: 1rem;
+}
+
+.foot-measure-guide-page .measure-conclusion-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 20px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foot-measure-guide-page .measure-conclusion-list li {
+  position: relative;
+  margin: 0;
+  padding-left: 1.35em;
+  font-size: 0.82rem;
+  line-height: 1.65;
+}
+
+.foot-measure-guide-page .measure-conclusion-list li::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--accent-dark);
+  content: "✓";
+  font-weight: 900;
+}
+
+.foot-measure-guide-page .measure-conclusion p {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.7;
+}
+
+.foot-measure-guide-page .measure-supply-compact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 11px;
+  margin: 22px 0 26px;
+}
+
+.foot-measure-guide-page .measure-supply-compact > section {
+  padding: 18px 19px;
+  background: #fbfdfc;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+}
+
+.foot-measure-guide-page .measure-supply-compact span,
+.foot-measure-guide-page .measure-supply-compact strong {
+  display: block;
+}
+
+.foot-measure-guide-page .measure-supply-compact span {
+  margin-bottom: 4px;
+  color: var(--accent-dark);
+  font-size: 0.66rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.foot-measure-guide-page .measure-supply-compact strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.foot-measure-guide-page .measure-supply-compact p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.7;
+}
+
+.foot-measure-guide-page .measure-before-checklist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 18px;
+  margin: 20px 0 12px;
+  padding: 16px 18px;
+  background: #fbfdfc;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  list-style: none;
+}
+
+.foot-measure-guide-page .measure-before-checklist li {
+  position: relative;
+  margin: 0;
+  padding-left: 1.35em;
+  font-size: 0.79rem;
+  line-height: 1.65;
+}
+
+.foot-measure-guide-page .measure-before-checklist li::before {
+  position: absolute;
+  left: 0;
+  color: var(--accent-dark);
+  content: "✓";
+  font-weight: 900;
+}
+
+.foot-measure-guide-page .measure-source-note {
+  margin: 0 0 28px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.7;
+}
+
+.foot-measure-guide-page .detailed-measure-steps {
+  gap: 11px;
+  margin: 22px 0 31px;
+}
+
+.foot-measure-guide-page .detailed-measure-steps > li,
+.foot-measure-guide-page .detailed-measure-steps > li:nth-child(even) {
+  padding: 21px;
+  background: #fbfdfc;
+  border: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(61, 68, 77, 0.04);
+}
+
+.foot-measure-guide-page .detailed-measure-steps > li > span,
+.foot-measure-guide-page .detailed-measure-steps > li:nth-child(even) > span {
+  padding: 4px 9px;
+  color: #fff;
+  background: var(--coral);
+  border-radius: 7px;
+}
+
+.foot-measure-guide-page .detailed-measure-steps.is-compact {
+  gap: 9px;
+}
+
+.foot-measure-guide-page .detailed-measure-steps.is-compact > li {
+  padding: 16px 17px;
+  box-shadow: none;
+}
+
+.foot-measure-guide-page .detailed-measure-steps.is-compact h3 {
+  margin: 6px 0 7px;
+  font-size: 0.9rem;
+}
+
+.foot-measure-guide-page .detailed-measure-steps.is-compact p {
+  font-size: 0.76rem;
+  line-height: 1.7;
+}
+
+.foot-measure-guide-page .foot-measurer-diagram {
+  max-width: 520px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.foot-measure-guide-page .measurer-check-box {
+  margin: 20px 0 25px;
+  padding: 18px 20px;
+  background: #f5faf7;
+  border-color: var(--line);
+  border-radius: 15px;
+}
+
+.foot-measure-guide-page .measurer-check-box > strong {
+  color: var(--accent-deep);
+  font-size: 0.9rem;
+}
+
+.foot-measure-guide-page .measurer-check-box ul {
+  gap: 5px 18px;
+  margin-top: 10px;
+  padding-left: 1.25em;
+}
+
+.foot-measure-guide-page .affiliate-position-note {
+  margin: 25px 0 9px;
+  color: var(--muted);
+  font-size: 0.77rem;
+}
+
+.foot-measure-guide-page .affiliate-product-box {
+  margin: 0 0 32px;
+  padding: 22px;
+  background: #fbfdfc;
+  border-color: var(--line);
+  border-radius: 17px;
+  box-shadow: none;
+}
+
+.foot-measure-guide-page .affiliate-product-box > span {
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.foot-measure-guide-page .official-sheet-grid > section,
+.foot-measure-guide-page .official-sheet-grid > section:nth-child(2),
+.foot-measure-guide-page .condition-compare > section,
+.foot-measure-guide-page .condition-compare > section:nth-child(2) {
+  padding: 19px;
+  background: #fbfdfc;
+}
+
+.foot-measure-guide-page .print-check-box {
+  background: #f5faf7;
+  border-color: var(--line);
+}
+
+.foot-measure-guide-page .print-check-box strong {
+  background: var(--accent-dark);
+}
+
+.foot-measure-guide-page .print-check-box span {
+  color: var(--ink);
+}
+
+.foot-measure-guide-page .measure-mistake-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 21px 0 28px;
+}
+
+.foot-measure-guide-page .measure-mistake-grid > section,
+.foot-measure-guide-page .measure-mistake-grid > section:nth-child(even) {
+  padding: 23px 18px 18px;
+  background: #fbfdfc;
+  border-radius: 15px;
+}
+
+.foot-measure-guide-page .measure-mistake-grid h3 {
+  margin: 5px 0 8px;
+  font-size: 0.88rem;
+}
+
+.foot-measure-guide-page .measure-mistake-grid p {
+  font-size: 0.75rem;
+  line-height: 1.7;
+}
+
+.foot-measure-guide-page .measure-fit-checklist {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.foot-measure-guide-page .measure-related-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 22px 0 30px;
+}
+
+.foot-measure-guide-page .measure-related-links .size-up-inline-card {
+  margin: 0;
+}
+
+.foot-measure-guide-page .faq-stack {
+  gap: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.foot-measure-guide-page .faq-stack > section {
+  margin: 0;
+  padding: 17px 19px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.foot-measure-guide-page .faq-stack > section:last-child {
+  border-bottom: 0;
+}
+
+.foot-measure-guide-page .faq-stack h3 {
+  margin: 0 0 5px;
+  font-size: 0.9rem;
+}
+
+.foot-measure-guide-page .faq-stack p {
+  margin: 0;
+  font-size: 0.79rem;
+  line-height: 1.72;
+}
+
+@media (max-width: 720px) {
+  .foot-measure-guide-page .measure-supply-compact,
+  .foot-measure-guide-page .official-sheet-grid,
+  .foot-measure-guide-page .condition-compare,
+  .foot-measure-guide-page .measure-mistake-grid,
+  .foot-measure-guide-page .measure-related-links,
+  .foot-measure-guide-page .measure-fit-checklist {
+    grid-template-columns: 1fr;
+  }
+
+  .foot-measure-guide-page .measure-conclusion,
+  .foot-measure-guide-page .detailed-measure-steps > li,
+  .foot-measure-guide-page .detailed-measure-steps > li:nth-child(even) {
+    padding: 17px;
+  }
+
+  .foot-measure-guide-page .measure-conclusion-list,
+  .foot-measure-guide-page .measure-before-checklist {
+    gap: 5px 12px;
+  }
+
+  .foot-measure-guide-page .measure-before-checklist {
+    padding: 14px;
+  }
+
+  .foot-measure-guide-page .affiliate-product-box {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 390px) {
+  .foot-measure-guide-page .measure-conclusion-list,
+  .foot-measure-guide-page .measure-before-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* ── 子どもの靴は大きめでいい？ ── */
 .shoe-too-big-page .article-hero-inner {
   grid-template-columns: minmax(0, 1fr) 300px;
