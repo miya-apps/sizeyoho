@@ -7978,6 +7978,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-size: 0.9rem;
 }
 
+.next-year-size-page .next-year-cta-nowrap {
+  display: inline-block;
+  white-space: nowrap;
+}
+
 .next-year-size-page .next-year-steps {
   display: grid;
   gap: 12px;
