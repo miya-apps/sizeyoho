@@ -7508,7 +7508,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
   .age-size-table tbody tr {
     display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: 112px minmax(0, 1fr);
     margin-top: 11px;
     overflow: hidden;
     background: #fff;
