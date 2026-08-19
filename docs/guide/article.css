@@ -2829,6 +2829,65 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   line-height: 1.7;
 }
 
+.foot-measure-guide-page .measure-method-overview {
+  margin: 18px 0 27px;
+  padding: 14px 15px;
+  background: #f5faf7;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+}
+
+.foot-measure-guide-page .measure-method-overview > strong {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--accent-deep);
+  font-size: 0.8rem;
+}
+
+.foot-measure-guide-page .measure-method-overview > div {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.foot-measure-guide-page .measure-method-overview a {
+  display: grid;
+  min-width: 0;
+  padding: 10px 8px;
+  align-content: center;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #dce8e1;
+  border-radius: 11px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.foot-measure-guide-page .measure-method-overview a:hover {
+  color: var(--accent-deep);
+  background: #fbfdfc;
+  border-color: #c8ddd1;
+}
+
+.foot-measure-guide-page .measure-method-overview a span,
+.foot-measure-guide-page .measure-method-overview a strong {
+  display: block;
+}
+
+.foot-measure-guide-page .measure-method-overview a span {
+  color: var(--muted);
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.foot-measure-guide-page .measure-method-overview a strong {
+  margin-top: 3px;
+  color: var(--accent-deep);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
 .foot-measure-guide-page .measure-before-checklist {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -2904,6 +2963,25 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 .foot-measure-guide-page .detailed-measure-steps.is-compact p {
   font-size: 0.76rem;
   line-height: 1.7;
+}
+
+.foot-measure-guide-page .measure-record-cta {
+  gap: 16px;
+  margin: -3px 0 32px;
+  padding: 16px 18px;
+}
+
+.foot-measure-guide-page .measure-record-cta strong {
+  font-size: 0.95rem;
+}
+
+.foot-measure-guide-page .measure-record-cta p {
+  font-size: 0.78rem;
+}
+
+.foot-measure-guide-page .measure-record-cta > a {
+  padding: 8px 12px;
+  font-size: 0.74rem;
 }
 
 .foot-measure-guide-page .foot-measurer-diagram {
@@ -3139,6 +3217,15 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   line-height: 1.72;
 }
 
+.foot-measure-guide-page .shoe-app-cta .cta-heading {
+  margin-left: 0;
+  padding-left: 0;
+}
+
+.foot-measure-guide-page .shoe-app-cta .cta-heading::before {
+  display: none;
+}
+
 @media (max-width: 720px) {
   .foot-measure-guide-page .measure-supply-compact,
   .foot-measure-guide-page .official-sheet-grid,
@@ -3167,6 +3254,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   .foot-measure-guide-page .affiliate-product-box {
     padding: 18px;
   }
+
+  .foot-measure-guide-page .measure-record-cta {
+    gap: 11px;
+    padding: 15px 16px;
+  }
 }
 
 @media (max-width: 390px) {
@@ -3184,6 +3276,26 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 @media (max-width: 480px) {
+  .foot-measure-guide-page .measure-method-overview {
+    padding: 12px;
+  }
+
+  .foot-measure-guide-page .measure-method-overview > div {
+    gap: 5px;
+  }
+
+  .foot-measure-guide-page .measure-method-overview a {
+    padding: 9px 5px;
+  }
+
+  .foot-measure-guide-page .measure-method-overview a span {
+    font-size: 0.6rem;
+  }
+
+  .foot-measure-guide-page .measure-method-overview a strong {
+    font-size: 0.72rem;
+  }
+
   .foot-measure-guide-page .affiliate-buttons {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
