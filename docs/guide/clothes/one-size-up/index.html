@@ -14,6 +14,26 @@
   <link rel="apple-touch-icon" href="../../../apple-touch-icon.png">
   <link rel="manifest" href="../../../site.webmanifest">
   <link rel="stylesheet" href="../../article.css?v=20260819-one-size-up-clarity-1">
+  <style>
+    .oversize-guide-page .oversize-garment-card h3 {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+    }
+
+    .oversize-garment-heading-icon {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 30px;
+      box-sizing: border-box;
+      margin-top: 1px;
+      padding: 5px;
+      color: var(--accent-deep);
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid rgba(52, 127, 89, 0.12);
+      border-radius: 9px;
+    }
+  </style>
 
   <meta property="og:title" content="子ども服はワンサイズ上を買う？大きめ・ジャストサイズの選び方">
   <meta property="og:description" content="今着る服と来年用を分け、トップス・パンツ・アウターなど服の種類ごとに、大きめを選ぶときの確認ポイントを解説します。">
@@ -102,6 +122,28 @@
 <body class="oversize-guide-page">
   <a class="skip-link" href="#main-content">本文へ移動</a>
 
+  <!-- Iconify: Phosphor Icons (ph), regular style -->
+  <svg class="icon-sprite" aria-hidden="true" focusable="false">
+    <symbol id="oversize-icon-t-shirt" viewBox="0 0 256 256">
+      <path fill="currentColor" d="M247.59 61.22 195.83 33A8 8 0 0 0 192 32h-32a8 8 0 0 0-8 8 24 24 0 0 1-48 0 8 8 0 0 0-8-8H64a8 8 0 0 0-3.84 1L8.41 61.22a15.76 15.76 0 0 0-6.59 21.26l19.27 36.81A16.37 16.37 0 0 0 35.67 128H56v80a16 16 0 0 0 16 16h112a16 16 0 0 0 16-16v-80h20.34a16.37 16.37 0 0 0 14.58-8.71l19.27-36.81a15.76 15.76 0 0 0-6.6-21.26M35.67 112a.62.62 0 0 1-.41-.13L16.09 75.26 56 53.48V112ZM184 208H72V48h16.8a40 40 0 0 0 78.38 0H184Zm36.75-96.14a.55.55 0 0 1-.41.14H200V53.48l39.92 21.78Z"/>
+    </symbol>
+    <symbol id="oversize-icon-shirt-folded" viewBox="0 0 256 256">
+      <path fill="currentColor" d="M200 40h-20.69l-13.65-13.66A8 8 0 0 0 160 24H96a8 8 0 0 0-5.66 2.34L76.69 40H56a16 16 0 0 0-16 16v152a16 16 0 0 0 16 16h144a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16m-72 25.58L111 40h34.1Zm33.24-21L168 51.31V104l-29.43-25.44ZM88 51.31l6.76-6.75 22.67 34L88 104ZM56 56h16v48a15.85 15.85 0 0 0 9.21 14.49A16.1 16.1 0 0 0 88 120a15.89 15.89 0 0 0 10.2-3.73l.11-.1L120 97.48V208H56Zm144 152h-64V97.48l21.65 18.7.11.1A15.89 15.89 0 0 0 168 120a16.1 16.1 0 0 0 6.83-1.54A15.85 15.85 0 0 0 184 104V56h16Z"/>
+    </symbol>
+    <symbol id="oversize-icon-hoodie" viewBox="0 0 256 256">
+      <path fill="currentColor" d="M237.31 120.53 183 39.12A16 16 0 0 0 169.73 32H86.27A16 16 0 0 0 73 39.12l-54.31 81.41a16 16 0 0 0-2.13 13.09L38 212.21A16 16 0 0 0 53.43 224H80a16 16 0 0 0 16-16v-16h64v16a16 16 0 0 0 16 16h26.57A16 16 0 0 0 218 212.21l21.44-78.59a16 16 0 0 0-2.13-13.09M80 176V69l24 14.15V136a8 8 0 0 0 16 0V92.57l3.94 2.32a8 8 0 0 0 8.12 0l3.94-2.32V128a8 8 0 0 0 16 0V83.14L176 69v107Zm89.73-128 2.92 4.39L128 78.71 83.35 52.39 86.27 48ZM80 208H53.43L32 129.41l32-48V176a16 16 0 0 0 16 16Zm122.57 0H176v-16a16 16 0 0 0 16-16V81.41l32 48Z"/>
+    </symbol>
+    <symbol id="oversize-icon-pants" viewBox="0 0 256 256">
+      <path fill="currentColor" d="m223.88 214-22-176A16 16 0 0 0 186 24H70a16 16 0 0 0-15.88 14l-22 176A16 16 0 0 0 48 232h40.69a16 16 0 0 0 15.51-12.06l23.8-92 23.79 91.94A16 16 0 0 0 167.31 232H208a16 16 0 0 0 15.88-18M192.9 95.2A32.13 32.13 0 0 1 169 72h21ZM186 40l2 16H68l2-16ZM66 72h21a32.13 32.13 0 0 1-23.9 23.2Zm22.69 144H48l13-104.27A48.08 48.08 0 0 0 103.32 72H120v23Zm78.6-.06L136 95V72h16.68A48.08 48.08 0 0 0 195 111.73L208 216Z"/>
+    </symbol>
+    <symbol id="oversize-icon-dress" viewBox="0 0 256 256">
+      <path fill="currentColor" d="M214.7 209.7a2 2 0 0 0-.11-.25l-45.48-96.86 20.5-32.18.11-.18a16 16 0 0 0 0-16.46l-.3-.47L168 32.7V8a8 8 0 0 0-16 0v24.42L146.74 39a24 24 0 0 1-37.48 0L104 32.42V8a8 8 0 0 0-16 0v24.7L66.58 63.3l-.3.47a16 16 0 0 0 0 16.46l.11.18 20.5 32.18-45.48 96.86a2 2 0 0 0-.11.25A16 16 0 0 0 56 232h144a16 16 0 0 0 14.71-22.3M80 72l16.43-23.43.33.42a40 40 0 0 0 62.48 0l.33-.42L176 72l-20.38 32h-55.23ZM56 216l45.07-96h53.84L200 216Z"/>
+    </symbol>
+    <symbol id="oversize-icon-run" viewBox="0 0 256 256">
+      <path fill="currentColor" d="M152 88a32 32 0 1 0-32-32 32 32 0 0 0 32 32m0-48a16 16 0 1 1-16 16 16 16 0 0 1 16-16m67.31 100.68c-.61.28-7.49 3.28-19.67 3.28-13.85 0-34.55-3.88-60.69-20a169.31 169.31 0 0 1-15.41 32.34 104.29 104.29 0 0 1 31.31 15.81C173.92 186.65 184 207.35 184 232a8 8 0 0 1-16 0c0-41.7-34.69-56.71-54.14-61.85-.55.7-1.12 1.41-1.69 2.1-19.64 23.8-44.25 36.18-71.63 36.18a92 92 0 0 1-9.34-.43A8 8 0 0 1 32.8 192c25.92 2.58 48.47-7.49 67-30 12.49-15.14 21-33.61 25.25-47C86.13 92.35 61.27 111.63 61 111.84A8 8 0 1 1 51 99.36c1.5-1.2 37.22-29 89.51 6.57 45.47 30.91 71.93 20.31 72.18 20.19a8 8 0 1 1 6.63 14.56Z"/>
+    </symbol>
+  </svg>
+
   <header class="site-header">
     <div class="site-header-inner">
       <a class="brand" href="https://miyaapps.com/sizeyoho/" aria-label="サイズ予報 トップページ">
@@ -161,7 +203,7 @@
       <aside class="app-inline-cta" aria-labelledby="app-inline-title">
         <div>
           <span class="eyebrow">SIZE YOHO APP</span>
-          <strong id="app-inline-title">今ぴったり。次の季節はワンサイズ上？</strong>
+          <strong id="app-inline-title">今ぴったり。次の季節も同じ？サイズアップ？</strong>
           <p>サイズ予報では、お子さまの身長・体重の記録から、春・夏・秋・冬ごとの服サイズの目安を確認できます。</p>
         </div>
         <a href="#size-forecast">サイズ予報について見る ↓</a>
@@ -248,32 +290,32 @@
 
       <div class="oversize-garment-grid">
         <section class="oversize-garment-card garment-short">
-          <h3 id="short-sleeve">半袖トップス</h3>
+          <h3 id="short-sleeve"><svg class="oversize-garment-heading-icon" aria-hidden="true" focusable="false"><use href="#oversize-icon-t-shirt"/></svg><span>半袖トップス</span></h3>
           <p>多少ゆとりがあっても着やすい商品はあります。首回りが開きすぎず、肩や着丈が動きを妨げないか確認します。</p>
           <strong>確認：首回り・身幅・肩・着丈</strong>
         </section>
         <section class="oversize-garment-card garment-long">
-          <h3 id="long-sleeve">長袖トップス・トレーナー</h3>
+          <h3 id="long-sleeve"><svg class="oversize-garment-heading-icon" aria-hidden="true" focusable="false"><use href="#oversize-icon-shirt-folded"/></svg><span>長袖トップス・トレーナー</span></h3>
           <p>袖丈と袖口が重要です。手首で止まる作りか、折り返しても動きにくくならないかを見ます。</p>
           <strong>確認：袖丈・袖口・肩・着丈</strong>
         </section>
         <section class="oversize-garment-card garment-outer">
-          <h3 id="outerwear">アウター</h3>
+          <h3 id="outerwear"><svg class="oversize-garment-heading-icon" aria-hidden="true" focusable="false"><use href="#oversize-icon-hoodie"/></svg><span>アウター</span></h3>
           <p>重ね着分のゆとりを考えつつ、肩が落ちすぎず、袖で手が隠れすぎないか確認します。</p>
           <strong>確認：肩幅・袖丈・着丈・身幅</strong>
         </section>
         <section class="oversize-garment-card garment-pants">
-          <h3 id="pants">パンツ・長ズボン</h3>
+          <h3 id="pants"><svg class="oversize-garment-heading-icon" aria-hidden="true" focusable="false"><use href="#oversize-icon-pants"/></svg><span>パンツ・長ズボン</span></h3>
           <p>裾が床につかず、ウエストがずれないかを確認します。調節ゴムの有無も判断材料です。</p>
           <strong>確認：ウエスト・股下・裾・動きやすさ</strong>
         </section>
         <section class="oversize-garment-card garment-dress">
-          <h3 id="dress-skirt">ワンピース・スカート</h3>
+          <h3 id="dress-skirt"><svg class="oversize-garment-heading-icon" aria-hidden="true" focusable="false"><use href="#oversize-icon-dress"/></svg><span>ワンピース・スカート</span></h3>
           <p>立ったときの丈だけでなく、歩く・階段を上る・遊ぶときに邪魔にならないかを見ます。</p>
           <strong>確認：丈・身幅・足さばき</strong>
         </section>
         <section class="oversize-garment-card garment-nursery">
-          <h3 id="nursery">園・保育園・幼稚園や外遊びで着る服</h3>
+          <h3 id="nursery"><svg class="oversize-garment-heading-icon" aria-hidden="true" focusable="false"><use href="#oversize-icon-run"/></svg><span>園・保育園・幼稚園や外遊びで着る服</span></h3>
           <p>走る、しゃがむ、登る動きを妨げないかを優先し、園独自の服装ルールにも合わせます。</p>
           <strong>確認：動作・袖・裾・園のルール</strong>
         </section>
@@ -281,7 +323,7 @@
 
       <h2 id="size-step">「ワンサイズ上」って何cm大きい？</h2>
 
-      <p><strong>次のサイズ表示は、ブランドや商品によって異なります。</strong>90の次に95がある場合と、95を扱わず100へ進む場合があります。</p>
+      <p><strong>サイズ表示が90→100でも、服の着丈・身幅・袖丈などが一律に10cm大きくなるという意味ではありません。</strong>90・95・100などはサイズ表示であり、実際の商品寸法の差はブランドや商品ごとに異なります。次のサイズ表示もブランドや商品によって異なり、90の次に95がある場合と、95を扱わず100へ進む場合があります。</p>
 
       <div class="dimension-compare size-step-compare">
         <div>
