@@ -5632,7 +5632,23 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .oversize-guide-page .oversize-garment-card h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
   margin-top: 0;
+  line-height: 1.45;
+}
+
+.oversize-guide-page .oversize-garment-heading-icon {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  box-sizing: border-box;
+  padding: 4px;
+  color: var(--accent-deep);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(52, 127, 89, 0.12);
+  border-radius: 8px;
 }
 
 .article-body .oversize-garment-card h3::before {
