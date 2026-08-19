@@ -6494,12 +6494,12 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-weight: 900;
 }
 
-.shoe-size-guide-page .summary-checklist {
+:is(.shoe-size-guide-page, .size-90-page) .summary-checklist {
   gap: 0;
   border-top: 1px solid var(--line);
 }
 
-.shoe-size-guide-page .summary-checklist li {
+:is(.shoe-size-guide-page, .size-90-page) .summary-checklist li {
   padding: 13px 4px 13px 31px;
   background: transparent;
   border: 0;
@@ -6508,7 +6508,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   counter-increment: none;
 }
 
-.shoe-size-guide-page .summary-checklist li::before {
+:is(.shoe-size-guide-page, .size-90-page) .summary-checklist li::before {
   top: 13px;
   left: 4px;
   display: block;
