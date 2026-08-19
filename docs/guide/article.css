@@ -7943,28 +7943,27 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .next-year-size-page .next-year-axes > div {
-  display: grid;
-  min-height: 92px;
-  padding: 16px 10px;
-  place-items: center;
-  align-content: center;
+  display: flex;
+  min-height: 84px;
+  padding: 13px 10px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.86);
   text-align: center;
 }
 
-.next-year-size-page .next-year-axes span,
+.next-year-size-page .next-year-axis-icon {
+  display: block;
+  width: 21px;
+  height: 21px;
+  margin-bottom: 6px;
+  color: var(--accent-deep);
+  flex: 0 0 auto;
+}
+
 .next-year-size-page .next-year-axes strong {
   display: block;
-}
-
-.next-year-size-page .next-year-axes span {
-  margin-bottom: 4px;
-  color: var(--coral);
-  font-size: 0.64rem;
-  font-weight: 900;
-}
-
-.next-year-size-page .next-year-axes strong {
   color: var(--accent-deep);
   font-size: 0.84rem;
   line-height: 1.5;
@@ -7985,7 +7984,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .next-year-size-page .next-year-steps {
   display: grid;
-  gap: 12px;
+  gap: 9px;
   margin: 24px 0 30px;
   padding: 0;
   list-style: none;
@@ -7994,21 +7993,10 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 .next-year-size-page .next-year-steps > li {
   margin: 0;
   padding: 20px 22px;
-  background: #f2faf6;
+  background: #f5faf7;
   border: 1px solid var(--line);
   border-radius: 17px;
-}
-
-.next-year-size-page .next-year-steps > li:nth-child(2) {
-  background: #fff9f2;
-}
-
-.next-year-size-page .next-year-steps > li:nth-child(3) {
-  background: #f6f5fc;
-}
-
-.next-year-size-page .next-year-steps > li:nth-child(4) {
-  background: #fff4f5;
+  box-shadow: 0 5px 14px rgba(61, 68, 77, 0.045);
 }
 
 .next-year-size-page .next-year-step-heading {
@@ -8054,12 +8042,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   background: #f4faf7;
   border: 1px solid var(--line);
   border-radius: 16px;
-}
-
-.next-year-size-page .next-year-scenarios section.is-current {
-  background: #fff8f4;
-  border-color: #eccfc6;
-  box-shadow: inset 0 4px 0 var(--coral);
+  box-shadow: 0 5px 14px rgba(61, 68, 77, 0.045);
 }
 
 .next-year-size-page .next-year-scenarios span {
@@ -8176,8 +8159,8 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 
   .next-year-size-page .next-year-axes > div {
-    min-height: 76px;
-    padding: 12px 9px;
+    min-height: 72px;
+    padding: 10px 9px;
   }
 
   .next-year-size-page .next-year-answer > p {
@@ -8189,11 +8172,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 
   .next-year-size-page .next-year-step-heading {
-    align-items: flex-start;
+    align-items: center;
     gap: 9px;
-  }
-
-  .next-year-size-page .next-year-step-heading span {
-    margin-top: 2px;
   }
 }
