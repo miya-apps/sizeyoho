@@ -5376,7 +5376,9 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   letter-spacing: 0.12em;
 }
 
-.article-body .tool-heading h2 {
+.article-body .tool-heading h2,
+.article-body .tool-heading .tool-title {
+  display: block;
   margin: 0;
   padding: 0;
   color: #405149;
@@ -5623,6 +5625,10 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   padding: 0;
   color: #405149;
   font-size: 1.02rem;
+}
+
+.oversize-guide-page .oversize-garment-card h3 {
+  margin-top: 0;
 }
 
 .article-body .oversize-garment-card h3::before {
@@ -5967,6 +5973,10 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   .safety-box {
     grid-template-columns: 1fr;
     padding: 20px;
+  }
+
+  .oversize-garment-card {
+    padding: 18px 18px 16px;
   }
 
   .size-step-links {
@@ -6732,12 +6742,12 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-weight: 900;
 }
 
-:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page) .summary-checklist {
+:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page, .oversize-guide-page) .summary-checklist {
   gap: 0;
   border-top: 1px solid var(--line);
 }
 
-:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page) .summary-checklist li {
+:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page, .oversize-guide-page) .summary-checklist li {
   padding: 13px 4px 13px 31px;
   background: transparent;
   border: 0;
@@ -6746,7 +6756,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   counter-increment: none;
 }
 
-:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page) .summary-checklist li::before {
+:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page, .oversize-guide-page) .summary-checklist li::before {
   top: 13px;
   left: 4px;
   display: block;
