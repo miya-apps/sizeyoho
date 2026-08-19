@@ -6915,13 +6915,6 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   margin-bottom: 8px;
 }
 
-.age-size-lead {
-  margin: 0 0 15px;
-  color: #59675f;
-  font-size: 0.82rem;
-  line-height: 1.75;
-}
-
 .age-size-table-wrap {
   overflow: hidden;
   background: #fff;
@@ -6940,15 +6933,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .age-size-col-age {
-  width: 18%;
+  width: 32%;
 }
 
-.age-size-col-category {
-  width: 36%;
-}
-
-.age-size-col-point {
-  width: 46%;
+.age-size-col-example {
+  width: 68%;
 }
 
 .age-size-table th,
@@ -6982,13 +6971,9 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .category-size-line {
-  display: block;
-}
-
-.category-size-line + .category-size-line {
-  margin-top: 6px;
-  padding-top: 6px;
-  border-top: 1px dashed rgba(52, 127, 89, 0.2);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
 }
 
 .category-size-line > strong,
@@ -6996,10 +6981,18 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   display: block;
 }
 
-.category-size-line > span {
-  margin-top: 1px;
+.category-size-line > strong {
   color: #69756f;
-  font-size: 0.92em;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.category-size-line > span {
+  color: var(--accent-deep);
+  font-size: 1.06rem;
+  font-weight: 900;
+  line-height: 1.35;
+  white-space: nowrap;
 }
 
 .age-size-panel .source-note {
@@ -7515,7 +7508,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
   .age-size-table tbody tr {
     display: grid;
-    grid-template-columns: 92px minmax(0, 1fr);
+    grid-template-columns: 96px minmax(0, 1fr);
     margin-top: 11px;
     overflow: hidden;
     background: #fff;
@@ -7549,6 +7542,9 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 
   .age-size-table tbody td:first-of-type {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
     background: #fff;
     text-align: right;
   }
@@ -7557,40 +7553,23 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     background: #fff;
   }
 
-  .age-size-table tbody td:last-child {
-    display: grid;
-    grid-column: 1 / -1;
-    grid-template-columns: 76px minmax(0, 1fr);
-    gap: 10px;
-    padding: 10px 13px 12px;
-    color: #59675f;
-    background: #fffaf6;
-    border-top: 1px solid var(--line);
-  }
-
-  .age-size-table tbody td:last-child::before {
-    color: var(--accent-deep);
-    content: attr(data-label);
-    font-size: 0.7rem;
-    font-weight: 900;
+  .category-size-line {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
   }
 
   .category-size-line > strong {
     color: #59675f;
-    font-size: 0.72rem;
-  }
-
-  .category-size-line > span {
-    margin-top: 2px;
-    color: var(--accent-deep);
-    font-size: 1.02rem;
-    font-weight: 900;
+    font-size: 0.66rem;
     line-height: 1.35;
   }
 
-  .category-size-line + .category-size-line {
-    margin-top: 8px;
-    padding-top: 8px;
+  .category-size-line > span {
+    color: var(--accent-deep);
+    font-size: 1.08rem;
+    font-weight: 900;
+    line-height: 1.35;
   }
 
   .age-anchor-nav > div {
