@@ -5508,13 +5508,14 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   color: #a05f50;
 }
 
-.article-body .pros-cons-grid h3 {
-  margin: 6px 0 12px;
+.oversize-guide-page .article-body .pros-cons-grid h3.oversize-role-label {
+  margin: 0 0 10px;
   padding: 0;
-  font-size: 1.05rem;
+  font-size: 0.76rem;
+  line-height: 1.4;
 }
 
-.article-body .pros-cons-grid h3::before {
+.oversize-guide-page .article-body .pros-cons-grid h3.oversize-role-label::before {
   display: none;
 }
 
