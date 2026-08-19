@@ -4724,6 +4724,14 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   color: var(--accent-deep);
 }
 
+.size-90-page .brand-comparison-table tbody th {
+  color: var(--ink);
+  background: #f7f9f8;
+  font-size: 0.88rem;
+  font-weight: 800;
+  text-align: left;
+}
+
 .age-focus-card {
   background: linear-gradient(135deg, #eef9f3, #fff8f3);
   border-color: rgba(52, 127, 89, 0.22);
@@ -4799,6 +4807,13 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-size: 0.66rem;
   font-weight: 900;
   letter-spacing: 0.12em;
+}
+
+.size-step-compare span {
+  color: #5f6d65;
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  line-height: 1.5;
 }
 
 .dimension-compare strong {
