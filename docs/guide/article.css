@@ -7712,6 +7712,44 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   line-height: 1.75;
 }
 
+.shoe-size-guide-page .measurement-priority-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: -9px 0 2px;
+  padding: 9px 13px;
+  color: #4d5d55;
+  background: #f8faf9;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 0.76rem;
+  line-height: 1.5;
+  text-decoration: none;
+}
+
+.shoe-size-guide-page .measurement-priority-link span {
+  color: #69756f;
+}
+
+.shoe-size-guide-page .measurement-priority-link strong {
+  color: var(--accent-deep);
+  font-size: 0.8rem;
+}
+
+.shoe-size-guide-page .measurement-priority-link:hover {
+  background: #f1f8f4;
+  border-color: #b8d9c6;
+}
+
+.shoe-size-guide-page .measurement-priority-link:focus-visible {
+  outline: 3px solid rgba(52, 127, 89, 0.24);
+  outline-offset: 3px;
+}
+
+.shoe-size-guide-page .brand-rule-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .shoe-size-guide-page .brand-rule-grid section,
 .shoe-size-guide-page .brand-rule-grid section:nth-child(n) {
   padding: 18px;
@@ -7729,6 +7767,28 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   margin-bottom: 8px;
   color: #748078;
   letter-spacing: 0.03em;
+}
+
+.shoe-size-guide-page .fit-check-note {
+  margin: -8px 0 28px;
+  padding: 15px 17px;
+  background: #f8faf9;
+  border-left: 3px solid #9fcbb3;
+  border-radius: 0 12px 12px 0;
+}
+
+.shoe-size-guide-page .fit-check-note > strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #405149;
+  font-size: 0.84rem;
+}
+
+.shoe-size-guide-page .fit-check-note p {
+  margin: 0;
+  color: #59665f;
+  font-size: 0.8rem;
+  line-height: 1.75;
 }
 
 .shoe-size-guide-page .home-measure-steps {
@@ -7811,7 +7871,8 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     gap: 2px;
   }
 
-  .brand-rule-grid {
+  .brand-rule-grid,
+  .shoe-size-guide-page .brand-rule-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -7945,6 +8006,14 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   .shoe-forecast-inline-cta small {
     margin-top: 3px;
     white-space: normal;
+  }
+
+  .shoe-size-guide-page .measurement-priority-link {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    margin-top: -6px;
   }
 
   .age-detail-grid,
