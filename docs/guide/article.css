@@ -6494,6 +6494,34 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-weight: 900;
 }
 
+.shoe-size-guide-page .summary-checklist {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.shoe-size-guide-page .summary-checklist li {
+  padding: 13px 4px 13px 31px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  counter-increment: none;
+}
+
+.shoe-size-guide-page .summary-checklist li::before {
+  top: 13px;
+  left: 4px;
+  display: block;
+  width: auto;
+  height: auto;
+  color: var(--accent-deep);
+  background: transparent;
+  border-radius: 0;
+  content: "✓";
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
 .shoe-app-cta {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 205px;
@@ -7070,46 +7098,6 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   background: var(--accent-dark);
 }
 
-.age-warning-box {
-  display: grid;
-  grid-template-columns: 48px minmax(0, 1fr);
-  gap: 15px;
-  margin: 24px 0;
-  padding: 22px;
-  background: #fff9ec;
-  border: 1px solid #ead9b8;
-  border-radius: 18px;
-}
-
-.age-warning-box > span {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  color: #fff;
-  background: #d59a48;
-  border-radius: 14px;
-  font-size: 1.2rem;
-  font-weight: 900;
-}
-
-.age-warning-box strong {
-  display: block;
-  margin-bottom: 7px;
-  color: #76531f;
-  font-size: 1.05rem;
-}
-
-.age-warning-box p {
-  margin-bottom: 9px;
-}
-
-.age-warning-box ol {
-  margin: 0;
-  padding-left: 1.25em;
-  font-size: 0.86rem;
-}
-
 .size-up-inline-card {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
@@ -7607,11 +7595,6 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
   .age-anchor-nav > div {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .age-warning-box {
-    grid-template-columns: 1fr;
-    padding: 19px;
   }
 
   .size-up-inline-card {
