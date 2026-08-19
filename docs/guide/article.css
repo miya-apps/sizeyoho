@@ -5079,6 +5079,12 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     margin: 0;
   }
 
+  .size-90-page .answer-stats.answer-stats-four > div:last-child .answer-choice {
+    width: 100%;
+    justify-self: stretch;
+    text-align: center;
+  }
+
   .size-90-answer > .answer-source-note {
     padding: 9px 16px 0;
   }
@@ -5125,17 +5131,24 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
   .size-90-page .size-comparison-table td,
   .size-90-page .size-comparison-table td:nth-of-type(3) {
+    display: grid;
     grid-column: auto;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.4em;
     padding: 7px 10px;
     font-size: 0.8rem;
     line-height: 1.45;
+    text-align: center;
   }
 
   .size-90-page .size-comparison-table td::before {
-    display: inline;
-    margin: 0 0.4em 0 0;
+    display: block;
+    margin: 0;
+    justify-self: start;
     font-size: 0.68rem;
     line-height: 1.4;
+    text-align: left;
   }
 
   .size-90-page .size-comparison-table td:nth-of-type(2) {
