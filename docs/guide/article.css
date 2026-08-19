@@ -4659,14 +4659,14 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   white-space: nowrap;
 }
 
-.size-100-page .answer-stats > div:nth-child(-n + 2) dd {
+:is(.size-100-page, .size-110-page) .answer-stats > div:nth-child(-n + 2) dd {
   display: grid;
   width: 100%;
   min-height: 2.3rem;
   place-items: center;
 }
 
-.size-100-page .answer-stats > div:nth-child(-n + 2) dd strong {
+:is(.size-100-page, .size-110-page) .answer-stats > div:nth-child(-n + 2) dd strong {
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -4770,7 +4770,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   color: var(--accent-deep);
 }
 
-.size-90-page .brand-comparison-table tbody th {
+:is(.size-90-page, .size-110-page) .brand-comparison-table tbody th {
   color: var(--ink);
   background: #f7f9f8;
   font-size: 0.88rem;
@@ -5070,25 +5070,25 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 @media (max-width: 760px) {
-  .size-100-page .answer-stats {
+  :is(.size-100-page, .size-110-page) .answer-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .size-100-page .answer-stats > div {
+  :is(.size-100-page, .size-110-page) .answer-stats > div {
     grid-column: auto;
     min-height: 96px;
     padding: 12px 8px;
   }
 
-  .size-100-page .answer-stats > div:nth-child(-n + 2) dd {
+  :is(.size-100-page, .size-110-page) .answer-stats > div:nth-child(-n + 2) dd {
     min-height: 1.7rem;
   }
 
-  .size-100-page .answer-stats > div:nth-child(-n + 2) dd strong {
+  :is(.size-100-page, .size-110-page) .answer-stats > div:nth-child(-n + 2) dd strong {
     font-size: clamp(1rem, 4.2vw, 1.25rem);
   }
 
-  .size-100-page .answer-stats > div:last-child {
+  :is(.size-100-page, .size-110-page) .answer-stats > div:last-child {
     grid-column: 1 / -1;
     grid-template-columns: auto minmax(0, 1fr);
     min-height: 64px;
@@ -5098,11 +5098,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     text-align: left;
   }
 
-  .size-100-page .answer-stats > div:last-child dt {
+  :is(.size-100-page, .size-110-page) .answer-stats > div:last-child dt {
     margin: 0;
   }
 
-  .size-100-page .answer-stats > div:last-child .answer-choice {
+  :is(.size-100-page, .size-110-page) .answer-stats > div:last-child .answer-choice {
     width: 100%;
     justify-self: stretch;
     text-align: center;
@@ -5162,29 +5162,29 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     padding-top: 11px;
   }
 
-  :is(.size-90-page, .size-100-page) .comparison-table-wrap {
+  :is(.size-90-page, .size-100-page, .size-110-page) .comparison-table-wrap {
     margin-top: 16px;
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table tbody {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table tbody {
     gap: 8px;
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table tbody tr,
-  :is(.size-90-page, .size-100-page) .size-comparison-table tbody tr:nth-child(odd),
-  :is(.size-90-page, .size-100-page) .size-comparison-table tbody tr:nth-child(even) {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table tbody tr,
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table tbody tr:nth-child(odd),
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table tbody tr:nth-child(even) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     background: #fff;
     border-radius: 13px;
     box-shadow: 0 5px 14px rgba(61, 68, 77, 0.05);
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table tbody tr.is-primary {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table tbody tr.is-primary {
     background: #fff8f6;
     box-shadow: 0 6px 16px rgba(61, 68, 77, 0.06), inset 5px 0 0 var(--coral);
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table tbody th {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table tbody th {
     grid-column: 1 / -1;
     padding: 7px 12px;
     color: #40534a;
@@ -5193,13 +5193,13 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     line-height: 1.4;
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table tbody tr.is-primary th {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table tbody tr.is-primary th {
     color: var(--white);
     background: var(--coral);
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table td,
-  :is(.size-90-page, .size-100-page) .size-comparison-table td:nth-of-type(3) {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table td,
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table td:nth-of-type(3) {
     display: grid;
     grid-column: auto;
     grid-template-columns: max-content minmax(0, 1fr);
@@ -5211,7 +5211,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     text-align: center;
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table td::before {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table td::before {
     display: block;
     margin: 0;
     justify-self: start;
@@ -5220,11 +5220,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     text-align: left;
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table td:nth-of-type(2) {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table td:nth-of-type(2) {
     border-left: 1px solid var(--line);
   }
 
-  :is(.size-90-page, .size-100-page) .size-comparison-table td:nth-of-type(3) {
+  :is(.size-90-page, .size-100-page, .size-110-page) .size-comparison-table td:nth-of-type(3) {
     grid-column: 1 / -1;
     padding-block: 7px 9px;
   }
@@ -6728,12 +6728,12 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-weight: 900;
 }
 
-:is(.shoe-size-guide-page, .size-90-page, .size-100-page) .summary-checklist {
+:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page) .summary-checklist {
   gap: 0;
   border-top: 1px solid var(--line);
 }
 
-:is(.shoe-size-guide-page, .size-90-page, .size-100-page) .summary-checklist li {
+:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page) .summary-checklist li {
   padding: 13px 4px 13px 31px;
   background: transparent;
   border: 0;
@@ -6742,7 +6742,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   counter-increment: none;
 }
 
-:is(.shoe-size-guide-page, .size-90-page, .size-100-page) .summary-checklist li::before {
+:is(.shoe-size-guide-page, .size-90-page, .size-100-page, .size-110-page) .summary-checklist li::before {
   top: 13px;
   left: 4px;
   display: block;
