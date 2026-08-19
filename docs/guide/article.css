@@ -2719,6 +2719,27 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 /* 測り方記事：自宅での基本手順を主役にする最終調整 */
+.foot-measure-guide-page .measure-term-table-wrap {
+  overflow-x: hidden;
+}
+
+.foot-measure-guide-page .measure-term-table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.foot-measure-guide-page .measure-term-table tr > :first-child {
+  width: 28%;
+  white-space: nowrap;
+}
+
+.foot-measure-guide-page .measure-term-table tr > :last-child {
+  width: 72%;
+  overflow-wrap: break-word;
+  word-break: normal;
+}
+
 .foot-measure-guide-page .measure-conclusion {
   display: block;
   margin: 0 0 30px;
