@@ -2912,8 +2912,8 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .foot-measure-guide-page .affiliate-position-note {
   margin: 25px 0 9px;
-  color: var(--muted);
-  font-size: 0.77rem;
+  color: #52645b;
+  font-size: 0.79rem;
 }
 
 .foot-measure-guide-page .affiliate-product-box {
@@ -2926,8 +2926,50 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .foot-measure-guide-page .affiliate-product-box > span {
-  color: var(--muted);
-  letter-spacing: 0.05em;
+  display: inline-flex;
+  padding: 3px 9px;
+  color: var(--accent-deep);
+  background: #edf8f2;
+  border-radius: 999px;
+  letter-spacing: 0.03em;
+}
+
+.foot-measure-guide-page .affiliate-buttons {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  max-width: 620px;
+  margin: 16px auto 12px;
+}
+
+.foot-measure-guide-page .affiliate-buttons a {
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  text-align: center;
+}
+
+.foot-measure-guide-page .affiliate-buttons .is-amazon {
+  color: #2e2924;
+  background: #ffb84d;
+  border-color: #e5a43f;
+}
+
+.foot-measure-guide-page .affiliate-buttons .is-amazon:hover {
+  color: #2e2924;
+  background: #f3a72f;
+}
+
+.foot-measure-guide-page .affiliate-buttons .is-rakuten {
+  color: #fff;
+  background: #b40000;
+  border-color: #9f0000;
+}
+
+.foot-measure-guide-page .affiliate-buttons .is-rakuten:hover {
+  color: #fff;
+  background: #970000;
 }
 
 .foot-measure-guide-page .official-sheet-grid > section,
@@ -2939,16 +2981,48 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .foot-measure-guide-page .print-check-box {
+  display: block;
+  margin: 20px 0 29px;
+  padding: 15px 17px;
   background: #f5faf7;
   border-color: var(--line);
 }
 
 .foot-measure-guide-page .print-check-box strong {
-  background: var(--accent-dark);
+  display: block;
+  padding: 0;
+  color: var(--accent-deep);
+  background: transparent;
+  border-radius: 0;
+  font-size: 0.76rem;
+  line-height: 1.5;
 }
 
-.foot-measure-guide-page .print-check-box span {
+.foot-measure-guide-page .print-check-box ul {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 5px 14px;
+  margin: 9px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.foot-measure-guide-page .print-check-box li {
+  position: relative;
+  margin: 0;
+  padding-left: 1.35em;
   color: var(--ink);
+  font-size: 0.71rem;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.foot-measure-guide-page .print-check-box li::before {
+  position: absolute;
+  left: 0;
+  color: var(--accent-dark);
+  content: "✓";
+  font-weight: 900;
 }
 
 .foot-measure-guide-page .measure-mistake-grid {
@@ -3054,6 +3128,19 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 @media (max-width: 390px) {
   .foot-measure-guide-page .measure-conclusion-list,
   .foot-measure-guide-page .measure-before-checklist {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .foot-measure-guide-page .print-check-box ul {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+}
+
+@media (max-width: 480px) {
+  .foot-measure-guide-page .affiliate-buttons {
     grid-template-columns: 1fr;
   }
 }
