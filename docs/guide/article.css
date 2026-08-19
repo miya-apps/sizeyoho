@@ -2935,17 +2935,20 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .foot-measure-guide-page .affiliate-buttons {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  max-width: 620px;
-  margin: 16px auto 12px;
+  grid-template-columns: repeat(2, max-content);
+  justify-content: center;
+  gap: 8px;
+  max-width: 100%;
+  margin: 14px auto 11px;
 }
 
 .foot-measure-guide-page .affiliate-buttons a {
-  min-height: 44px;
-  padding: 9px 12px;
+  min-width: 118px;
+  min-height: 42px;
+  padding: 7px 11px;
   border: 1px solid transparent;
-  border-radius: 11px;
-  font-size: 0.76rem;
+  border-radius: 10px;
+  font-size: 0.72rem;
   line-height: 1.45;
   text-align: center;
 }
@@ -2978,6 +2981,26 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 .foot-measure-guide-page .condition-compare > section:nth-child(2) {
   padding: 19px;
   background: #fbfdfc;
+}
+
+.foot-measure-guide-page .official-sheet-grid a {
+  display: inline;
+  padding: 0;
+  color: var(--accent-deep);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+.foot-measure-guide-page .official-sheet-grid a:hover {
+  color: var(--accent-dark);
+  background: transparent;
+  transform: none;
 }
 
 .foot-measure-guide-page .print-check-box {
@@ -3141,7 +3164,16 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 @media (max-width: 480px) {
   .foot-measure-guide-page .affiliate-buttons {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    width: 100%;
+  }
+
+  .foot-measure-guide-page .affiliate-buttons a {
+    min-width: 0;
+    padding-right: 7px;
+    padding-left: 7px;
+    font-size: 0.69rem;
   }
 }
 
