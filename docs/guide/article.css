@@ -4059,12 +4059,11 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   text-align: center;
 }
 
-.shoe-too-big-page .references > h3 {
+.shoe-too-big-page .references > h2 {
   margin-top: 0;
-  padding-left: 0;
 }
 
-.shoe-too-big-page .references > h3::before {
+.shoe-too-big-page .references > h2::before {
   display: none;
 }
 
@@ -4100,6 +4099,37 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .shoe-too-big-page .foot-15-grid > section:nth-child(2) > strong {
   color: var(--accent-deep);
+}
+
+.shoe-too-big-page .foot-15-grid h3 {
+  margin: 0 0 7px;
+  color: #405149;
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+
+.shoe-too-big-page .foot-15-grid > section > strong {
+  margin: 0 0 7px;
+}
+
+.shoe-too-big-page .foot-15-grid > section > span {
+  margin-bottom: 11px;
+  color: #6f7a74;
+  font-size: 0.64rem;
+  letter-spacing: 0.06em;
+}
+
+.shoe-too-big-page .too-big-text-link,
+.shoe-too-big-page .too-big-related-text {
+  margin: 15px 0 28px;
+  color: #5e6b65;
+  font-size: 0.82rem;
+  line-height: 1.75;
+}
+
+.shoe-too-big-page .too-big-text-link a,
+.shoe-too-big-page .too-big-related-text a {
+  display: inline;
 }
 
 .shoe-too-big-page .fit-card-pair section,
