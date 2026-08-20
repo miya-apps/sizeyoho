@@ -6783,19 +6783,19 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .shoe-frequency-grid > div {
   display: flex;
-  min-height: 142px;
-  padding: 21px 17px;
+  min-height: 108px;
+  padding: 17px 15px;
   flex-direction: column;
   justify-content: center;
-  background: #f1faf5;
+  background: #fbfdfc;
 }
 
 .shoe-frequency-grid > div:nth-child(2) {
-  background: #fff9ec;
+  background: #fbfdfc;
 }
 
 .shoe-frequency-grid > div:nth-child(3) {
-  background: #f7f4fb;
+  background: #fbfdfc;
 }
 
 .shoe-frequency-grid span,
@@ -6931,7 +6931,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .shoe-decision-flow {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 7px;
   margin: 22px 0 27px;
   padding: 0;
@@ -6940,38 +6940,26 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .shoe-decision-flow li {
   position: relative;
-  min-height: 150px;
+  min-height: 144px;
   margin: 0;
-  padding: 42px 13px 15px;
-  background: #f2faf6;
+  padding: 17px 15px 15px;
+  background: #fbfdfc;
   border: 1px solid var(--line);
   border-radius: 15px;
 }
 
-.shoe-decision-flow li:nth-child(3) { background: #eef9f3; }
-.shoe-decision-flow li:nth-child(4) { background: #fff8ef; }
-.shoe-decision-flow li:nth-child(5) { background: #fff3f3; }
+.shoe-decision-flow li:nth-child(3),
+.shoe-decision-flow li:nth-child(4),
+.shoe-decision-flow li:nth-child(5) { background: #fbfdfc; }
 
 .shoe-decision-flow li::before {
-  position: absolute;
-  top: 12px;
-  left: 13px;
-  display: grid;
-  width: 24px;
-  height: 24px;
-  place-items: center;
-  color: #fff;
-  background: var(--accent-dark);
-  border-radius: 8px;
-  content: counter(list-item);
-  font-size: 0.68rem;
-  font-weight: 900;
+  display: none;
 }
 
 .shoe-decision-flow li:not(:last-child)::after {
   position: absolute;
   z-index: 2;
-  top: 65px;
+  top: 56px;
   right: -10px;
   color: #75a38c;
   content: "›";
@@ -6985,14 +6973,28 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .shoe-decision-flow strong {
-  margin-bottom: 7px;
+  margin: 8px 0 6px;
   color: var(--accent-deep);
-  font-size: 0.78rem;
+  font-size: 0.82rem;
 }
 
-.shoe-decision-flow span {
+.shoe-decision-flow .shoe-step-label {
+  display: inline-flex;
+  width: fit-content;
+  padding: 4px 8px;
+  color: #fff;
+  background: var(--coral);
+  border-radius: 7px;
+  font-size: 0.62rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+}
+
+.shoe-decision-flow p {
+  margin: 0;
   color: #59675f;
-  font-size: 0.68rem;
+  font-size: 0.7rem;
   line-height: 1.65;
 }
 
@@ -7555,6 +7557,142 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   box-shadow: 0 15px 30px rgba(61, 68, 77, 0.17);
 }
 
+.shoe-size-up-page .shoe-frequency-details {
+  margin: 0 0 23px;
+  overflow: hidden;
+  background: #fbfdfc;
+  border: 1px solid var(--line);
+  border-radius: 13px;
+}
+
+.shoe-size-up-page .shoe-frequency-details summary {
+  padding: 12px 15px;
+  color: var(--accent-deep);
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 900;
+}
+
+.shoe-size-up-page .shoe-frequency-details p {
+  margin: 0;
+  padding: 0 15px 14px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.75;
+}
+
+.shoe-size-up-page .size-up-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 20px 0 25px;
+}
+
+.shoe-size-up-page .size-up-signal-grid > section {
+  padding: 18px 19px 15px;
+  background: #fbfdfc;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+}
+
+.shoe-size-up-page .size-up-signal-grid > section:last-child {
+  grid-column: 1 / -1;
+}
+
+.shoe-size-up-page .article-body .size-up-signal-grid h3 {
+  margin: 0 0 7px;
+  padding: 0;
+  color: var(--accent-deep);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.shoe-size-up-page .article-body .size-up-signal-grid h3::before {
+  display: none;
+}
+
+.shoe-size-up-page .size-up-signal-grid p {
+  margin: 0;
+  color: #59675f;
+  font-size: 0.78rem;
+  line-height: 1.72;
+}
+
+.shoe-size-up-page .shoe-size-rule-note {
+  margin: -5px 0 29px;
+  padding: 14px 16px;
+  color: #58675f;
+  background: #f5faf7;
+  border-left: 4px solid #aacfb9;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  line-height: 1.75;
+}
+
+.shoe-size-up-page .faq-stack {
+  gap: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+
+.shoe-size-up-page .faq-stack section,
+.shoe-size-up-page .faq-stack section:nth-child(even) {
+  margin: 0;
+  padding: 17px 19px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+}
+
+.shoe-size-up-page .faq-stack section:last-child {
+  border-bottom: 0;
+}
+
+.shoe-size-up-page .article-body .faq-stack h3 {
+  margin: 0 0 5px;
+  font-size: 0.9rem;
+}
+
+.shoe-size-up-page .faq-stack p {
+  font-size: 0.79rem;
+  line-height: 1.72;
+}
+
+.shoe-size-up-page .summary-checklist {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.shoe-size-up-page .summary-checklist li {
+  padding: 13px 4px 13px 31px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  counter-increment: none;
+}
+
+.shoe-size-up-page .summary-checklist li::before {
+  top: 13px;
+  left: 4px;
+  display: block;
+  width: auto;
+  height: auto;
+  color: var(--accent-deep);
+  background: transparent;
+  border-radius: 0;
+  content: "✓";
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
+.shoe-size-up-page .shoe-app-cta .cta-heading::before {
+  display: none;
+}
+
 .shoe-size-up-page .references > p {
   margin: 18px 0 0;
   color: #66726c;
@@ -7582,7 +7720,7 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 @media (max-width: 900px) {
   .shoe-decision-flow {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .shoe-decision-flow li:not(:last-child)::after {
@@ -7672,8 +7810,13 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 
   .shoe-decision-flow,
-  .foot-dimension-grid {
+  .foot-dimension-grid,
+  .shoe-size-up-page .size-up-signal-grid {
     grid-template-columns: 1fr;
+  }
+
+  .shoe-size-up-page .size-up-signal-grid > section:last-child {
+    grid-column: auto;
   }
 
   .shoe-decision-flow li {
