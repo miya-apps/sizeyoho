@@ -3053,47 +3053,76 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   letter-spacing: 0.03em;
 }
 
-.foot-measure-guide-page .affiliate-buttons {
-  grid-template-columns: repeat(2, max-content);
-  justify-content: start;
-  gap: 6px;
-  max-width: 100%;
-  margin: 12px 0 10px;
+.foot-measure-guide-page .affiliate-shop-selector {
+  margin: 14px 0 11px;
+  padding: 13px 14px 0;
+  overflow: hidden;
+  background: #f7fbf8;
+  border: 1px solid var(--line);
+  border-radius: 13px;
 }
 
-.foot-measure-guide-page .affiliate-buttons a {
-  min-width: 104px;
-  min-height: 40px;
-  padding: 6px 10px;
-  border: 1px solid transparent;
-  border-radius: 9px;
-  font-size: 0.69rem;
-  line-height: 1.45;
-  text-align: center;
+.foot-measure-guide-page .affiliate-shop-selector > strong {
+  display: block;
+  color: var(--accent-deep);
+  font-size: 0.8rem;
+  line-height: 1.5;
 }
 
-.foot-measure-guide-page .affiliate-buttons .is-amazon {
-  color: #684b1c;
-  background: #fff7e8;
-  border-color: #dfb96d;
+.foot-measure-guide-page .affiliate-shop-selector > p {
+  margin: 3px 0 10px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.6;
 }
 
-.foot-measure-guide-page .affiliate-buttons .is-amazon:hover {
-  color: #5a3f16;
-  background: #ffefd2;
+.foot-measure-guide-page .affiliate-shop-links {
+  margin: 0 -14px;
+}
+
+.foot-measure-guide-page .affiliate-shop-links a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  min-height: 46px;
+  padding: 0 14px;
+  align-items: center;
+  color: var(--ink);
+  background: #fff;
+  border-top: 1px solid var(--line);
+  border-left: 3px solid transparent;
+  text-decoration: none;
+}
+
+.foot-measure-guide-page .affiliate-shop-links a:hover {
+  color: var(--ink);
+  background: #fbfdfc;
   transform: none;
 }
 
-.foot-measure-guide-page .affiliate-buttons .is-rakuten {
-  color: #9f0000;
-  background: #fff5f5;
-  border-color: #d99191;
+.foot-measure-guide-page .affiliate-shop-links .is-amazon {
+  border-left-color: #d79422;
 }
 
-.foot-measure-guide-page .affiliate-buttons .is-rakuten:hover {
-  color: #890000;
-  background: #fee9e9;
-  transform: none;
+.foot-measure-guide-page .affiliate-shop-links .is-rakuten {
+  border-left-color: #c64f4f;
+}
+
+.foot-measure-guide-page .affiliate-shop-links a > strong {
+  color: var(--ink);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.foot-measure-guide-page .shop-link-action {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  color: #627069;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.4;
+  white-space: nowrap;
 }
 
 .foot-measure-guide-page .official-sheet-grid > section,
@@ -3359,19 +3388,6 @@ tbody tr:nth-child(4) { background: #fff6f8; }
     font-size: 0.72rem;
   }
 
-  .foot-measure-guide-page .affiliate-buttons {
-    grid-template-columns: repeat(2, max-content);
-    justify-content: start;
-    gap: 6px;
-    width: fit-content;
-    max-width: 100%;
-  }
-
-  .foot-measure-guide-page .affiliate-buttons a {
-    min-width: 104px;
-    padding-right: 7px;
-    padding-left: 7px;
-  }
 }
 
 /* ── 子どもの靴は大きめでいい？ ── */
