@@ -4060,11 +4060,25 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 .shoe-too-big-page .references > h2 {
-  margin-top: 0;
+  margin: 0 0 18px;
+  padding: 0;
+  color: #4b5651;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-align: left;
 }
 
 .shoe-too-big-page .references > h2::before {
   display: none;
+}
+
+.shoe-too-big-page .references {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
 }
 
 .shoe-too-big-page .references > p {
@@ -4103,9 +4117,14 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .shoe-too-big-page .foot-15-grid h3 {
   margin: 0 0 7px;
+  padding-left: 0;
   color: #405149;
   font-size: 0.93rem;
   line-height: 1.55;
+}
+
+.shoe-too-big-page .foot-15-grid h3::before {
+  display: none;
 }
 
 .shoe-too-big-page .foot-15-grid > section > strong {
