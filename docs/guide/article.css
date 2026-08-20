@@ -4074,6 +4074,83 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   font-size: 0.76rem;
 }
 
+.shoe-too-big-page .too-big-conclusion p {
+  margin: 0;
+  color: #59665f;
+  font-size: 0.86rem;
+  line-height: 1.75;
+}
+
+.shoe-too-big-page .three-numbers li,
+.shoe-too-big-page .three-numbers li:nth-child(2),
+.shoe-too-big-page .three-numbers li:nth-child(3) {
+  background: #f7fbf9;
+}
+
+.shoe-too-big-page .foot-15-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.shoe-too-big-page .foot-15-grid > section,
+.shoe-too-big-page .foot-15-grid > section:nth-child(2) {
+  background: #f8fcfa;
+  border-color: var(--line);
+  border-top-color: var(--accent);
+}
+
+.shoe-too-big-page .foot-15-grid > section:nth-child(2) > strong {
+  color: var(--accent-deep);
+}
+
+.shoe-too-big-page .fit-card-pair section,
+.shoe-too-big-page .fit-card-pair section:nth-child(2),
+.shoe-too-big-page .online-checks section,
+.shoe-too-big-page .online-checks section:nth-child(2),
+.shoe-too-big-page .now-next-cards section,
+.shoe-too-big-page .now-next-cards section:nth-child(2),
+.shoe-too-big-page .foot-dimension-grid section,
+.shoe-too-big-page .foot-dimension-grid section:nth-child(even) {
+  background: #f8fcfa;
+  border-color: var(--line);
+}
+
+.shoe-too-big-page .fit-card-pair span,
+.shoe-too-big-page .fit-card-pair section:nth-child(2) span,
+.shoe-too-big-page .online-checks > section > span,
+.shoe-too-big-page .online-checks section:nth-child(2) > span,
+.shoe-too-big-page .now-next-cards span,
+.shoe-too-big-page .now-next-cards section:nth-child(2) span {
+  color: var(--accent-dark);
+}
+
+.shoe-too-big-page .summary-checklist {
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+
+.shoe-too-big-page .summary-checklist li {
+  padding: 13px 4px 13px 31px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  counter-increment: none;
+}
+
+.shoe-too-big-page .summary-checklist li::before {
+  top: 13px;
+  left: 4px;
+  display: block;
+  width: auto;
+  height: auto;
+  color: var(--accent-deep);
+  background: transparent;
+  border-radius: 0;
+  content: "✓";
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
 @media (max-width: 840px) {
   .shoe-too-big-page .article-hero-inner {
     grid-template-columns: minmax(0, 1fr) 250px;
