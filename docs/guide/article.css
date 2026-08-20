@@ -2711,25 +2711,53 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 /* 測り方記事：自宅での基本手順を主役にする最終調整 */
-.foot-measure-guide-page .measure-term-table-wrap {
-  overflow-x: hidden;
+.foot-measure-guide-page .measure-points-combined {
+  margin: 22px 0 26px;
+  padding: 14px;
+  background: #f8fcfa;
+  border: 1px solid var(--line);
+  border-radius: 22px;
 }
 
-.foot-measure-guide-page .measure-term-table {
-  width: 100%;
+.foot-measure-guide-page .measure-points-combined .measure-diagram {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+.foot-measure-guide-page .measure-points-combined .measure-diagram img {
+  width: min(560px, 100%);
+}
+
+.foot-measure-guide-page .measure-point-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0 0;
+}
+
+.foot-measure-guide-page .measure-point-cards > div {
   min-width: 0;
-  table-layout: fixed;
+  padding: 13px 14px;
+  background: #fff;
+  border: 1px solid #dce8e1;
+  border-radius: 12px;
 }
 
-.foot-measure-guide-page .measure-term-table tr > :first-child {
-  width: 28%;
-  white-space: nowrap;
+.foot-measure-guide-page .measure-point-cards dt {
+  margin: 0 0 5px;
+  color: var(--accent-deep);
+  font-size: 0.82rem;
+  font-weight: 900;
 }
 
-.foot-measure-guide-page .measure-term-table tr > :last-child {
-  width: 72%;
-  overflow-wrap: break-word;
-  word-break: normal;
+.foot-measure-guide-page .measure-point-cards dd {
+  margin: 0;
+  color: #58655f;
+  font-size: 0.73rem;
+  line-height: 1.65;
 }
 
 .foot-measure-guide-page .measure-conclusion {
@@ -3027,43 +3055,45 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .foot-measure-guide-page .affiliate-buttons {
   grid-template-columns: repeat(2, max-content);
-  justify-content: center;
-  gap: 8px;
+  justify-content: start;
+  gap: 6px;
   max-width: 100%;
-  margin: 14px auto 11px;
+  margin: 12px 0 10px;
 }
 
 .foot-measure-guide-page .affiliate-buttons a {
-  min-width: 118px;
-  min-height: 42px;
-  padding: 7px 11px;
+  min-width: 104px;
+  min-height: 40px;
+  padding: 6px 10px;
   border: 1px solid transparent;
-  border-radius: 10px;
-  font-size: 0.72rem;
+  border-radius: 9px;
+  font-size: 0.69rem;
   line-height: 1.45;
   text-align: center;
 }
 
 .foot-measure-guide-page .affiliate-buttons .is-amazon {
-  color: #2e2924;
-  background: #ffb84d;
-  border-color: #e5a43f;
+  color: #684b1c;
+  background: #fff7e8;
+  border-color: #dfb96d;
 }
 
 .foot-measure-guide-page .affiliate-buttons .is-amazon:hover {
-  color: #2e2924;
-  background: #f3a72f;
+  color: #5a3f16;
+  background: #ffefd2;
+  transform: none;
 }
 
 .foot-measure-guide-page .affiliate-buttons .is-rakuten {
-  color: #fff;
-  background: #b40000;
-  border-color: #9f0000;
+  color: #9f0000;
+  background: #fff5f5;
+  border-color: #d99191;
 }
 
 .foot-measure-guide-page .affiliate-buttons .is-rakuten:hover {
-  color: #fff;
-  background: #970000;
+  color: #890000;
+  background: #fee9e9;
+  transform: none;
 }
 
 .foot-measure-guide-page .official-sheet-grid > section,
@@ -3147,19 +3177,44 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 
 .foot-measure-guide-page .measure-mistake-grid > section,
 .foot-measure-guide-page .measure-mistake-grid > section:nth-child(even) {
-  padding: 23px 18px 18px;
+  padding: 18px;
   background: #fbfdfc;
   border-radius: 15px;
 }
 
+.foot-measure-guide-page .measure-mistake-grid > section::before {
+  top: 18px;
+  left: 18px;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  color: #fff;
+  background: var(--coral);
+  border-radius: 6px;
+  content: "×";
+  font-size: 0.75rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
 .foot-measure-guide-page .measure-mistake-grid h3 {
-  margin: 5px 0 8px;
+  margin: 0 0 8px;
+  padding-left: 27px;
   font-size: 0.88rem;
+  line-height: 1.5;
 }
 
 .foot-measure-guide-page .measure-mistake-grid p {
   font-size: 0.75rem;
   line-height: 1.7;
+}
+
+.foot-measure-guide-page .summary-checklist li::before {
+  box-sizing: border-box;
+  color: var(--accent-deep);
+  background: #e7f5ed;
+  border: 1px solid #c2dece;
 }
 
 .foot-measure-guide-page .measure-fit-checklist {
@@ -3219,6 +3274,22 @@ tbody tr:nth-child(4) { background: #fff6f8; }
 }
 
 @media (max-width: 720px) {
+  .foot-measure-guide-page .measure-point-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .foot-measure-guide-page .measure-point-cards > div {
+    display: grid;
+    grid-template-columns: 58px minmax(0, 1fr);
+    align-items: start;
+    gap: 8px;
+    padding: 11px 12px;
+  }
+
+  .foot-measure-guide-page .measure-point-cards dt {
+    margin: 0;
+  }
+
   .foot-measure-guide-page .measure-supply-compact,
   .foot-measure-guide-page .official-sheet-grid,
   .foot-measure-guide-page .condition-compare,
@@ -3289,16 +3360,17 @@ tbody tr:nth-child(4) { background: #fff6f8; }
   }
 
   .foot-measure-guide-page .affiliate-buttons {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, max-content);
+    justify-content: start;
     gap: 6px;
-    width: 100%;
+    width: fit-content;
+    max-width: 100%;
   }
 
   .foot-measure-guide-page .affiliate-buttons a {
-    min-width: 0;
+    min-width: 104px;
     padding-right: 7px;
     padding-left: 7px;
-    font-size: 0.69rem;
   }
 }
 
