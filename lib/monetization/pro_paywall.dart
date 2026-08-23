@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../app/app_info.dart';
+import '../support/contact_launcher.dart';
 import 'pro_pricing.dart';
 import 'pro_status.dart';
 import 'purchase_manager.dart';
@@ -164,6 +166,27 @@ class _ProPaywallSheetState extends State<_ProPaywallSheet> {
                 color: Colors.grey[700],
               ),
             ),
+            const SizedBox(height: 2),
+            Wrap(
+              alignment: WrapAlignment.center,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                _legalLink(
+                  context,
+                  label: '利用規約',
+                  url: kTermsPageUrl,
+                ),
+                const Text(
+                  '｜',
+                  style: TextStyle(fontSize: 11, color: Color(0xFF777777)),
+                ),
+                _legalLink(
+                  context,
+                  label: 'プライバシーポリシー',
+                  url: kPrivacyPolicyUrl,
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -207,6 +230,30 @@ class _ProPaywallSheetState extends State<_ProPaywallSheet> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _legalLink(
+    BuildContext context, {
+    required String label,
+    required String url,
+  }) {
+    return TextButton(
+      onPressed: () => openExternalPage(
+        context,
+        url: url,
+        pageName: label,
+      ),
+      style: TextButton.styleFrom(
+        minimumSize: const Size(0, 48),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        tapTargetSize: MaterialTapTargetSize.padded,
+        textStyle: const TextStyle(
+          fontSize: 11.5,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      child: Text(label),
     );
   }
 

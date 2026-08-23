@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../app/adaptive_layout.dart';
+import '../app/app_info.dart';
 import '../backup/growth_backup.dart';
 import '../export/save_to_device.dart';
 import '../cloud/cloud_backup.dart';
@@ -195,6 +196,18 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     );
                   },
+                ),
+                _menuTile(
+                  context,
+                  icon: Icons.description_outlined,
+                  iconColor: scheme.primary,
+                  title: '利用規約',
+                  subtitle: 'サービスの利用条件・Pro版について',
+                  onTap: () => openExternalPage(
+                    context,
+                    url: kTermsPageUrl,
+                    pageName: '利用規約',
+                  ),
                 ),
                 _menuTile(
                   context,

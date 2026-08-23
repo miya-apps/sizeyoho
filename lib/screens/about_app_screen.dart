@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app/adaptive_layout.dart';
 import '../app/app_info.dart';
+import '../support/contact_launcher.dart';
 
 /// 「データの根拠・免責事項」画面。
 ///
@@ -142,7 +143,20 @@ class AboutAppScreen extends StatelessWidget {
                       'ものではありません。',
                 ),
               ]),
-              const SizedBox(height: 16),
+              const SizedBox(height: 4),
+              Align(
+                alignment: Alignment.center,
+                child: TextButton.icon(
+                  onPressed: () => openExternalPage(
+                    context,
+                    url: kDisclaimerPageUrl,
+                    pageName: '免責事項',
+                  ),
+                  icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                  label: const Text('詳しい免責事項をWebで確認'),
+                ),
+              ),
+              const SizedBox(height: 12),
               _card(context, const [
                 _AboutItem(
                   title: 'オープンソース素材のライセンス',

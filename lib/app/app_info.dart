@@ -12,5 +12,7 @@ const String kWebBaseUrl = 'https://miyaapps.com/sizeyoho';
 const String kWebDisplayUrl = 'miyaapps.com/sizeyoho';
 const String kContactPageUrl = '$kWebBaseUrl/contact.html';
 const String kPrivacyPolicyUrl = '$kWebBaseUrl/privacy.html';
+const String kTermsPageUrl = 'https://miyaapps.com/terms.html';
+const String kDisclaimerPageUrl = 'https://miyaapps.com/disclaimer.html';
 const String kContactFormUrl =
     'https://docs.google.com/forms/d/e/1FAIpQLSfmVQ7BpgNVbbQRa-yVXuwOElXEzipLZ9OD_MH7jW-y5zW2qQ/viewform';
