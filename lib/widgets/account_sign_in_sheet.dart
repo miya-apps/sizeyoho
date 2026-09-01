@@ -22,6 +22,14 @@ class _AccountSignInSheet extends StatelessWidget {
       (defaultTargetPlatform == TargetPlatform.iOS ||
           defaultTargetPlatform == TargetPlatform.macOS);
 
+  // Firebase公式ではネイティブGoogleログインにgoogle_sign_inが必要。
+  // 公開済みAndroidの経路はこのiOS準備では変更せず、iOSではOS標準の
+  // Appleログインだけを表示する。
+  static bool get _showGoogle =>
+      kIsWeb ||
+      (defaultTargetPlatform != TargetPlatform.iOS &&
+          defaultTargetPlatform != TargetPlatform.macOS);
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,14 +40,15 @@ class _AccountSignInSheet extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const Text(
-              'クラウドにバックアップ',
+              'クラウドアカウント',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
             ),
             const SizedBox(height: 8),
             Text(
               '機種変更や端末の故障に備えて、記録をクラウドに'
-              '保存するためのアカウントです。\n'
+              '保存するためと、既存アカウントの管理・削除に使います。\n'
+              'オンライン自動バックアップはPro版の機能です。\n'
               'Pro版のお支払いは App Store・Google Play で'
               '行い、ここでのサインインは不要です。',
               textAlign: TextAlign.center,
@@ -50,18 +59,39 @@ class _AccountSignInSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            _SignInButton(
-              label: 'Googleで続ける',
-              leading: const _GoogleMark(),
-              onPressed: () => _signIn(context, CloudBackup.instance.signInWithGoogle),
-            ),
-            if (_showApple) ...[
-              const SizedBox(height: 10),
+            if (_showGoogle)
               _SignInButton(
-                label: 'Appleで続ける',
-                icon: Icons.apple,
-                onPressed: () => _signIn(context, CloudBackup.instance.signInWithApple),
+                label: 'Googleで続ける',
+                leading: const _GoogleMark(),
+                onPressed: () =>
+                    _signIn(context, CloudBackup.instance.signInWithGoogle),
               ),
+            if (_showApple) ...[
+              if (_showGoogle) const SizedBox(height: 10),
+              _SignInButton(
+                label: 'Appleでサインイン',
+                icon: Icons.apple,
+                appleStyle: true,
+                onPressed: () => _signIn(
+                  context,
+                  CloudBackup.instance.signInWithApple,
+                ),
+              ),
+              if (!_showGoogle) ...[
+                const SizedBox(height: 12),
+                Text(
+                  'Android版のGoogleアカウントとは別の保存先です。Androidから'
+                  '記録を移す場合は、先にファイルへバックアップしてiPhoneで'
+                  '読み込んでください。Pro購入はGoogle Playから'
+                  'App Storeへ引き継がれません。',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 11,
+                    height: 1.5,
+                    color: Colors.grey[700],
+                  ),
+                ),
+              ],
             ],
           ],
         ),
@@ -94,30 +124,53 @@ class _SignInButton extends StatelessWidget {
     required this.label,
     this.icon,
     this.leading,
+    this.appleStyle = false,
     required this.onPressed,
   });
 
   final String label;
   final IconData? icon;
   final Widget? leading;
+  final bool appleStyle;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
+    final content = Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        if (leading != null) ...[leading!, const SizedBox(width: 10)],
+        if (icon != null) ...[
+          Icon(icon, size: 22),
+          const SizedBox(width: 10),
+        ],
+        Text(label),
+      ],
+    );
+    if (appleStyle) {
+      // Appleのcustom button寸法・配色へ合わせる。最終的なlogo/余白は
+      // 実機で最新HIGと照合してから提出する。
+      return FilledButton(
+        onPressed: onPressed,
+        style: FilledButton.styleFrom(
+          minimumSize: const Size.fromHeight(50),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          backgroundColor: Colors.black,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: content,
+      );
+    }
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          if (leading != null) ...[leading!, const SizedBox(width: 10)],
-          if (icon != null) ...[Icon(icon, size: 22), const SizedBox(width: 10)],
-          Text(label),
-        ],
-      ),
+      child: content,
     );
   }
 }
