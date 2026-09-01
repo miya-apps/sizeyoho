@@ -11,6 +11,7 @@ class ProStatus {
   ProStatus._();
 
   static const String _kKey = 'pro_active_v1';
+  static bool _persistenceDirty = false;
 
   /// Pro 版が有効なら true。UI は ValueListenableBuilder で監視できる。
   static final ValueNotifier<bool> isPro = ValueNotifier<bool>(false);
@@ -19,12 +20,22 @@ class ProStatus {
   static Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
     isPro.value = prefs.getBool(_kKey) ?? false;
+    _persistenceDirty = false;
   }
 
-  /// 課金処理の成功/復元時に呼ぶ（現時点では未使用）。
+  /// 課金処理、復元、StoreKitの現在権利確認から呼ぶ。
   static Future<void> setActive(bool active) async {
+    if (isPro.value == active && !_persistenceDirty) return;
     isPro.value = active;
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_kKey, active);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final saved = await prefs.setBool(_kKey, active);
+      if (!saved) throw StateError('Pro status was not persisted');
+      _persistenceDirty = false;
+    } catch (_) {
+      // 次回のStoreKit照会で同じ値でも保存を再試行する。
+      _persistenceDirty = true;
+      rethrow;
+    }
   }
 }

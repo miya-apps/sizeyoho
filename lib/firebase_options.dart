@@ -23,10 +23,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -65,4 +62,45 @@ class DefaultFirebaseOptions {
     projectId: 'sizeyoho',
     storageBucket: 'sizeyoho.firebasestorage.app',
   );
+
+  /// iOS release values are intentionally supplied outside Git.
+  ///
+  /// Create the ignored `config/ios.firebase.json` from the iOS app registered
+  /// in Firebase, then pass it with `--dart-define-from-file`. This prevents a
+  /// newly issued API key from being committed while still letting Windows and
+  /// macOS use the same build command.
+  static FirebaseOptions get ios {
+    const apiKey = String.fromEnvironment('FIREBASE_IOS_API_KEY');
+    const appId = String.fromEnvironment('FIREBASE_IOS_APP_ID');
+    const messagingSenderId = String.fromEnvironment(
+      'FIREBASE_MESSAGING_SENDER_ID',
+    );
+    const projectId = String.fromEnvironment('FIREBASE_PROJECT_ID');
+    const storageBucket = String.fromEnvironment('FIREBASE_STORAGE_BUCKET');
+    const iosBundleId = String.fromEnvironment('FIREBASE_IOS_BUNDLE_ID');
+
+    const values = <String>[
+      apiKey,
+      appId,
+      messagingSenderId,
+      projectId,
+      storageBucket,
+      iosBundleId,
+    ];
+    if (values.any((value) => value.isEmpty)) {
+      throw UnsupportedError(
+        'iOS Firebase settings are missing. Build with '
+        '--dart-define-from-file=config/ios.firebase.json.',
+      );
+    }
+
+    return const FirebaseOptions(
+      apiKey: apiKey,
+      appId: appId,
+      messagingSenderId: messagingSenderId,
+      projectId: projectId,
+      storageBucket: storageBucket,
+      iosBundleId: iosBundleId,
+    );
+  }
 }

@@ -5,7 +5,33 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
+import '../monetization/purchase_manager.dart';
 import '../monetization/pro_status.dart';
+
+/// UMPが広告リクエストを許可し、Mobile Adsの初期化も完了した状態。
+final ValueNotifier<bool> adRequestsReady = ValueNotifier<bool>(false);
+
+/// UMPの「広告のプライバシー設定」を設定画面に出す必要があるか。
+final ValueNotifier<bool> adPrivacyOptionsRequired = ValueNotifier<bool>(false);
+
+bool _mobileAdsInitialized = false;
+bool _androidAdsInitializationStarted = false;
+bool _iosAdLifecycleStarted = false;
+bool _iosConsentFlowStarted = false;
+Timer? _iosConsentRetryTimer;
+int _iosConsentRetryCount = 0;
+const List<Duration> _iosConsentRetryDelays = [
+  Duration(seconds: 30),
+  Duration(minutes: 1),
+  Duration(minutes: 2),
+];
+Timer? _androidAdsRetryTimer;
+int _androidAdsRetryCount = 0;
+const List<Duration> _androidAdsRetryDelays = [
+  Duration(seconds: 30),
+  Duration(minutes: 1),
+  Duration(minutes: 2),
+];
 
 /// 画面下部のバナー広告（無料版のみ・Android/iOSのみ）。
 ///
@@ -46,26 +72,53 @@ class _AdBannerState extends State<AdBanner> {
   @override
   void initState() {
     super.initState();
-    if (AdBanner._supported && !ProStatus.isPro.value) {
-      _load();
-    }
-    // Pro状態が切り替わったら広告を破棄／読み込みし直す。
+    _tryLoad();
+    // Pro状態、同意状態、iOSのStoreKit権利確認が切り替わったら、広告を
+    // 破棄／読み込みし直す。
     ProStatus.isPro.addListener(_onProChanged);
+    adRequestsReady.addListener(_onAvailabilityChanged);
+    PurchaseManager.instance.entitlementsReady.addListener(
+      _onAvailabilityChanged,
+    );
+  }
+
+  bool get _mayLoad =>
+      AdBanner._supported &&
+      adRequestsReady.value &&
+      (!Platform.isIOS || PurchaseManager.instance.entitlementsReady.value) &&
+      !ProStatus.isPro.value;
+
+  void _tryLoad() {
+    if (_mayLoad && _ad == null) _load();
+  }
+
+  void _onAvailabilityChanged() {
+    if (!mounted) return;
+    if (!_mayLoad) {
+      _disposeCurrentAd();
+      return;
+    }
+    _retryCount = 0;
+    _tryLoad();
   }
 
   void _onProChanged() {
     if (!mounted) return;
     if (ProStatus.isPro.value) {
-      _retryTimer?.cancel();
-      _ad?.dispose();
-      setState(() {
-        _ad = null;
-        _loaded = false;
-      });
-    } else if (AdBanner._supported && _ad == null) {
-      _retryCount = 0;
-      _load();
+      _disposeCurrentAd();
+    } else {
+      _onAvailabilityChanged();
     }
+  }
+
+  void _disposeCurrentAd() {
+    _retryTimer?.cancel();
+    _ad?.dispose();
+    if (_ad == null && !_loaded) return;
+    setState(() {
+      _ad = null;
+      _loaded = false;
+    });
   }
 
   /// 失敗回数に応じて間隔を広げつつ再読み込みを予約する（30秒→60秒→…）。
@@ -75,11 +128,12 @@ class _AdBannerState extends State<AdBanner> {
     _retryCount++;
     _retryTimer?.cancel();
     _retryTimer = Timer(delay, () {
-      if (mounted && !ProStatus.isPro.value && _ad == null) _load();
+      if (mounted && _mayLoad && _ad == null) _load();
     });
   }
 
   void _load() {
+    if (!_mayLoad || _ad != null) return;
     final unitId = defaultTargetPlatform == TargetPlatform.iOS
         ? AdBanner._iosUnitId
         : AdBanner._androidUnitId;
@@ -88,16 +142,18 @@ class _AdBannerState extends State<AdBanner> {
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (_) {
-          if (mounted) {
-            _retryCount = 0;
-            setState(() => _loaded = true);
+        onAdLoaded: (loadedAd) {
+          if (!mounted || !_mayLoad || !identical(_ad, loadedAd)) {
+            loadedAd.dispose();
+            return;
           }
+          _retryCount = 0;
+          setState(() => _loaded = true);
         },
         onAdFailedToLoad: (ad, error) {
           debugPrint('AdBanner failed to load: $error');
           ad.dispose();
-          if (mounted) {
+          if (mounted && identical(_ad, ad)) {
             setState(() {
               _ad = null;
               _loaded = false;
@@ -114,6 +170,10 @@ class _AdBannerState extends State<AdBanner> {
   @override
   void dispose() {
     ProStatus.isPro.removeListener(_onProChanged);
+    adRequestsReady.removeListener(_onAvailabilityChanged);
+    PurchaseManager.instance.entitlementsReady.removeListener(
+      _onAvailabilityChanged,
+    );
     _retryTimer?.cancel();
     _ad?.dispose();
     super.dispose();
@@ -127,10 +187,13 @@ class _AdBannerState extends State<AdBanner> {
     }
     return SafeArea(
       top: false,
-      child: SizedBox(
-        width: ad.size.width.toDouble(),
-        height: ad.size.height.toDouble(),
-        child: AdWidget(ad: ad),
+      bottom: false,
+      child: Center(
+        child: SizedBox(
+          width: ad.size.width.toDouble(),
+          height: ad.size.height.toDouble(),
+          child: AdWidget(ad: ad),
+        ),
       ),
     );
   }
@@ -139,5 +202,201 @@ class _AdBannerState extends State<AdBanner> {
 /// アプリ起動時に一度だけ呼ぶ（main.dart から）。
 Future<void> initializeAds() async {
   if (!AdBanner._supported) return;
+  if (Platform.isAndroid && _androidAdsInitializationStarted) return;
+
+  try {
+    // AndroidはSDK初期化成功後に広告を許可し、失敗時は有限回再試行する。
+    // iOSはGoogleの推奨順序でUMP同意を確認してから有効にする。
+    if (Platform.isAndroid) {
+      _androidAdsInitializationStarted = true;
+      await _initializeMobileAds();
+      adRequestsReady.value = true;
+      _androidAdsRetryTimer?.cancel();
+      _androidAdsRetryCount = 0;
+      return;
+    }
+
+    // iOSはStoreKitの現在権利を確認できた無料利用者だけ広告フローへ進む。
+    // Pro利用者の起動時にはUMP/GMA自体へアクセスしない。
+    if (!PurchaseManager.instance.entitlementsReady.value ||
+        ProStatus.isPro.value ||
+        _iosConsentFlowStarted) {
+      return;
+    }
+    _iosConsentFlowStarted = true;
+
+    await MobileAds.instance.updateRequestConfiguration(
+      RequestConfiguration(maxAdContentRating: MaxAdContentRating.g),
+    );
+    await _gatherIosConsent();
+    await _refreshPrivacyOptionsRequirement();
+    await _applyIosAdPermission();
+    _iosConsentRetryTimer?.cancel();
+    _iosConsentRetryCount = 0;
+  } catch (error) {
+    if (Platform.isIOS) {
+      _iosConsentFlowStarted = false;
+      // Google推奨どおり、更新失敗時も前sessionの同意状態で広告を
+      // リクエスト可能か確認する。最新同意の取得自体は別途再試行する。
+      try {
+        await _applyIosAdPermission();
+      } catch (fallbackError) {
+        adRequestsReady.value = false;
+        debugPrint('Previous UMP consent could not be applied: $fallbackError');
+      }
+      // 補助UIのstatus取得失敗で、上のcanRequestAds評価をskipしない。
+      try {
+        await _refreshPrivacyOptionsRequirement();
+      } catch (privacyOptionsError) {
+        debugPrint(
+          'UMP privacy options status could not be refreshed: '
+          '$privacyOptionsError',
+        );
+      }
+      _scheduleIosConsentRetry();
+    } else {
+      _androidAdsInitializationStarted = false;
+      adRequestsReady.value = false;
+      _scheduleAndroidAdsRetry();
+    }
+    debugPrint('Mobile Ads initialization failed: $error');
+  }
+}
+
+void _scheduleAndroidAdsRetry() {
+  if (_androidAdsRetryCount >= _androidAdsRetryDelays.length) return;
+  final delay = _androidAdsRetryDelays[_androidAdsRetryCount];
+  _androidAdsRetryCount++;
+  _androidAdsRetryTimer?.cancel();
+  _androidAdsRetryTimer = Timer(delay, () => unawaited(initializeAds()));
+}
+
+/// StoreKitの権利確認後にiOS広告のライフサイクルを開始する。
+/// 起動時にProなら何も送信せず、後日失効が確認された時だけ初期化する。
+void startIosAdLifecycle() {
+  if (!AdBanner._supported || !Platform.isIOS || _iosAdLifecycleStarted) {
+    return;
+  }
+  _iosAdLifecycleStarted = true;
+  ProStatus.isPro.addListener(_syncIosAdLifecycle);
+  PurchaseManager.instance.entitlementsReady.addListener(_syncIosAdLifecycle);
+  _syncIosAdLifecycle();
+}
+
+void _syncIosAdLifecycle() {
+  if (PurchaseManager.instance.entitlementsReady.value &&
+      !ProStatus.isPro.value) {
+    unawaited(initializeAds());
+  }
+}
+
+void _scheduleIosConsentRetry() {
+  if (_iosConsentRetryCount >= _iosConsentRetryDelays.length ||
+      ProStatus.isPro.value ||
+      !PurchaseManager.instance.entitlementsReady.value) {
+    return;
+  }
+  final delay = _iosConsentRetryDelays[_iosConsentRetryCount];
+  _iosConsentRetryCount++;
+  _iosConsentRetryTimer?.cancel();
+  _iosConsentRetryTimer = Timer(delay, _syncIosAdLifecycle);
+}
+
+Future<void> _initializeMobileAds() async {
+  if (_mobileAdsInitialized) return;
   await MobileAds.instance.initialize();
+  _mobileAdsInitialized = true;
+}
+
+Future<void> _gatherIosConsent() async {
+  final update = Completer<void>();
+  ConsentInformation.instance.requestConsentInfoUpdate(
+    ConsentRequestParameters(),
+    () {
+      if (!update.isCompleted) update.complete();
+    },
+    (error) {
+      debugPrint(
+        'UMP consent update failed: code=${error.errorCode} '
+        'message=${error.message}',
+      );
+      if (!update.isCompleted) {
+        update.completeError(StateError('UMP consent update failed'));
+      }
+    },
+  );
+  // timeoutはnetwork updateだけに適用し、利用者が同意画面を読む時間を
+  // 制限しない。これにより表示中formへretryが重なるのを防ぐ。
+  await update.future.timeout(const Duration(seconds: 30));
+  await _loadAndShowRequiredConsentForm();
+}
+
+Future<void> _loadAndShowRequiredConsentForm() async {
+  FormError? formError;
+  await ConsentForm.loadAndShowConsentFormIfRequired((error) {
+    formError = error;
+  });
+  final error = formError;
+  if (error != null) {
+    debugPrint(
+      'UMP consent form failed: code=${error.errorCode} '
+      'message=${error.message}',
+    );
+    throw StateError('UMP consent form failed');
+  }
+}
+
+Future<void> _refreshPrivacyOptionsRequirement() async {
+  final status = await ConsentInformation.instance
+      .getPrivacyOptionsRequirementStatus();
+  adPrivacyOptionsRequired.value =
+      status == PrivacyOptionsRequirementStatus.required;
+}
+
+Future<void> _applyIosAdPermission() async {
+  // UMP待機中に購入が完了した場合、Pro利用者ではGMAを初期化しない。
+  if (ProStatus.isPro.value ||
+      !PurchaseManager.instance.entitlementsReady.value) {
+    adRequestsReady.value = false;
+    _iosConsentFlowStarted = false;
+    return;
+  }
+  final canRequestAds = await ConsentInformation.instance.canRequestAds();
+  if (ProStatus.isPro.value ||
+      !PurchaseManager.instance.entitlementsReady.value) {
+    adRequestsReady.value = false;
+    _iosConsentFlowStarted = false;
+    return;
+  }
+  if (canRequestAds && !ProStatus.isPro.value) {
+    await _initializeMobileAds();
+  }
+  adRequestsReady.value =
+      canRequestAds && _mobileAdsInitialized && !ProStatus.isPro.value;
+}
+
+/// UMPが要求する場合に、利用者が同意内容を後から変更するための画面を開く。
+/// 成功時はnull、表示できない場合は利用者向けメッセージを返す。
+Future<String?> showAdPrivacyOptions() async {
+  if (!AdBanner._supported || !Platform.isIOS) {
+    return 'この環境では広告のプライバシー設定を表示できません';
+  }
+  try {
+    FormError? formError;
+    await ConsentForm.showPrivacyOptionsForm((error) {
+      formError = error;
+    });
+    final error = formError;
+    await _refreshPrivacyOptionsRequirement();
+    await _applyIosAdPermission();
+    if (error == null) return null;
+    debugPrint(
+      'UMP privacy options failed: code=${error.errorCode} '
+      'message=${error.message}',
+    );
+    return '広告のプライバシー設定を開けませんでした';
+  } catch (error) {
+    debugPrint('UMP privacy options failed: $error');
+    return '広告のプライバシー設定を開けませんでした';
+  }
 }

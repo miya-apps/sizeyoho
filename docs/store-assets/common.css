@@ -1,3 +1,18 @@
+@font-face {
+  font-family: 'Zen Maru Gothic';
+  src: url('../../assets/fonts/ZenMaruGothic-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+}
+@font-face {
+  font-family: 'Zen Maru Gothic';
+  src: url('../../assets/fonts/ZenMaruGothic-Bold.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 700;
+  font-display: block;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -83,7 +98,9 @@ body {
 }
 
 .phone {
-  width: 1080px;
+  /* 6.9-inch iPhone screenshots are taller than the current Android source
+     images. 900px keeps a 1290:2796 screen inside the fixed 2796px canvas. */
+  width: 900px;
   padding: 12px;
   background: #1a1a1a;
   border-radius: 64px;

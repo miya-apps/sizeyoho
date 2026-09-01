@@ -53,3 +53,17 @@ node_modules/
 
 # ストア提出用の原寸画像（store-assets のHTMLから再生成できる）
 /store-submission/
+
+# iOS release credentials and machine-local service configuration.
+# Never commit signing keys, provisioning profiles, App Store Connect keys,
+# or the Firebase values used by a release build.
+*.cer
+*.p12
+*.mobileprovision
+*.provisionprofile
+*.p8
+*.pem
+*.key
+/config/ios.firebase.json
+**/GoogleService-Info.plist
+ios/Flutter/Local.xcconfig

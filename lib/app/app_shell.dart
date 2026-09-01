@@ -225,7 +225,6 @@ class _AppShellState extends State<AppShell> {
 
     _loadInitialData();
     // Pro 版の有効状態（広告非表示・自動バックアップの分岐で参照）。
-    ProStatus.load();
     // 書き出し時に名前を伏せる設定（PDF・サイズガイド画像で参照）。
     ExportPrivacy.load();
   }

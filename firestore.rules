@@ -6,10 +6,32 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{uid} {
-      allow read, write: if request.auth != null && request.auth.uid == uid;
+      function isOwner() {
+        return request.auth != null && request.auth.uid == uid;
+      }
+
+      function deletionStarted() {
+        return 'deleting' in resource.data && resource.data.deleting == true;
+      }
+
+      allow read, create: if isOwner();
+      allow delete: if isOwner() && !deletionStarted();
+      // `deleting: true`への最初の更新は許可し、それ以後は遅延した別端末が
+      // metadataを上書きして削除を取り消せないようにする。
+      allow update: if isOwner() && !deletionStarted();
 
       match /backup/{chunk} {
-        allow read, write: if request.auth != null && request.auth.uid == uid;
+        function parentDeletionStarted() {
+          let parentPath = /databases/$(database)/documents/users/$(uid);
+          return exists(parentPath) &&
+              'deleting' in get(parentPath).data &&
+              get(parentPath).data.deleting == true;
+        }
+
+        allow read, delete: if isOwner();
+        // 既存Androidの初回backupは親documentより先にchunkを作るため、
+        // 親がまだ無い場合は維持する。削除markerがあれば新規writeだけ拒否する。
+        allow create, update: if isOwner() && !parentDeletionStarted();
       }
     }
   }

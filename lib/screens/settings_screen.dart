@@ -4,10 +4,12 @@ import 'dart:typed_data';
 import 'package:file_saver/file_saver.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:firebase_auth/firebase_auth.dart' show User;
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform, kDebugMode, kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../ads/ad_banner.dart';
 import '../app/adaptive_layout.dart';
 import '../app/app_info.dart';
 import '../backup/growth_backup.dart';
@@ -232,6 +234,36 @@ class SettingsScreen extends StatelessWidget {
                   onTap: () => openContactForm(context),
                 ),
               ]),
+              ValueListenableBuilder<bool>(
+                valueListenable: adPrivacyOptionsRequired,
+                builder: (context, required, _) {
+                  if (!required) return const SizedBox.shrink();
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 12),
+                    child: _menuCard(context, [
+                      _menuTile(
+                        context,
+                        icon: Icons.ads_click_rounded,
+                        iconColor: scheme.primary,
+                        title: '広告のプライバシー設定',
+                        subtitle: '広告に関する同意内容を確認・変更します',
+                        onTap: () async {
+                          final messenger = ScaffoldMessenger.of(context);
+                          final error = await showAdPrivacyOptions();
+                          if (error != null) {
+                            messenger.showSnackBar(
+                              SnackBar(
+                                content: Text(error),
+                                behavior: SnackBarBehavior.floating,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ]),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -290,6 +322,7 @@ class SettingsScreen extends StatelessWidget {
     const typeGroup = XTypeGroup(
       label: 'バックアップ',
       extensions: ['json'],
+      uniformTypeIdentifiers: ['public.json'],
     );
     final XFile? file;
     try {
@@ -588,6 +621,8 @@ class _ProSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final isIosApp =
+        !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
     return Card(
       margin: EdgeInsets.zero,
       color: Colors.white,
@@ -662,34 +697,65 @@ class _ProSection extends StatelessWidget {
                   style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
                 ),
               ),
-            if (isPro) ...[
+            if (isPro &&
+                !kIsWeb &&
+                defaultTargetPlatform == TargetPlatform.iOS) ...[
               const Divider(height: 1, indent: 16, endIndent: 16),
-              ValueListenableBuilder<User?>(
-                valueListenable: CloudBackup.instance.user,
-                builder: (context, user, _) {
-                  if (user == null) {
-                    return ListTile(
-                      leading: Icon(Icons.login_rounded, color: scheme.primary),
-                      title: const Text(
-                        'サインイン',
-                        style: TextStyle(
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w600,
+              ListTile(
+                leading: Icon(
+                  Icons.manage_accounts_outlined,
+                  color: scheme.primary,
+                ),
+                title: const Text(
+                  '定期購入を管理',
+                  style: TextStyle(fontSize: 14.5, fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  'プランの確認・変更・解約はApp Storeで行います',
+                  style: TextStyle(fontSize: 12.5, color: Colors.grey[700]),
+                ),
+                trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+                onTap: () => openExternalPage(
+                  context,
+                  url: 'https://apps.apple.com/account/subscriptions',
+                  pageName: 'App Storeの定期購入管理',
+                ),
+              ),
+            ],
+            ValueListenableBuilder<User?>(
+              valueListenable: CloudBackup.instance.user,
+              builder: (context, user, _) {
+                // iOSでは購読失効後・サインアウト後も再認証して既存の
+                // Firebaseアカウントを削除できるよう、管理導線を常に残す。
+                if (user == null && !isPro && !isIosApp) {
+                  return const SizedBox.shrink();
+                }
+                return Column(
+                  children: [
+                    const Divider(height: 1, indent: 16, endIndent: 16),
+                    if (user == null)
+                      ListTile(
+                        leading: Icon(Icons.login_rounded, color: scheme.primary),
+                        title: const Text(
+                          'サインイン',
+                          style: TextStyle(
+                            fontSize: 14.5,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
-                      subtitle: Text(
-                        'バックアップの保存先になるアカウントです',
-                        style: TextStyle(
-                          fontSize: 12.5,
-                          color: Colors.grey[700],
+                        subtitle: Text(
+                          isPro
+                              ? 'バックアップの保存先になるアカウントです'
+                              : '既存のクラウドアカウントの管理・削除に使います',
+                          style: TextStyle(
+                            fontSize: 12.5,
+                            color: Colors.grey[700],
+                          ),
                         ),
-                      ),
-                      trailing: const Icon(Icons.chevron_right, size: 20),
-                      onTap: () => showAccountSignInSheet(context),
-                    );
-                  }
-                  return Column(
-                    children: [
+                        trailing: const Icon(Icons.chevron_right, size: 20),
+                        onTap: () => showAccountSignInSheet(context),
+                      )
+                    else ...[
                       ListTile(
                         leading: Icon(
                           Icons.account_circle_outlined,
@@ -712,101 +778,139 @@ class _ProSection extends StatelessWidget {
                         ),
                         onTap: () => _confirmSignOut(context),
                       ),
-                      const Divider(height: 1, indent: 16, endIndent: 16),
-                      ValueListenableBuilder<bool>(
-                        valueListenable: CloudBackup.instance.autoBackupEnabled,
-                        builder: (context, auto, _) => SwitchListTile(
-                          secondary: Icon(
-                            Icons.cloud_sync_outlined,
+                      if (isPro) ...[
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ValueListenableBuilder<bool>(
+                          valueListenable:
+                              CloudBackup.instance.autoBackupEnabled,
+                          builder: (context, auto, _) => SwitchListTile(
+                            secondary: Icon(
+                              Icons.cloud_sync_outlined,
+                              color: scheme.primary,
+                            ),
+                            title: const Text(
+                              '自動バックアップ',
+                              style: TextStyle(
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            subtitle: Text(
+                              '記録を変更するたびに自動でクラウドへ保存します。'
+                              '写真はクラウドに送信されず、この端末にのみ保存されます',
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                            value: auto,
+                            onChanged: (value) => CloudBackup.instance
+                                .setAutoBackupEnabled(value),
+                          ),
+                        ),
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ValueListenableBuilder<bool>(
+                          valueListenable: CloudBackup.instance.busy,
+                          builder: (context, busy, _) =>
+                              ValueListenableBuilder<DateTime?>(
+                                valueListenable:
+                                    CloudBackup.instance.lastBackupAt,
+                                builder: (context, last, _) => ListTile(
+                                  leading: busy
+                                      ? const SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.5,
+                                          ),
+                                        )
+                                      : Icon(
+                                          Icons.cloud_upload_outlined,
+                                          color: scheme.primary,
+                                        ),
+                                  title: const Text(
+                                    '今すぐバックアップ',
+                                    style: TextStyle(
+                                      fontSize: 14.5,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  subtitle: Text(
+                                    last == null
+                                        ? 'まだクラウドに保存されていません'
+                                        : '最終バックアップ：'
+                                              '${DateFormat('yyyy/MM/dd HH:mm').format(last)}',
+                                    style: TextStyle(
+                                      fontSize: 12.5,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                  onTap: busy
+                                      ? null
+                                      : () => _backupNow(context),
+                                ),
+                              ),
+                        ),
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ListTile(
+                          leading: Icon(
+                            Icons.cloud_download_outlined,
                             color: scheme.primary,
                           ),
                           title: const Text(
-                            '自動バックアップ',
+                            'クラウドから復元',
                             style: TextStyle(
                               fontSize: 14.5,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
                           subtitle: Text(
-                            '記録を変更するたびに自動でクラウドへ保存します。'
-                            '写真はクラウドに送信されず、この端末にのみ保存されます',
+                            '機種変更後などに、クラウドのバックアップを読み込みます',
                             style: TextStyle(
                               fontSize: 12.5,
                               color: Colors.grey[700],
                             ),
                           ),
-                          value: auto,
-                          onChanged: (v) =>
-                              CloudBackup.instance.setAutoBackupEnabled(v),
+                          onTap: () => _restoreFromCloud(context),
                         ),
-                      ),
-                      const Divider(height: 1, indent: 16, endIndent: 16),
-                      ValueListenableBuilder<bool>(
-                        valueListenable: CloudBackup.instance.busy,
-                        builder: (context, busy, _) =>
-                            ValueListenableBuilder<DateTime?>(
-                              valueListenable: CloudBackup.instance.lastBackupAt,
-                              builder: (context, last, _) => ListTile(
-                                leading: busy
-                                    ? const SizedBox(
-                                        width: 24,
-                                        height: 24,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.5,
-                                        ),
-                                      )
-                                    : Icon(
-                                        Icons.cloud_upload_outlined,
-                                        color: scheme.primary,
-                                      ),
-                                title: const Text(
-                                  '今すぐバックアップ',
-                                  style: TextStyle(
-                                    fontSize: 14.5,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                subtitle: Text(
-                                  last == null
-                                      ? 'まだクラウドに保存されていません'
-                                      : '最終バックアップ：'
-                                            '${DateFormat('yyyy/MM/dd HH:mm').format(last)}',
-                                  style: TextStyle(
-                                    fontSize: 12.5,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                                onTap: busy ? null : () => _backupNow(context),
+                      ],
+                      // App Storeのアカウント削除要件に対応するiOS導線。
+                      // 公開済みAndroidのGoogle認証フローは変更しない。
+                      if (isIosApp) ...[
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ValueListenableBuilder<bool>(
+                          valueListenable: CloudBackup.instance.busy,
+                          builder: (context, busy, _) => ListTile(
+                            leading: Icon(
+                              Icons.person_remove_outlined,
+                              color: scheme.error,
+                            ),
+                            title: Text(
+                              'クラウドアカウントを削除',
+                              style: TextStyle(
+                                fontSize: 14.5,
+                                fontWeight: FontWeight.w600,
+                                color: scheme.error,
                               ),
                             ),
-                      ),
-                      const Divider(height: 1, indent: 16, endIndent: 16),
-                      ListTile(
-                        leading: Icon(
-                          Icons.cloud_download_outlined,
-                          color: scheme.primary,
-                        ),
-                        title: const Text(
-                          'クラウドから復元',
-                          style: TextStyle(
-                            fontSize: 14.5,
-                            fontWeight: FontWeight.w600,
+                            subtitle: Text(
+                              'クラウド上のバックアップとサインイン情報を削除します',
+                              style: TextStyle(
+                                fontSize: 12.5,
+                                color: Colors.grey[700],
+                              ),
+                            ),
+                            onTap: busy
+                                ? null
+                                : () => _confirmDeleteAccount(context),
                           ),
                         ),
-                        subtitle: Text(
-                          '機種変更後などに、クラウドのバックアップを読み込みます',
-                          style: TextStyle(
-                            fontSize: 12.5,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        onTap: () => _restoreFromCloud(context),
-                      ),
+                      ],
                     ],
-                  );
-                },
-              ),
-            ],
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -863,6 +967,56 @@ class _ProSection extends StatelessWidget {
     if (ok == true) {
       await CloudBackup.instance.signOut();
     }
+  }
+
+  Future<void> _confirmDeleteAccount(BuildContext context) async {
+    final scheme = Theme.of(context).colorScheme;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text(
+          'クラウドアカウントを削除',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+        ),
+        content: const Text(
+          'クラウド上のバックアップと、バックアップ用のサインイン情報を削除します。'
+          '別端末からの遅延送信を拒否するため、記録やメールアドレスを含まない削除済みマーカーだけが残ります。'
+          'この操作は元に戻せません。\n\n'
+          'この端末内の成長記録・写真は残ります。Pro版の定期購入は自動では解約されません。',
+          style: TextStyle(fontSize: 13.5, height: 1.6),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => openExternalPage(
+              dialogContext,
+              url: 'https://apps.apple.com/account/subscriptions',
+              pageName: 'App Storeの定期購入管理',
+            ),
+            child: const Text('定期購入を管理'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(false),
+            child: const Text('キャンセル'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dialogContext).pop(true),
+            style: FilledButton.styleFrom(backgroundColor: scheme.error),
+            child: const Text('削除する'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    final error = await CloudBackup.instance.deleteAccount();
+    if (!context.mounted) return;
+    messenger.showSnackBar(
+      SnackBar(
+        content: Text(error ?? 'クラウドアカウントを削除しました'),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 
   Future<void> _restoreFromCloud(BuildContext context) async {
