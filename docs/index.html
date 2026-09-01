@@ -31,10 +31,11 @@
     "@context": "https://schema.org",
     "@type": "MobileApplication",
     "name": "サイズ予報",
-    "operatingSystem": "Android, iOS",
+    "operatingSystem": "Android",
     "applicationCategory": "HealthApplication",
     "description": "子どもの身長・体重を成長曲線に記録し、洋服・靴・おむつサイズの買い替え時期を先読みできる保護者向けアプリ。",
     "url": "https://miyaapps.com/sizeyoho/",
+    "installUrl": "https://play.google.com/store/apps/details?id=com.miyaapps.sizeyoho",
     "image": "https://miyaapps.com/sizeyoho/icon.png",
     "author": {
       "@type": "Organization",
@@ -618,6 +619,13 @@
       font-size: 0.9rem;
       color: var(--accent-dark);
     }
+    .cta .store-status {
+      display: block;
+      margin-top: 10px;
+      color: #596760;
+      font-size: 0.8rem;
+      font-weight: 400;
+    }
 
     footer {
       text-align: center;
@@ -643,8 +651,8 @@
     <div class="hero-shot">
       <img src="screenshots/clothing-guide.webp" alt="洋服サイズ予報の画面。いまのサイズと来シーズンの目安サイズを表示" width="500" height="890" loading="eager" fetchpriority="high">
     </div>
-    <a class="button-primary" href="contact.html#release-notice">リリース通知を受け取る</a>
-    <p class="store-note">App Store・Google Play で公開予定／主要機能は無料で使えます</p>
+    <a class="button-primary" href="https://play.google.com/store/apps/details?id=com.miyaapps.sizeyoho" target="_blank" rel="noopener noreferrer">Google Playで入手</a>
+    <p class="store-note">Android版はGoogle Playで公開中／App Store版は準備中です</p>
   </div>
 
   <div class="container">
@@ -920,15 +928,16 @@
       </div>
       </details>
       <p class="pro-note">
-        料金は税込です。定期購入は自動更新され、各ストアのアカウントに請求されます。
-        解約は App Store または Google Play の定期購入設定から行えます。
+        料金は税込です。Google Playの定期購入は自動更新され、Googleアカウントに請求されます。
+        解約はGoogle Playの定期購入設定から行えます。App Store版は準備中です。
       </p>
     </section>
 
     <section>
       <div class="cta">
-        <p>App Store・Google Play で公開準備中です</p>
-        <a class="button" href="contact.html#release-notice">リリース通知を受け取る</a>
+        <p>Android版はGoogle Playで公開中です</p>
+        <a class="button" href="https://play.google.com/store/apps/details?id=com.miyaapps.sizeyoho" target="_blank" rel="noopener noreferrer">Google Playで入手</a>
+        <span class="store-status">App Store版は準備中です</span>
       </div>
     </section>
 
@@ -1004,8 +1013,8 @@
 
     <section>
       <div class="cta">
-        <p>公開したら、いちばんにお知らせします</p>
-        <a class="button" href="contact.html#release-notice">リリース通知を受け取る</a>
+        <p>サイズ予報はGoogle Playから利用できます</p>
+        <a class="button" href="https://play.google.com/store/apps/details?id=com.miyaapps.sizeyoho" target="_blank" rel="noopener noreferrer">Google Playで入手</a>
         <a class="cta-sub" href="contact.html">質問・要望を送る</a>
       </div>
     </section>
